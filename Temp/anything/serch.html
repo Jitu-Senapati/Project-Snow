@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STRUVO - Complete Student Platform</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #0a0a0a; color: #fff; overflow-x: hidden; }
+        
+        .auth-section { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 20px; }
+        #bg-video { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
+        .video-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); z-index: -1; }
+        
+        .logo { color: aliceblue; user-select: none; text-align: center; }
+        .logo h1 { font-size: 48px; letter-spacing: 8px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .login-box { background: transparent; border: 2px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); width: 500px; border-radius: 20px; padding: 40px; }
+        .box-head h1 { text-align: center; color: aliceblue; margin-bottom: 30px; font-size: 32px; }
+        
+        .objects-register { display: none; }
+        
+        .input-box { margin: 15px auto; position: relative; display: flex; align-items: center; }
+        .input-box input { padding: 12px 12px 12px 40px; border-radius: 10px; border: none; height: 45px; width: 100%; font-size: 15px; background: rgba(255, 255, 255, 0.95); }
+        .input-box i { position: absolute; left: 12px; color: #666; font-size: 18px; }
+        
+        .login-button button { width: 100%; height: 45px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; margin: 20px 0; }
+        
+        .remember-forgot { display: flex; justify-content: space-between; color: aliceblue; font-size: 14px; margin: 15px 0; }
+        .remember-forgot a { color: #a78bfa; text-decoration: none; }
+        
+        .account { color: aliceblue; text-align: center; margin-top: 15px; font-size: 14px; }
+        .creat-acc { color: #a78bfa; cursor: pointer; font-weight: 600; }
+        
+        .main-app { display: none; min-height: 100vh; padding-bottom: 80px; }
+        
+        .app-header { background: #000; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 100; }
+        .app-logo { font-size: 24px; font-weight: bold; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .header-icons { display: flex; gap: 20px; font-size: 24px; }
+        .header-icons i { cursor: pointer; transition: 0.3s; }
+        .header-icons i:hover { color: #a78bfa; }
+        
+        .page-content { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; }
+        .page-content.active { display: block; }
+        
+        .search-bar { background: #1a1a1a; padding: 12px 20px; border-radius: 25px; display: flex; align-items: center; gap: 10px; margin-bottom: 20px; border: 1px solid #333; }
+        .search-bar input { background: transparent; border: none; outline: none; color: white; width: 100%; font-size: 15px; }
+        .search-bar input::placeholder { color: #666; }
+        
+        .bus-card { background: #1a1a1a; border-radius: 15px; padding: 20px; margin-bottom: 20px; border: 1px solid #333; }
+        .map-placeholder { background: #2a2a2a; height: 200px; border-radius: 10px; display: flex; justify-content: center; align-items: center; color: #666; margin-top: 15px; }
+        
+        .chat-list { background: #1a1a1a; border-radius: 15px; overflow: hidden; }
+        .chat-item { display: flex; align-items: center; gap: 15px; padding: 15px 20px; border-bottom: 1px solid #333; cursor: pointer; transition: 0.3s; }
+        .chat-item:hover { background: #252525; }
+        .chat-item.hidden { display: none; }
+        .chat-avatar { width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; }
+        .chat-info { flex: 1; }
+        .chat-name { font-weight: 600; margin-bottom: 5px; }
+        .chat-message { color: #888; font-size: 14px; }
+        
+        .chat-window-view { display: none; flex-direction: column; height: calc(100vh - 160px); }
+        .chat-window-header { display: flex; justify-content: space-between; padding: 15px 20px; background: #1a1a1a; border-radius: 15px 15px 0 0; border-bottom: 1px solid #333; }
+        .back-to-chats { font-size: 24px; cursor: pointer; color: #a78bfa; }
+        .chat-messages { flex: 1; padding: 20px; overflow-y: auto; background: #0a0a0a; display: flex; flex-direction: column; gap: 15px; }
+        .message { display: flex; gap: 10px; max-width: 70%; }
+        .message.sent { align-self: flex-end; flex-direction: row-reverse; }
+        .message-bubble { padding: 12px 16px; border-radius: 18px; background: #1a1a1a; }
+        .message.sent .message-bubble { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .chat-input-container { display: flex; gap: 10px; padding: 15px 20px; background: #1a1a1a; border-top: 1px solid #333; }
+        .chat-input { flex: 1; padding: 12px 16px; background: #252525; border: 1px solid #333; border-radius: 25px; color: white; outline: none; }
+        .send-btn { width: 40px; height: 40px; border-radius: 50%; border: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; cursor: pointer; }
+        
+        .profile-header-section { padding: 20px; border-bottom: 1px solid #222; }
+        .profile-avatar-small { width: 90px; height: 90px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: bold; margin-bottom: 15px; }
+        
+        .edit-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 1000; }
+        .edit-modal.active { display: flex; align-items: center; justify-content: center; }
+        .edit-modal-content { background: #1a1a1a; border-radius: 20px; width: 500px; max-width: 90%; border: 1px solid #333; }
+        .modal-header { display: flex; justify-content: space-between; padding: 20px; border-bottom: 1px solid #333; }
+        .modal-header i { cursor: pointer; font-size: 24px; }
+        .modal-body { padding: 20px; max-height: 60vh; overflow-y: auto; }
+        .form-group { margin-bottom: 15px; }
+        .form-group input { width: 100%; padding: 10px; background: #252525; border: 1px solid #333; border-radius: 8px; color: white; }
+        .modal-footer { padding: 20px; border-top: 1px solid #333; display: flex; gap: 10px; }
+        .cancel-btn, .save-btn { flex: 1; padding: 10px; border-radius: 8px; cursor: pointer; border: none; font-weight: 600; }
+        .cancel-btn { background: #2a2a2a; color: white; }
+        .save-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        
+        .edit-profile-btn-main { padding: 10px 20px; background: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: white; cursor: pointer; }
+        
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #000; border-top: 1px solid #222; display: flex; justify-content: space-around; padding: 12px 0; z-index: 100; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; color: #666; padding: 8px 20px; }
+        .nav-item i { font-size: 24px; }
+        .nav-item span { font-size: 12px; }
+        .nav-item.active { color: #a78bfa; }
+        
+        @media (max-width: 768px) {
+            .login-box { width: 90%; padding: 30px 25px; }
+            .logo h1 { font-size: 36px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-section" id="authSection">
+        <video autoplay muted loop id="bg-video">
+            <source src="https://cdn.pixabay.com/video/2016/06/02/3617-168686041_large.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay"></div>
+        
+        <div class="logo">
+            <h1>STRUVO</h1>
+        </div>
+        
+        <div class="login-box">
+            <div class="objects">
+                <div class="box-head">
+                    <h1>Log in</h1>
+                </div>
+                <div class="input-box">
+                    <i class="bx bx-envelope"></i>
+                    <input type="text" placeholder="Enter your email">
+                </div>
+                <div class="input-box">
+                    <i class="bx bx-lock"></i>
+                    <input type="password" placeholder="Password">
+                </div>
+                <div class="remember-forgot">
+                    <label><input type="checkbox"> Remember me</label>
+                    <a href="#">Forgot password?</a>
+                </div>
+                <div class="login-button">
+                    <button id="loginBtn">Log in</button>
+                </div>
+                <div class="account">
+                    <p>Don't have an account? <a class="creat-acc">Create account</a></p>
+                </div>
+            </div>
+            
+            <div class="objects-register">
+                <div class="box-head">
+                    <h1>Register</h1>
+                </div>
+                <div class="input-box">
+                    <i class="bx bx-envelope"></i>
+                    <input type="text" placeholder="Enter your email">
+                </div>
+                <div class="input-box">
+                    <i class="bx bx-user"></i>
+                    <input type="text" placeholder="Username">
+                </div>
+                <div class="input-box">
+                    <i class="bx bx-lock"></i>
+                    <input type="password" placeholder="Password">
+                </div>
+                <div class="login-button">
+                    <button>Register</button>
+                </div>
+                <div class="account">
+                    <p>Already have account? <a class="Login-acc">Login</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-app" id="mainApp">
+        <div class="app-header">
+            <div class="app-logo">STRUVO</div>
+            <div class="header-icons">
+                <i class="bx bx-search"></i>
+                <i class="bx bx-bell"></i>
+                <i class="bx bx-menu"></i>
+            </div>
+        </div>
+
+        <div class="page-content active" id="busPage">
+            <h2 style="margin-bottom: 20px">Bus Tracking</h2>
+            <div class="bus-card">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                    <div style="font-size: 20px; font-weight: bold; color: #a78bfa;">Bus #101</div>
+                    <div style="padding: 5px 15px; border-radius: 20px; background: #10b981; color: white; font-size: 12px;">Active</div>
+                </div>
+                <p style="color: #888; margin-bottom: 10px">Route: Main Campus → City Center</p>
+                <p style="color: #888">ETA: 5 minutes</p>
+                <div class="map-placeholder">
+                    <i class="bx bx-map" style="font-size: 48px"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-content" id="explorerPage">
+            <h2 style="margin-bottom: 20px">Explorer</h2>
+            <div class="search-bar">
+                <i class="bx bx-search"></i>
+                <input type="text" placeholder="Search events, announcements...">
+            </div>
+        </div>
+
+        <div class="page-content" id="chatPage">
+            <h2 style="margin-bottom: 20px">Messages</h2>
+            
+            <div class="chat-list-view">
+                <!-- SEARCH BAR FOR CHATS -->
+                <div class="search-bar" style="margin-bottom: 15px;">
+                    <i class="bx bx-search"></i>
+                    <input type="text" id="chatSearchInput" placeholder="Search messages...">
+                </div>
+                
+                <div class="chat-list">
+                    <div class="chat-item" data-chat="amit">
+                        <div class="chat-avatar">AK</div>
+                        <div class="chat-info">
+                            <div class="chat-name">Amit Kumar</div>
+                            <div class="chat-message">Hey, are you coming to the lab?</div>
+                        </div>
+                        <div style="color: #888; font-size: 12px">2m</div>
+                    </div>
+                    <div class="chat-item" data-chat="priya">
+                        <div class="chat-avatar">PS</div>
+                        <div class="chat-info">
+                            <div class="chat-name">Priya Sharma</div>
+                            <div class="chat-message">Can you share the notes?</div>
+                        </div>
+                        <div style="color: #888; font-size: 12px">15m</div>
+                    </div>
+                    <div class="chat-item" data-chat="rahul">
+                        <div class="chat-avatar">RV</div>
+                        <div class="chat-info">
+                            <div class="chat-name">Rahul Verma</div>
+                            <div class="chat-message">Thanks for the help!</div>
+                        </div>
+                        <div style="color: #888; font-size: 12px">1h</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chat-window-view">
+                <div class="chat-window-header">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <i class="bx bx-arrow-back back-to-chats"></i>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div class="chat-avatar" style="width: 45px; height: 45px; font-size: 16px;" id="chatAvatarHeader">AK</div>
+                            <div>
+                                <div style="font-weight: 600;" id="chatNameHeader">Amit Kumar</div>
+                                <div style="font-size: 12px; color: #10b981;">Online</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 20px; font-size: 22px; color: #888;">
+                        <i class="bx bx-phone"></i>
+                        <i class="bx bx-video"></i>
+                        <i class="bx bx-dots-vertical-rounded"></i>
+                    </div>
+                </div>
+                
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message">
+                        <div style="width: 35px; height: 35px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">AK</div>
+                        <div class="message-bubble">Hey! How are you?</div>
+                    </div>
+                    <div class="message sent">
+                        <div style="width: 35px; height: 35px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">PB</div>
+                        <div class="message-bubble">I'm good! What about you?</div>
+                    </div>
+                </div>
+                
+                <div class="chat-input-container">
+                    <input type="text" class="chat-input" id="chatInput" placeholder="Type a message...">
+                    <button class="send-btn" id="sendBtn"><i class="bx bx-send"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-content" id="profilePage">
+            <div class="profile-header-section">
+                <div class="profile-avatar-small">PB</div>
+                <h2>Prabhat Behera</h2>
+                <p style="color: #888; margin-bottom: 15px;">@Prabhat4a</p>
+                <button class="edit-profile-btn-main"><i class="bx bx-edit"></i> Edit Profile</button>
+            </div>
+        </div>
+
+        <div class="edit-modal" id="editModal">
+            <div class="edit-modal-content">
+                <div class="modal-header">
+                    <h2>Edit Profile</h2>
+                    <i class="bx bx-x" id="closeModal"></i>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="text" placeholder="Full Name" value="Prabhat Behera">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" placeholder="Username" value="@Prabhat4a">
+                    </div>
+                    <div class="form-group">
+                        <input type="email" placeholder="Email" value="prabhat@struvo.edu">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="cancel-btn" id="cancelBtn">Cancel</button>
+                    <button class="save-btn" id="saveBtn">Save</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item active" data-page="busPage">
+                <i class="bx bx-bus"></i>
+                <span>Bus</span>
+            </div>
+            <div class="nav-item" data-page="explorerPage">
+                <i class="bx bx-compass"></i>
+                <span>Explorer</span>
+            </div>
+            <div class="nav-item" data-page="chatPage">
+                <i class="bx bx-message-rounded-dots"></i>
+                <span>Chat</span>
+            </div>
+            <div class="nav-item" data-page="profilePage">
+                <i class="bx bx-user"></i>
+                <span>Profile</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auth toggle
+        const creatAcc = document.querySelector(".creat-acc");
+        const loginAcc = document.querySelector(".Login-acc");
+        const loginForm = document.querySelector(".objects");
+        const registerForm = document.querySelector(".objects-register");
+
+        creatAcc.addEventListener("click", () => {
+            loginForm.style.display = "none";
+            registerForm.style.display = "block";
+        });
+
+        loginAcc.addEventListener("click", () => {
+            registerForm.style.display = "none";
+            loginForm.style.display = "block";
+        });
+
+        // Login
+        document.getElementById("loginBtn").addEventListener("click", () => {
+            document.getElementById("authSection").style.display = "none";
+            document.getElementById("mainApp").style.display = "block";
+        });
+
+        // Navigation
+        document.querySelectorAll(".nav-item").forEach(item => {
+            item.addEventListener("click", () => {
+                document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+                item.classList.add("active");
+                document.querySelectorAll(".page-content").forEach(p => p.classList.remove("active"));
+                document.getElementById(item.getAttribute("data-page")).classList.add("active");
+            });
+        });
+
+        // Chat search functionality
+        const chatSearchInput = document.getElementById("chatSearchInput");
+        chatSearchInput.addEventListener("input", (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            document.querySelectorAll(".chat-item").forEach(item => {
+                const name = item.querySelector(".chat-name").textContent.toLowerCase();
+                const message = item.querySelector(".chat-message").textContent.toLowerCase();
+                if (name.includes(searchTerm) || message.includes(searchTerm)) {
+                    item.classList.remove("hidden");
+                } else {
+                    item.classList.add("hidden");
+                }
+            });
+        });
+
+        // Chat window
+        const chatListView = document.querySelector(".chat-list-view");
+        const chatWindowView = document.querySelector(".chat-window-view");
+        
+        document.querySelectorAll(".chat-item").forEach(item => {
+            item.addEventListener("click", () => {
+                const name = item.querySelector(".chat-name").textContent;
+                const avatar = item.querySelector(".chat-avatar").textContent;
+                document.getElementById("chatNameHeader").textContent = name;
+                document.getElementById("chatAvatarHeader").textContent = avatar;
+                chatListView.style.display = "none";
+                chatWindowView.style.display = "flex";
+            });
+        });
+
+        document.querySelector(".back-to-chats").addEventListener("click", () => {
+            chatWindowView.style.display = "none";
+            chatListView.style.display = "block";
+        });
+
+        // Send message
+        document.getElementById("sendBtn").addEventListener("click", () => {
+            const input = document.getElementById("chatInput");
+            const text = input.value.trim();
+            if (text) {
+                const msg = document.createElement("div");
+                msg.className = "message sent";
+                msg.innerHTML = `
+                    <div style="width: 35px; height: 35px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">PB</div>
+                    <div class="message-bubble">${text}</div>
+                `;
+                document.getElementById("chatMessages").appendChild(msg);
+                input.value = "";
+                document.getElementById("chatMessages").scrollTop = document.getElementById("chatMessages").scrollHeight;
+            }
+        });
+
+        document.getElementById("chatInput").addEventListener("keypress", (e) => {
+            if (e.key === "Enter") document.getElementById("sendBtn").click();
+        });
+
+        // Profile edit modal
+        const editModal = document.getElementById("editModal");
+        document.querySelector(".edit-profile-btn-main").addEventListener("click", () => {
+            editModal.classList.add("active");
+        });
+
+        document.getElementById("closeModal").addEventListener("click", () => {
+            editModal.classList.remove("active");
+        });
+
+        document.getElementById("cancelBtn").addEventListener("click", () => {
+            editModal.classList.remove("active");
+        });
+
+        document.getElementById("saveBtn").addEventListener("click", () => {
+            alert("Profile updated!");
+            editModal.classList.remove("active");
+        });
+    </script>
+</body>
+</html>
