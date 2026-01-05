@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>STRUVO - Login</title>
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: #0a0a0a;
+        color: #fff;
+        overflow-x: hidden;
+      }
+
+      .auth-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        gap: 20px;
+      }
+
+      #bg-video {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -2;
+      }
+
+      .video-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: -1;
+      }
+
+      .logo {
+        color: aliceblue;
+        user-select: none;
+        text-align: center;
+      }
+
+      .logo h1 {
+        font-size: 48px;
+        letter-spacing: 8px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .login-box {
+        background: transparent;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 0 30px black;
+        backdrop-filter: blur(10px);
+        width: 500px;
+        min-height: 300px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 20px;
+        padding: 40px;
+      }
+
+      .box-head h1,
+      .box-head-2 h1 {
+        text-align: center;
+        color: aliceblue;
+        margin-bottom: 30px;
+        font-size: 32px;
+      }
+
+      .objects,
+      .objects-register {
+        width: 100%;
+      }
+
+      .objects-register {
+        display: none;
+      }
+
+      .input-box {
+        margin: 15px auto;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .input-wrapper {
+        position: relative;
+        width: 100%;
+        display: flex;
+        align-items: center;
+      }
+
+      .input-box input {
+        padding: 12px 12px 12px 40px;
+        border-radius: 10px;
+        border: 2px solid transparent;
+        outline: none;
+        height: 45px;
+        width: 100%;
+        font-size: 15px;
+        background: rgba(255, 255, 255, 0.95);
+        transition: border-color 0.3s;
+      }
+
+      .input-box input.error {
+        border-color: #ef4444;
+      }
+
+      .input-box i {
+        position: absolute;
+        left: 12px;
+        color: #666;
+        font-size: 18px;
+      }
+
+      .error-message {
+        color: #ef4444;
+        font-size: 13px;
+        margin-top: 5px;
+        display: none;
+        align-self: flex-start;
+        font-weight: 500;
+      }
+
+      .error-message.show {
+        display: block;
+      }
+
+      @keyframes blinkRed {
+        0%,
+        100% {
+          color: aliceblue;
+        }
+        50% {
+          color: #ef4444;
+        }
+      }
+
+      .remember.blink-error {
+        animation: blinkRed 0.5s ease-in-out 3;
+      }
+
+      .remember.blink-error label {
+        color: #ef4444;
+      }
+
+      .login-button button,
+      .Register-button button {
+        width: 100%;
+        height: 45px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 10px;
+        border: none;
+        font-weight: 600;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 20px 0;
+        transition: 0.3s;
+      }
+
+      .login-button button:hover,
+      .Register-button button:hover {
+        transform: scale(1.02);
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      .google-login {
+        width: 100%;
+        height: 45px;
+        background: white;
+        color: #444;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        font-size: 15px;
+      }
+
+      .google-login:hover {
+        background: #f8f8f8;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .remember-forgot {
+        display: flex;
+        justify-content: space-between;
+        color: aliceblue;
+        font-size: 14px;
+        margin: 15px 0;
+      }
+
+      .remember-forgot a {
+        color: #a78bfa;
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .remember,
+      .account,
+      .have-account {
+        color: aliceblue;
+        text-align: center;
+        margin-top: 15px;
+        font-size: 14px;
+      }
+
+      .creat-acc,
+      .Login-acc {
+        color: #a78bfa;
+        text-decoration: none;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: 20px 0;
+        color: aliceblue;
+      }
+
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+      }
+
+      .divider span {
+        padding: 0 15px;
+        font-size: 14px;
+      }
+
+      @media (max-width: 768px) {
+        .login-box {
+          width: 90%;
+          padding: 30px 25px;
+        }
+        .logo h1 {
+          font-size: 36px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="auth-section" id="authSection">
+      <video autoplay muted loop id="bg-video">
+        <source
+          src="https://cdn.pixabay.com/video/2016/06/02/3617-168686041_large.mp4"
+          type="video/mp4"
+        />
+      </video>
+      <div class="video-overlay"></div>
+
+      <div class="logo">
+        <h1>STRUVO</h1>
+      </div>
+
+      <div class="login-box">
+        <div class="objects">
+          <div class="box-head">
+            <h1>Log in</h1>
+          </div>
+          <form id="loginForm">
+            <div class="input-box">
+              <div class="input-wrapper">
+                <i class="bx bx-envelope"></i>
+                <input
+                  type="email"
+                  id="loginEmail"
+                  placeholder="Enter your email"
+                />
+              </div>
+              <div class="error-message" id="emailError">
+                Please enter a valid email
+              </div>
+            </div>
+            <div class="input-box">
+              <div class="input-wrapper">
+                <i class="bx bx-lock"></i>
+                <input
+                  type="password"
+                  id="loginPassword"
+                  placeholder="Password"
+                />
+              </div>
+              <div class="error-message" id="passwordError">
+                Please enter your password
+              </div>
+            </div>
+            <div class="remember-forgot">
+              <label><input type="checkbox" /> Remember me</label>
+              <a href="#">Forgot password?</a>
+            </div>
+            <div class="login-button">
+              <button type="submit" id="loginBtn">Log in</button>
+            </div>
+            <div class="divider"><span>OR</span></div>
+            <button type="button" class="google-login">
+              Continue with Google
+            </button>
+            <div class="account">
+              <p>
+                Don't have an account?
+                <a href="#" class="creat-acc">Create an account</a>
+              </p>
+            </div>
+          </form>
+        </div>
+
+        <div class="objects-register">
+          <div class="box-head-2">
+            <h1>Register</h1>
+          </div>
+          <form id="registerForm">
+            <div class="input-box">
+              <div class="input-wrapper">
+                <i class="bx bx-envelope"></i>
+                <input
+                  type="email"
+                  id="registerEmail"
+                  placeholder="Enter your email"
+                />
+              </div>
+              <div class="error-message" id="registerEmailError">
+                Please enter a valid email
+              </div>
+            </div>
+            <div class="input-box">
+              <div class="input-wrapper">
+                <i class="bx bx-lock"></i>
+                <input
+                  type="password"
+                  id="registerPassword"
+                  placeholder="Password"
+                />
+              </div>
+              <div class="error-message" id="registerPasswordError">
+                Please enter your password
+              </div>
+            </div>
+            <div class="input-box">
+              <div class="input-wrapper">
+                <i class="bx bx-user"></i>
+                <input
+                  type="text"
+                  id="registerUsername"
+                  placeholder="Username"
+                />
+              </div>
+              <div class="error-message" id="registerUsernameError">
+                Please enter a username
+              </div>
+            </div>
+            <div class="remember">
+              <label
+                ><input type="checkbox" id="termsCheckbox" /> I agree with terms
+                and conditions</label
+              >
+              <div class="error-message" id="termsError">
+                You must agree to terms and conditions
+              </div>
+            </div>
+            <div class="Register-button">
+              <button type="submit">Register</button>
+            </div>
+            <div class="divider"><span>OR</span></div>
+            <button type="button" class="google-login">
+              Continue with Google
+            </button>
+            <div class="have-account">
+              <p>
+                Already have an account? <a href="#" class="Login-acc">Login</a>
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const loginForm = document.getElementById("loginForm");
+      const loginEmail = document.getElementById("loginEmail");
+      const loginPassword = document.getElementById("loginPassword");
+      const emailError = document.getElementById("emailError");
+      const passwordError = document.getElementById("passwordError");
+
+      const registerForm = document.getElementById("registerForm");
+      const registerEmail = document.getElementById("registerEmail");
+      const registerPassword = document.getElementById("registerPassword");
+      const registerUsername = document.getElementById("registerUsername");
+      const registerEmailError = document.getElementById("registerEmailError");
+      const registerPasswordError = document.getElementById(
+        "registerPasswordError"
+      );
+      const registerUsernameError = document.getElementById(
+        "registerUsernameError"
+      );
+      const termsCheckbox = document.getElementById("termsCheckbox");
+      const termsError = document.getElementById("termsError");
+      const rememberDiv = document.querySelector(".remember");
+
+      const creatAccBtn = document.querySelector(".creat-acc");
+      const loginAccBtn = document.querySelector(".Login-acc");
+      const objectsLogin = document.querySelector(".objects");
+      const objectsRegister = document.querySelector(".objects-register");
+
+      // Toggle between login and register
+      creatAccBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        objectsLogin.style.display = "none";
+        objectsRegister.style.display = "block";
+      });
+
+      loginAccBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        objectsRegister.style.display = "none";
+        objectsLogin.style.display = "block";
+      });
+
+      // Login form validation
+      loginForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        let isValid = true;
+
+        emailError.classList.remove("show");
+        passwordError.classList.remove("show");
+        loginEmail.classList.remove("error");
+        loginPassword.classList.remove("error");
+
+        if (!loginEmail.value.trim()) {
+          emailError.textContent = "Please enter your email";
+          emailError.classList.add("show");
+          loginEmail.classList.add("error");
+          isValid = false;
+        } else if (!validateEmail(loginEmail.value)) {
+          emailError.textContent = "Please enter a valid email address";
+          emailError.classList.add("show");
+          loginEmail.classList.add("error");
+          isValid = false;
+        }
+
+        if (!loginPassword.value.trim()) {
+          passwordError.textContent = "Please enter your password";
+          passwordError.classList.add("show");
+          loginPassword.classList.add("error");
+          isValid = false;
+        } else if (loginPassword.value.length < 6) {
+          passwordError.textContent = "Password must be at least 6 characters";
+          passwordError.classList.add("show");
+          loginPassword.classList.add("error");
+          isValid = false;
+        }
+
+        if (isValid) {
+          window.location.href = "app.html";
+        }
+      });
+
+      // Register form validation
+      registerForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        let isValid = true;
+
+        registerEmailError.classList.remove("show");
+        registerPasswordError.classList.remove("show");
+        registerUsernameError.classList.remove("show");
+        termsError.classList.remove("show");
+        registerEmail.classList.remove("error");
+        registerPassword.classList.remove("error");
+        registerUsername.classList.remove("error");
+
+        if (!registerEmail.value.trim()) {
+          registerEmailError.textContent = "Please enter your email";
+          registerEmailError.classList.add("show");
+          registerEmail.classList.add("error");
+          isValid = false;
+        } else if (!validateEmail(registerEmail.value)) {
+          registerEmailError.textContent = "Please enter a valid email address";
+          registerEmailError.classList.add("show");
+          registerEmail.classList.add("error");
+          isValid = false;
+        }
+
+        if (!registerPassword.value.trim()) {
+          registerPasswordError.textContent = "Please enter your password";
+          registerPasswordError.classList.add("show");
+          registerPassword.classList.add("error");
+          isValid = false;
+        } else if (registerPassword.value.length < 6) {
+          registerPasswordError.textContent =
+            "Password must be at least 6 characters";
+          registerPasswordError.classList.add("show");
+          registerPassword.classList.add("error");
+          isValid = false;
+        }
+
+        if (!registerUsername.value.trim()) {
+          registerUsernameError.textContent = "Please enter a username";
+          registerUsernameError.classList.add("show");
+          registerUsername.classList.add("error");
+          isValid = false;
+        } else {
+          const usernameValidation = validateUsername(registerUsername.value);
+          if (!usernameValidation.valid) {
+            registerUsernameError.textContent = usernameValidation.message;
+            registerUsernameError.classList.add("show");
+            registerUsername.classList.add("error");
+            isValid = false;
+          }
+        }
+
+        if (!termsCheckbox.checked) {
+          termsError.classList.add("show");
+          rememberDiv.classList.add("blink-error");
+          setTimeout(() => {
+            rememberDiv.classList.remove("blink-error");
+          }, 1500);
+          isValid = false;
+        }
+
+        if (isValid) {
+          window.location.href = "app.html";
+        }
+      });
+
+      function validateEmail(email) {
+        const emailRegex =
+          /^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|outlook\.com|hotmail\.com)$/;
+        return emailRegex.test(email);
+      }
+
+      function validateUsername(username) {
+        // Check if username starts with a letter
+        if (!/^[a-zA-Z]/.test(username)) {
+          return { valid: false, message: "Username must start with a letter" };
+        }
+
+        // Check for spaces
+        if (/\s/.test(username)) {
+          return { valid: false, message: "Username cannot contain spaces" };
+        }
+
+        // Check length (maximum 9 characters)
+        if (username.length > 9) {
+          return {
+            valid: false,
+            message: "Username must be maximum 9 characters",
+          };
+        }
+
+        // Check if username is empty
+        if (username.length === 0) {
+          return { valid: false, message: "Please enter a username" };
+        }
+
+        return { valid: true, message: "" };
+      }
+
+      loginEmail.addEventListener("input", function () {
+        emailError.classList.remove("show");
+        loginEmail.classList.remove("error");
+      });
+
+      loginPassword.addEventListener("input", function () {
+        passwordError.classList.remove("show");
+        loginPassword.classList.remove("error");
+      });
+
+      registerEmail.addEventListener("input", function () {
+        registerEmailError.classList.remove("show");
+        registerEmail.classList.remove("error");
+      });
+
+      registerPassword.addEventListener("input", function () {
+        registerPasswordError.classList.remove("show");
+        registerPassword.classList.remove("error");
+      });
+
+      registerUsername.addEventListener("input", function () {
+        registerUsernameError.classList.remove("show");
+        registerUsername.classList.remove("error");
+      });
+
+      termsCheckbox.addEventListener("change", function () {
+        termsError.classList.remove("show");
+        rememberDiv.classList.remove("blink-error");
+      });
+    </script>
+  </body>
+</html>

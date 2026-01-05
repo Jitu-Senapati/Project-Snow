@@ -1,0 +1,148 @@
+/* GLOBAL DARK THEME */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body {
+  background: #0a0a0a;
+  color: #fff;
+  padding: 20px;
+}
+
+/* HEADER & STATS */
+.profile-header-section {
+  padding-bottom: 20px;
+  border-bottom: 1px solid #222;
+}
+.profile-top-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+.profile-avatar-small {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-weight: bold;
+}
+.profile-stats-inline {
+  display: flex;
+  gap: 25px;
+}
+.stat-box {
+  text-align: center;
+}
+.stat-number {
+  font-size: 20px;
+  font-weight: bold;
+}
+.stat-text {
+  font-size: 13px;
+  color: #888;
+}
+.profile-username {
+  color: #888;
+  font-size: 14px;
+}
+.profile-bio {
+  color: #ccc;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+/* ACADEMIC CARDS */
+.info-section {
+  padding-top: 20px;
+}
+.section-title {
+  font-size: 18px;
+  color: #a78bfa;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+.info-card {
+  background: #1a1a1a;
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #333;
+}
+.info-card-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.info-card-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+.info-card-title i {
+  color: #a78bfa;
+  font-size: 20px;
+}
+
+.cgpa-badge {
+  padding: 5px 15px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* COMBO BOX STYLING */
+.combo-container {
+  margin: 10px 0;
+}
+.sem-combo-box {
+  width: 100%;
+  padding: 12px;
+  background: #252525;
+  border: 1px solid #444;
+  color: white;
+  border-radius: 10px;
+  outline: none;
+  font-size: 15px;
+  cursor: pointer;
+  appearance: none; /* Removes default arrow */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23a78bfa%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px top 50%;
+  background-size: 12px auto;
+}
+
+.subject-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  background: #252525;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+.grade-a {
+  color: #10b981;
+  font-weight: bold;
+}
+.grade-b {
+  color: #f59e0b;
+  font-weight: bold;
+}
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+.info-label {
+  color: #888;
+}

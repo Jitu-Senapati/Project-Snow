@@ -1,0 +1,75 @@
+/* Isolated Explorer Styles */
+body {
+  background: #0a0a0a;
+  font-family: "Segoe UI", sans-serif;
+  padding: 20px;
+}
+
+.page-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.search-bar {
+  background: #1a1a1a;
+  padding: 12px 20px;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 25px;
+  border: 1px solid #333;
+}
+
+.search-bar input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  width: 100%;
+  font-size: 15px;
+}
+
+.search-bar i {
+  color: #666;
+  font-size: 20px;
+}
+
+.event-card {
+  background: #1a1a1a;
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #333;
+  transition: 0.3s;
+}
+
+.event-card:hover {
+  border-color: #a78bfa;
+}
+
+.event-tag {
+  display: inline-block;
+  background: #a78bfa;
+  color: white;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.event-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.event-date {
+  color: #888;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}

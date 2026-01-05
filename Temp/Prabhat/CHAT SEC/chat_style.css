@@ -1,0 +1,89 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body {
+  background: #0a0a0a;
+  padding: 20px;
+}
+
+.search-bar {
+  background: #1a1a1a;
+  padding: 12px 20px;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 25px;
+  border: 1px solid #333;
+}
+
+.search-bar input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  width: 100%;
+  font-size: 15px;
+}
+
+.search-bar input::placeholder {
+  color: #666;
+}
+
+.search-bar i {
+  color: #a78bfa; /* Matching the purple gradient theme */
+  font-size: 20px;
+}
+
+.chat-list {
+  background: #1a1a1a;
+  border-radius: 15px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+
+.chat-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 20px;
+  border-bottom: 1px solid #333;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.chat-item:hover {
+  background: #252525;
+}
+
+.chat-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  color: white;
+}
+
+.chat-info {
+  flex: 1;
+}
+
+.chat-name {
+  font-weight: 600;
+  color: white;
+  margin-bottom: 5px;
+}
+
+.chat-message {
+  color: #888;
+  font-size: 14px;
+}

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>STRUVO - Login</title>
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="login.css" />
+  </head>
+  <body>
+    <div class="auth-section" id="authSection">
+      <video autoplay muted loop id="bg-video">
+        <source
+          src="https://cdn.pixabay.com/video/2016/06/02/3617-168686041_large.mp4"
+          type="video/mp4"
+        />
+      </video>
+      <div class="video-overlay"></div>
+
+      <div class="logo">
+        <h1>STRUVO</h1>
+      </div>
+
+      <div class="login-box">
+        <div class="objects">
+          <div class="box-head">
+            <h1>Log in</h1>
+          </div>
+          <form id="loginForm">
+            <div class="input-box">
+              <div class="input-wrapper">
+                <i class="bx bx-envelope"></i>
+                <input
+                  type="email"
+                  id="loginEmail"
+                  placeholder="Enter your email"
+                />
+              </div>
+              <div class="error-message" id="emailError">
+                Please enter a valid email
+              </div>
+            </div>
+            <div class="input-box">
+              <div class="input-wrapper">
+                <i class="bx bx-lock"></i>
+                <input
+                  type="password"
+                  id="loginPassword"
+                  placeholder="Password"
+                />
+              </div>
+              <div class="error-message" id="passwordError">
+                Please enter your password
+              </div>
+            </div>
+            <div class="remember-forgot">
+              <label><input type="checkbox" /> Remember me</label>
+              <a href="#">Forgot password?</a>
+            </div>
+            <div class="login-button">
+              <button type="submit" id="loginBtn">Log in</button>
+            </div>
+            <div class="divider"><span>OR</span></div>
+            <button type="button" class="google-login">
+              Continue with Google
+            </button>
+            <div class="account">
+              <p>
+                Don't have an account?
+                <a href="#" class="creat-acc">Create an account</a>
+              </p>
+            </div>
+          </form>
+        </div>
+
+        <div class="objects-register">
+          <div class="box-head-2">
+            <h1>Register</h1>
+          </div>
+          <form id="registerForm">
+            <div class="input-box">
+              <div class="input-wrapper">
+                <i class="bx bx-envelope"></i>
+                <input
+                  type="email"
+                  id="registerEmail"
+                  placeholder="Enter your email"
+                />
+              </div>
+              <div class="error-message" id="registerEmailError">
+                Please enter a valid email
+              </div>
+            </div>
+            <div class="input-box">
+              <div class="input-wrapper">
+                <i class="bx bx-lock"></i>
+                <input
+                  type="password"
+                  id="registerPassword"
+                  placeholder="Password"
+                />
+              </div>
+              <div class="error-message" id="registerPasswordError">
+                Please enter your password
+              </div>
+            </div>
+            <div class="input-box">
+              <div class="input-wrapper">
+                <i class="bx bx-user"></i>
+                <input
+                  type="text"
+                  id="registerUsername"
+                  placeholder="Username"
+                />
+              </div>
+              <div class="error-message" id="registerUsernameError">
+                Please enter a username
+              </div>
+            </div>
+            <div class="remember">
+              <label
+                ><input type="checkbox" id="termsCheckbox" /> I agree with terms
+                and conditions</label
+              >
+              <div class="error-message" id="termsError">
+                You must agree to terms and conditions
+              </div>
+            </div>
+            <div class="Register-button">
+              <button type="submit">Register</button>
+            </div>
+            <div class="divider"><span>OR</span></div>
+            <button type="button" class="google-login">
+              Continue with Google
+            </button>
+            <div class="have-account">
+              <p>
+                Already have an account? <a href="#" class="Login-acc">Login</a>
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="login.js"></script>
+  </body>
+</html>
