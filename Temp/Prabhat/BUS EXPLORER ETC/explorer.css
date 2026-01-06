@@ -36,6 +36,16 @@ body {
   gap: 20px;
   font-size: 24px;
 }
+
+.header-icons i {
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.header-icons i:hover {
+  color: #a78bfa;
+}
+
 .page-content {
   display: none;
   padding: 20px;
