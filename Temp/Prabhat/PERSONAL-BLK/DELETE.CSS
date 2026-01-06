@@ -92,24 +92,88 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+}
+
+.input-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .input-box input {
-  padding: 12px 12px 12px 40px;
+  padding: 12px 45px 12px 40px;
   border-radius: 10px;
-  border: none;
+  border: 2px solid transparent;
   outline: none;
   height: 45px;
   width: 100%;
   font-size: 15px;
   background: rgba(255, 255, 255, 0.95);
+  transition: border-color 0.3s;
+}
+
+.input-box input.error {
+  border-color: #ef4444;
 }
 
 .input-box i {
   position: absolute;
   left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
   color: #666;
   font-size: 18px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px !important;
+  left: auto !important;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+  font-size: 20px;
+  cursor: pointer !important;
+  transition: color 0.3s;
+  z-index: 100;
+  pointer-events: auto !important;
+}
+
+.toggle-password:hover {
+  color: #a78bfa;
+}
+
+.error-message {
+  color: #ef4444;
+  font-size: 13px;
+  margin-top: 5px;
+  display: none;
+  align-self: flex-start;
+  font-weight: 500;
+}
+
+.error-message.show {
+  display: block;
+}
+
+@keyframes blinkRed {
+  0%,
+  100% {
+    color: aliceblue;
+  }
+  50% {
+    color: #ef4444;
+  }
+}
+
+.remember.blink-error {
+  animation: blinkRed 0.5s ease-in-out 3;
+}
+
+.remember.blink-error label {
+  color: #ef4444;
 }
 
 .login-button button,
@@ -151,7 +215,8 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.remember-forgot {
+.remember-forgot,
+.remember {
   display: flex;
   justify-content: space-between;
   color: aliceblue;
@@ -159,10 +224,13 @@ body {
   margin: 15px 0;
 }
 
-.remember-forgot a {
+.remember-forgot a,
+.creat-acc,
+.Login-acc {
   color: #a78bfa;
   text-decoration: none;
   font-weight: 500;
+  cursor: pointer;
 }
 
 .remember,
@@ -172,14 +240,6 @@ body {
   text-align: center;
   margin-top: 15px;
   font-size: 14px;
-}
-
-.creat-acc,
-.Login-acc {
-  color: #a78bfa;
-  text-decoration: none;
-  font-weight: 600;
-  cursor: pointer;
 }
 
 .divider {
