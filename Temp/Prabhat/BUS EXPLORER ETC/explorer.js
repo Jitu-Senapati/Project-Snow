@@ -73,3 +73,59 @@ toggleViewBtn.addEventListener("click", () => {
     : "View as Me";
 });
 appLogo.appendChild(toggleViewBtn);
+
+document.addEventListener("DOMContentLoaded", function () {
+  // ===== ELEMENTS =====
+  const menuToggle = document.getElementById("menuToggle");
+  const menuPanel = document.getElementById("menuPanel");
+
+  const notificationToggle = document.getElementById("notificationToggle");
+  const notificationPanel = document.getElementById("notificationPanel");
+
+  // ===== MENU TOGGLE =====
+  if (menuToggle && menuPanel) {
+    menuToggle.addEventListener("click", function (e) {
+      e.stopPropagation();
+
+      // close notification if open
+      if (notificationPanel) {
+        notificationPanel.classList.remove("active");
+      }
+
+      menuPanel.classList.toggle("active");
+    });
+  }
+
+  // ===== NOTIFICATION TOGGLE =====
+  if (notificationToggle && notificationPanel) {
+    notificationToggle.addEventListener("click", function (e) {
+      e.stopPropagation();
+
+      // close menu if open
+      if (menuPanel) {
+        menuPanel.classList.remove("active");
+      }
+
+      notificationPanel.classList.toggle("active");
+    });
+  }
+
+  // ===== CLICK OUTSIDE CLOSE =====
+  document.addEventListener("click", function (e) {
+    if (
+      menuPanel &&
+      !menuPanel.contains(e.target) &&
+      !menuToggle.contains(e.target)
+    ) {
+      menuPanel.classList.remove("active");
+    }
+
+    if (
+      notificationPanel &&
+      !notificationPanel.contains(e.target) &&
+      !notificationToggle.contains(e.target)
+    ) {
+      notificationPanel.classList.remove("active");
+    }
+  });
+});

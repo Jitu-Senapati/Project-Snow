@@ -19,7 +19,8 @@
       <div class="video-overlay"></div>
 
       <div class="logo">
-        <h1>STRUVO</h1>
+        <img src="logo.png" alt="STRUVO" class="logo-icon" />
+        <h1>STUVO</h1>
       </div>
 
       <div class="login-box">
@@ -49,6 +50,10 @@
                   id="loginPassword"
                   placeholder="Password"
                 />
+                <i
+                  class="bx bx-hide toggle-password"
+                  id="toggleLoginPassword"
+                ></i>
               </div>
               <div class="error-message" id="passwordError">
                 Please enter your password
@@ -100,6 +105,10 @@
                   id="registerPassword"
                   placeholder="Password"
                 />
+                <i
+                  class="bx bx-hide toggle-password"
+                  id="toggleRegisterPassword"
+                ></i>
               </div>
               <div class="error-message" id="registerPasswordError">
                 Please enter your password
@@ -123,9 +132,6 @@
                 ><input type="checkbox" id="termsCheckbox" /> I agree with terms
                 and conditions</label
               >
-              <div class="error-message" id="termsError">
-                You must agree to terms and conditions
-              </div>
             </div>
             <div class="Register-button">
               <button type="submit">Register</button>

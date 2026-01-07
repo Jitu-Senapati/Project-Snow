@@ -13,11 +13,50 @@ const registerPasswordError = document.getElementById("registerPasswordError");
 const registerUsernameError = document.getElementById("registerUsernameError");
 const termsCheckbox = document.getElementById("termsCheckbox");
 const termsError = document.getElementById("termsError");
+const rememberDiv = document.querySelector(".remember");
 
 const creatAccBtn = document.querySelector(".creat-acc");
 const loginAccBtn = document.querySelector(".Login-acc");
 const objectsLogin = document.querySelector(".objects");
 const objectsRegister = document.querySelector(".objects-register");
+
+// Password toggle elements
+const toggleLoginPassword = document.getElementById("toggleLoginPassword");
+const toggleRegisterPassword = document.getElementById(
+  "toggleRegisterPassword"
+);
+
+// Toggle password visibility for login
+toggleLoginPassword.addEventListener("click", function () {
+  const type =
+    loginPassword.getAttribute("type") === "password" ? "text" : "password";
+  loginPassword.setAttribute("type", type);
+
+  // Toggle eye icon
+  if (type === "password") {
+    this.classList.remove("bx-show");
+    this.classList.add("bx-hide");
+  } else {
+    this.classList.remove("bx-hide");
+    this.classList.add("bx-show");
+  }
+});
+
+// Toggle password visibility for register
+toggleRegisterPassword.addEventListener("click", function () {
+  const type =
+    registerPassword.getAttribute("type") === "password" ? "text" : "password";
+  registerPassword.setAttribute("type", type);
+
+  // Toggle eye icon
+  if (type === "password") {
+    this.classList.remove("bx-show");
+    this.classList.add("bx-hide");
+  } else {
+    this.classList.remove("bx-hide");
+    this.classList.add("bx-show");
+  }
+});
 
 // Toggle between login and register
 creatAccBtn.addEventListener("click", function (e) {
@@ -143,6 +182,10 @@ registerForm.addEventListener("submit", function (e) {
 
   if (!termsCheckbox.checked) {
     termsError.classList.add("show");
+    rememberDiv.classList.add("blink-error");
+    setTimeout(() => {
+      rememberDiv.classList.remove("blink-error");
+    }, 1500);
     isValid = false;
   }
 
@@ -162,4 +205,9 @@ registerForm.addEventListener("submit", function (e) {
     const err = this.parentElement.nextElementSibling;
     if (err) err.classList.remove("show");
   });
+});
+
+termsCheckbox.addEventListener("change", function () {
+  termsError.classList.remove("show");
+  rememberDiv.classList.remove("blink-error");
 });

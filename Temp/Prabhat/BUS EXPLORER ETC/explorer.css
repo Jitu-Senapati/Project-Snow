@@ -26,10 +26,20 @@ body {
 .app-logo {
   font-size: 24px;
   font-weight: bold;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: white;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing: 3px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-logo-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
 }
 .header-icons {
   display: flex;
@@ -295,4 +305,160 @@ body {
   padding: 10px;
   border-radius: 8px;
   cursor: pointer;
+}
+/* ===============================
+   HEADER DROPDOWN MENU (STEP 2)
+================================ */
+.menu-panel {
+  position: fixed;
+  top: 65px; /* just below header */
+  right: 15px;
+  width: 200px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 12px;
+  z-index: 999;
+
+  /* hidden state */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.25s ease;
+}
+
+.menu-panel.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 15px;
+  font-size: 14px;
+  cursor: pointer;
+  border-bottom: 1px solid #2a2a2a;
+  color: #ddd;
+}
+
+.menu-item i {
+  font-size: 18px;
+}
+
+.menu-item:hover {
+  background: #2a2a2a;
+}
+
+.menu-item.logout {
+  color: #ef4444;
+  border-bottom: none;
+}
+
+/* ===============================
+   NOTIFICATION DROPDOWN (STEP 2)
+================================ */
+
+.notification-panel {
+  position: fixed;
+  top: 65px; /* just below header */
+  right: 70px; /* slightly left of menu */
+  width: 300px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 14px;
+  z-index: 998;
+
+  /* hidden state */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-12px);
+  transition: all 0.25s ease;
+}
+
+.notification-panel.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.notification-item {
+  display: flex;
+  gap: 12px;
+  padding: 14px;
+  border-bottom: 1px solid #2a2a2a;
+  cursor: pointer;
+}
+
+.notification-item i {
+  font-size: 22px;
+  color: #a78bfa;
+  margin-top: 2px;
+}
+
+.notification-text strong {
+  font-size: 14px;
+  color: #fff;
+}
+
+.notification-text p {
+  font-size: 12px;
+  color: #aaa;
+  margin-top: 3px;
+}
+
+.notification-item:hover {
+  background: #2a2a2a;
+}
+
+.notification-footer {
+  padding: 12px;
+  text-align: center;
+  font-size: 13px;
+  color: #a78bfa;
+  cursor: pointer;
+}
+
+.notification-footer:hover {
+  background: #252525;
+}
+
+/* ===============================
+   MOBILE RESPONSIVE FIXES
+================================ */
+@media (max-width: 768px) {
+  /* Header icons spacing */
+  .header-icons {
+    gap: 14px;
+    font-size: 22px;
+  }
+
+  /* Dropdown panels */
+  .menu-panel,
+  .notification-panel {
+    width: calc(100% - 30px);
+    right: 15px;
+    left: 15px;
+    border-radius: 16px;
+  }
+
+  /* Notification text smaller */
+  .notification-text strong {
+    font-size: 13px;
+  }
+
+  .notification-text p {
+    font-size: 11px;
+  }
+
+  /* Page content padding for bottom nav */
+  .page-content {
+    padding-bottom: 90px;
+  }
+
+  /* Bottom nav icon size */
+  .bottom-nav i {
+    font-size: 22px;
+  }
 }

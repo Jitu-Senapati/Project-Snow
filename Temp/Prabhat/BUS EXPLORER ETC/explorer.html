@@ -13,11 +13,66 @@
   <body>
     <div class="main-app" id="mainApp" style="display: block">
       <div class="app-header">
-        <div class="app-logo">STRUVO</div>
+        <div class="app-logo">
+          <img src="logo.png" alt="STRUVO" class="header-logo-icon" />
+          STRUVO
+        </div>
         <div class="header-icons">
-          <i class="bx bx-search"></i>
-          <i class="bx bx-bell"></i>
-          <i class="bx bx-menu"></i>
+          <i class="bx bx-bell" id="notificationToggle"></i>
+
+          <i class="bx bx-menu" id="menuToggle"></i>
+        </div>
+
+        <!-- NOTIFICATION DROPDOWN -->
+        <div class="notification-panel" id="notificationPanel">
+          <div class="notification-item">
+            <i class="bx bx-bus"></i>
+            <div class="notification-text">
+              <strong>Bus #101</strong>
+              <p>Arriving in 5 minutes</p>
+            </div>
+          </div>
+
+          <div class="notification-item">
+            <i class="bx bx-calendar"></i>
+            <div class="notification-text">
+              <strong>New Event</strong>
+              <p>Tech Fest starts tomorrow</p>
+            </div>
+          </div>
+
+          <div class="notification-item">
+            <i class="bx bx-book"></i>
+            <div class="notification-text">
+              <strong>Attendance Updated</strong>
+              <p>Your attendance has been updated</p>
+            </div>
+          </div>
+
+          <div class="notification-footer">View all notifications</div>
+        </div>
+
+        <!-- HEADER DROPDOWN MENU -->
+        <div class="menu-panel" id="menuPanel">
+          <div class="menu-item" id="settingsBtn">
+            <i class="bx bx-cog"></i>
+            <span>Settings</span>
+          </div>
+
+          <div class="menu-item" id="feedbackBtn">
+            <i class="bx bx-message-dots"></i>
+            <span>Feedback</span>
+          </div>
+
+          <div class="menu-item" id="helpBtn">
+            <i class="bx bx-help-circle"></i>
+            <span>Help</span>
+          </div>
+
+          <div class="menu-item logout" id="logoutBtn">
+            <i class="bx bx-log-out"></i>
+            <span>Logout</span>
+          </div>
         </div>
       </div>
 
