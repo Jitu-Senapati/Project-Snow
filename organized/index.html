@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Coming Soon...</title>
+    <style>
+        :root{--bg:#0b1220;--accent:#7c3aed}
+        *{box-sizing:border-box}
+        html,body{height:100%}
+        body{
+            margin:0;
+            font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+            background:linear-gradient(135deg,#071025 var(--bg),#07172b 80%);
+            color:#e6eef8;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:24px;
+        }
+        .card{
+            width:100%;
+            max-width:720px;
+            background:rgba(255,255,255,0.03);
+            border-radius:12px;
+            padding:32px;
+            text-align:center;
+            box-shadow:0 8px 30px rgba(2,6,23,0.6);
+        }
+        .brand{font-weight:700;color:var(--accent);margin-bottom:12px}
+        .spinner{
+            width:48px;height:48px;margin:0 auto 18px;border-radius:50%;
+            border:4px solid rgba(255,255,255,0.06);border-top-color:var(--accent);
+            animation:spin 1s linear infinite;
+        }
+        @keyframes spin{to{transform:rotate(360deg)}}
+        h1{margin:0 0 8px;font-size:clamp(1.25rem,2.8vw,2rem)}
+        p{margin:0;color:#bcd0e8}
+        .small{margin-top:14px;font-size:.9rem;color:#98a6bf}
+    </style>
+</head>
+<body>
+    <div class="card" role="status" aria-live="polite">
+        <div class="brand">StuVo Project</div>
+        <div class="spinner" aria-hidden="true"></div>
+        <h1>The ap will be deployed soon...</h1>
+        <p class="small">Thanks for your patience — check back later.</p>
+    </div>
+</body>
+</html>
