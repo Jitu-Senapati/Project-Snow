@@ -1,131 +1,241 @@
-// Navigation Logic
-const navItems = document.querySelectorAll(".nav-item");
-const pages = document.querySelectorAll(".page-content");
+const loginForm = document.getElementById("loginForm");
+const loginEmail = document.getElementById("loginEmail");
+const loginPassword = document.getElementById("loginPassword");
+const emailError = document.getElementById("emailError");
+const passwordError = document.getElementById("passwordError");
 
-navItems.forEach((item) => {
-  item.addEventListener("click", () => {
-    const targetPage = item.getAttribute("data-page");
-    navItems.forEach((nav) => nav.classList.remove("active"));
-    item.classList.add("active");
-    pages.forEach((page) => page.classList.remove("active"));
-    document.getElementById(targetPage).classList.add("active");
+const registerForm = document.getElementById("registerForm");
+const registerEmail = document.getElementById("registerEmail");
+const registerPassword = document.getElementById("registerPassword");
+const registerUsername = document.getElementById("registerUsername");
+const registerEmailError = document.getElementById("registerEmailError");
+const registerPasswordError = document.getElementById("registerPasswordError");
+const registerUsernameError = document.getElementById("registerUsernameError");
+const termsCheckbox = document.getElementById("termsCheckbox");
+const termsError = document.getElementById("termsError");
+const rememberDiv = document.querySelector(".remember");
+
+const creatAccBtn = document.querySelector(".creat-acc");
+const loginAccBtn = document.querySelector(".Login-acc");
+const objectsLogin = document.querySelector(".objects");
+const objectsRegister = document.querySelector(".objects-register");
+
+const loginBtn = document.getElementById("loginBtn");
+
+function setLoading(btn, text) {
+  btn.disabled = true;
+  btn.dataset.oldText = btn.innerText;
+  btn.innerText = text;
+}
+
+function clearLoading(btn) {
+  btn.disabled = false;
+  btn.innerText = btn.dataset.oldText;
+}
+
+// Password toggle elements
+const toggleLoginPassword = document.getElementById("toggleLoginPassword");
+const toggleRegisterPassword = document.getElementById(
+  "toggleRegisterPassword"
+);
+
+// Toggle password visibility for login
+toggleLoginPassword.addEventListener("click", function () {
+  const type =
+    loginPassword.getAttribute("type") === "password" ? "text" : "password";
+  loginPassword.setAttribute("type", type);
+
+  // Toggle eye icon
+  if (type === "password") {
+    this.classList.remove("bx-show");
+    this.classList.add("bx-hide");
+  } else {
+    this.classList.remove("bx-hide");
+    this.classList.add("bx-show");
+  }
+});
+
+// Toggle password visibility for register
+toggleRegisterPassword.addEventListener("click", function () {
+  const type =
+    registerPassword.getAttribute("type") === "password" ? "text" : "password";
+  registerPassword.setAttribute("type", type);
+
+  // Toggle eye icon
+  if (type === "password") {
+    this.classList.remove("bx-show");
+    this.classList.add("bx-hide");
+  } else {
+    this.classList.remove("bx-hide");
+    this.classList.add("bx-show");
+  }
+});
+
+function resetForm(form) {
+  form.reset();
+  form
+    .querySelectorAll(".error-message")
+    .forEach((e) => e.classList.remove("show"));
+  form.querySelectorAll("input").forEach((i) => i.classList.remove("error"));
+}
+
+// Toggle between login and register
+creatAccBtn.addEventListener("click", function (e) {
+  e.preventDefault();
+  resetForm(loginForm);
+  objectsLogin.style.display = "none";
+  objectsRegister.style.display = "block";
+});
+
+loginAccBtn.addEventListener("click", function (e) {
+  e.preventDefault();
+  resetForm(registerForm);
+  objectsRegister.style.display = "none";
+  objectsLogin.style.display = "block";
+});
+
+// Helper: Email Validation
+function validateEmail(email) {
+  const emailRegex =
+    /^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|outlook\.com|hotmail\.com)$/;
+  return emailRegex.test(email);
+}
+
+// Helper: Username Validation
+function validateUsername(username) {
+  if (!/^[a-zA-Z]/.test(username)) {
+    return { valid: false, message: "Username must start with a letter" };
+  }
+  if (/\s/.test(username)) {
+    return { valid: false, message: "Username cannot contain spaces" };
+  }
+  if (username.length > 9) {
+    return { valid: false, message: "Username must be maximum 9 characters" };
+  }
+  if (username.length === 0) {
+    return { valid: false, message: "Please enter a username" };
+  }
+  return { valid: true, message: "" };
+}
+
+// Login form validation
+loginForm.addEventListener("submit", function (e) {
+  e.preventDefault();
+  let isValid = true;
+
+  emailError.classList.remove("show");
+  passwordError.classList.remove("show");
+  loginEmail.classList.remove("error");
+  loginPassword.classList.remove("error");
+
+  if (!loginEmail.value.trim()) {
+    emailError.textContent = "Please enter your email";
+    emailError.classList.add("show");
+    loginEmail.classList.add("error");
+    isValid = false;
+  } else if (!validateEmail(loginEmail.value)) {
+    emailError.textContent = "Please enter a valid email address";
+    emailError.classList.add("show");
+    loginEmail.classList.add("error");
+    isValid = false;
+  }
+
+  if (!loginPassword.value.trim()) {
+    passwordError.textContent = "Please enter your password";
+    passwordError.classList.add("show");
+    loginPassword.classList.add("error");
+    isValid = false;
+  } else if (loginPassword.value.length < 6) {
+    passwordError.textContent = "Password must be at least 6 characters";
+    passwordError.classList.add("show");
+    loginPassword.classList.add("error");
+    isValid = false;
+  }
+
+  if (isValid) {
+    setLoading(loginBtn, "Logging in...");
+    setTimeout(() => {
+      window.location.href = "app.html";
+    }, 1200);
+  }
+});
+
+// Register form validation
+registerForm.addEventListener("submit", function (e) {
+  e.preventDefault();
+  let isValid = true;
+
+  [
+    registerEmailError,
+    registerPasswordError,
+    registerUsernameError,
+    termsError,
+  ].forEach((err) => err.classList.remove("show"));
+  [registerEmail, registerPassword, registerUsername].forEach((inp) =>
+    inp.classList.remove("error")
+  );
+
+  if (!registerEmail.value.trim()) {
+    registerEmailError.textContent = "Please enter your email";
+    registerEmailError.classList.add("show");
+    registerEmail.classList.add("error");
+    isValid = false;
+  } else if (!validateEmail(registerEmail.value)) {
+    registerEmailError.textContent = "Please enter a valid email address";
+    registerEmailError.classList.add("show");
+    registerEmail.classList.add("error");
+    isValid = false;
+  }
+
+  if (!registerPassword.value.trim()) {
+    registerPasswordError.textContent = "Please enter your password";
+    registerPasswordError.classList.add("show");
+    registerPassword.classList.add("error");
+    isValid = false;
+  } else if (registerPassword.value.length < 6) {
+    registerPasswordError.textContent =
+      "Password must be at least 6 characters";
+    registerPasswordError.classList.add("show");
+    registerPassword.classList.add("error");
+    isValid = false;
+  }
+
+  const userCheck = validateUsername(registerUsername.value);
+  if (!userCheck.valid) {
+    registerUsernameError.textContent = userCheck.message;
+    registerUsernameError.classList.add("show");
+    registerUsername.classList.add("error");
+    isValid = false;
+  }
+
+  if (!termsCheckbox.checked) {
+    termsError.classList.add("show");
+    rememberDiv.classList.add("blink-error");
+    setTimeout(() => {
+      rememberDiv.classList.remove("blink-error");
+    }, 1500);
+    isValid = false;
+  }
+
+  if (isValid) window.location.href = "app.html";
+});
+
+// Clear errors on input
+[
+  loginEmail,
+  loginPassword,
+  registerEmail,
+  registerPassword,
+  registerUsername,
+].forEach((el) => {
+  el.addEventListener("input", function () {
+    this.classList.remove("error");
+    const err = this.parentElement.nextElementSibling;
+    if (err) err.classList.remove("show");
   });
 });
 
-// Profile Modal Logic
-const editModal = document.getElementById("editModal");
-const editProfileBtn = document.querySelector(".edit-profile-btn-main");
-const closeModal = document.getElementById("closeModal");
-const cancelBtn = document.getElementById("cancelBtn");
-const saveBtn = document.getElementById("saveBtn");
-
-if (editProfileBtn) {
-  editProfileBtn.addEventListener("click", () =>
-    editModal.classList.add("active")
-  );
-}
-if (closeModal) {
-  closeModal.addEventListener("click", () =>
-    editModal.classList.remove("active")
-  );
-}
-if (cancelBtn) {
-  cancelBtn.addEventListener("click", () =>
-    editModal.classList.remove("active")
-  );
-}
-if (saveBtn) {
-  saveBtn.addEventListener("click", () => {
-    alert("Profile updated successfully!");
-    editModal.classList.remove("active");
-  });
-}
-
-// Follow Button Logic
-const followBtn = document.getElementById("followBtn");
-let isFollowing = false;
-if (followBtn) {
-  followBtn.addEventListener("click", () => {
-    isFollowing = !isFollowing;
-    followBtn.innerHTML = isFollowing
-      ? '<i class="bx bx-check"></i> Following'
-      : '<i class="bx bx-plus"></i> Follow';
-    followBtn.style.background = isFollowing ? "#2a2a2a" : "#a78bfa";
-  });
-}
-
-// Demo View Toggle (From your original code)
-const appLogo = document.querySelector(".app-logo");
-const toggleViewBtn = document.createElement("button");
-toggleViewBtn.textContent = "View as Others";
-toggleViewBtn.style.cssText =
-  "padding: 5px 10px; background: #a78bfa; border: none; border-radius: 5px; color: white; cursor: pointer; font-size: 10px; margin-left: 10px;";
-
-let viewingOwnProfile = true;
-toggleViewBtn.addEventListener("click", () => {
-  viewingOwnProfile = !viewingOwnProfile;
-  const ownButtons = document.querySelector(".own-profile");
-  const otherButtons = document.querySelector(".other-profile");
-  ownButtons.style.display = viewingOwnProfile ? "flex" : "none";
-  otherButtons.style.display = viewingOwnProfile ? "none" : "flex";
-  toggleViewBtn.textContent = viewingOwnProfile
-    ? "View as Others"
-    : "View as Me";
-});
-appLogo.appendChild(toggleViewBtn);
-
-document.addEventListener("DOMContentLoaded", function () {
-  // ===== ELEMENTS =====
-  const menuToggle = document.getElementById("menuToggle");
-  const menuPanel = document.getElementById("menuPanel");
-
-  const notificationToggle = document.getElementById("notificationToggle");
-  const notificationPanel = document.getElementById("notificationPanel");
-
-  // ===== MENU TOGGLE =====
-  if (menuToggle && menuPanel) {
-    menuToggle.addEventListener("click", function (e) {
-      e.stopPropagation();
-
-      // close notification if open
-      if (notificationPanel) {
-        notificationPanel.classList.remove("active");
-      }
-
-      menuPanel.classList.toggle("active");
-    });
-  }
-
-  // ===== NOTIFICATION TOGGLE =====
-  if (notificationToggle && notificationPanel) {
-    notificationToggle.addEventListener("click", function (e) {
-      e.stopPropagation();
-
-      // close menu if open
-      if (menuPanel) {
-        menuPanel.classList.remove("active");
-      }
-
-      notificationPanel.classList.toggle("active");
-    });
-  }
-
-  // ===== CLICK OUTSIDE CLOSE =====
-  document.addEventListener("click", function (e) {
-    if (
-      menuPanel &&
-      !menuPanel.contains(e.target) &&
-      !menuToggle.contains(e.target)
-    ) {
-      menuPanel.classList.remove("active");
-    }
-
-    if (
-      notificationPanel &&
-      !notificationPanel.contains(e.target) &&
-      !notificationToggle.contains(e.target)
-    ) {
-      notificationPanel.classList.remove("active");
-    }
-  });
+termsCheckbox.addEventListener("change", function () {
+  termsError.classList.remove("show");
+  rememberDiv.classList.remove("blink-error");
 });

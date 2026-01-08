@@ -1,464 +1,299 @@
-/* Core Styling from original code */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
+
 body {
   background: #0a0a0a;
   color: #fff;
   overflow-x: hidden;
 }
 
-/* Main App Layout */
-.app-header {
-  background: #000;
-  padding: 15px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #222;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-.app-logo {
-  font-size: 24px;
-  font-weight: bold;
-  background: white;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: 3px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.header-logo-icon {
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
-  filter: brightness(0) invert(1);
-}
-.header-icons {
-  display: flex;
-  gap: 20px;
-  font-size: 24px;
-}
-
-.header-icons i {
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.header-icons i:hover {
-  color: #a78bfa;
-}
-
-.page-content {
-  display: none;
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-.page-content.active {
-  display: block;
-  animation: slideIn 0.3s ease;
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Bus Cards */
-.bus-card {
-  background: #1a1a1a;
-  border-radius: 15px;
-  padding: 20px;
-  margin-bottom: 20px;
-  border: 1px solid #333;
-}
-.bus-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-}
-.bus-number {
-  font-size: 20px;
-  font-weight: bold;
-  color: #a78bfa;
-}
-
-.bus-status {
-  padding: 5px 15px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.status-active {
-  background: #10b981;
-  color: white;
-}
-
-.map-placeholder {
-  background: #2a2a2a;
-  height: 200px;
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 15px;
-  color: #666;
-}
-
-/* Profile Elements */
-.profile-header-section {
-  padding: 20px;
-  border-bottom: 1px solid #222;
-}
-.profile-top-row {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  margin-bottom: 15px;
-}
-.profile-avatar-small {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 36px;
-}
-.profile-stats-inline {
-  display: flex;
-  gap: 25px;
-  flex: 1;
-  justify-content: center;
-}
-.stat-box {
-  text-align: center;
-}
-.stat-number {
-  font-size: 20px;
-  font-weight: bold;
-}
-.stat-text {
-  font-size: 13px;
-  color: #888;
-}
-.profile-buttons {
-  display: flex;
-  gap: 10px;
-}
-.edit-profile-btn-main,
-.share-profile-btn,
-.follow-btn,
-.message-btn,
-.more-btn {
-  padding: 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  border: 1px solid #444;
-  background: #2a2a2a;
-  color: white;
-}
-.edit-profile-btn-main {
-  flex: 1;
-}
-.follow-btn {
-  background: #a78bfa;
-  border: none;
-  flex: 1;
-}
-
-/* Academic Info */
-.info-card {
-  background: #1a1a1a;
-  border-radius: 15px;
-  padding: 20px;
-  margin-top: 20px;
-  border: 1px solid #333;
-}
-.attendance-percentage {
-  font-size: 24px;
-  color: #10b981;
-  font-weight: bold;
-}
-.attendance-details {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin: 15px 0;
-}
-.attendance-item {
-  background: #252525;
-  padding: 10px;
-  border-radius: 8px;
-  text-align: center;
-}
-.progress-bar {
-  width: 100%;
-  height: 8px;
-  background: #2a2a2a;
-  border-radius: 10px;
-  overflow: hidden;
-}
-.progress-fill {
-  height: 100%;
-  background: #10b981;
-}
-
-/* Navigation */
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background: #000;
-  display: flex;
-  justify-content: space-around;
-  padding: 10px 0;
-  border-top: 1px solid #222;
-}
-.nav-item {
+.auth-section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #666;
-  cursor: pointer;
-}
-.nav-item.active {
-  color: #a78bfa;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 20px;
 }
 
-/* Edit Modal */
-.edit-modal {
-  display: none;
+#bg-video {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  z-index: 1000;
+  object-fit: cover;
+  z-index: -2;
+}
+
+.video-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: -1;
+}
+
+.logo {
+  color: aliceblue;
+  user-select: none;
+  text-align: center;
+  display: flex;
   align-items: center;
   justify-content: center;
+  gap: 15px;
 }
-.edit-modal.active {
+
+.logo-icon {
+  width: 45px;
+  height: 45px;
+  object-fit: contain;
+}
+
+.logo h1 {
+  font-size: 48px;
+  letter-spacing: 8px;
+  background: white;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+.login-box {
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 30px black;
+  backdrop-filter: blur(10px);
+  width: 500px;
+  min-height: 300px;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  padding: 40px;
 }
-.edit-modal-content {
-  background: #1a1a1a;
-  padding: 20px;
-  border-radius: 15px;
-  width: 90%;
-  max-width: 500px;
+
+.box-head h1,
+.box-head-2 h1 {
+  text-align: center;
+  color: aliceblue;
+  margin-bottom: 30px;
+  font-size: 32px;
 }
-.form-group {
-  margin-bottom: 15px;
-}
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
-  color: #888;
-}
-.form-group input,
-.form-group textarea {
+
+.objects,
+.objects-register {
   width: 100%;
-  padding: 10px;
-  background: #252525;
-  border: 1px solid #333;
-  color: white;
-  border-radius: 8px;
 }
-.modal-footer {
+
+.objects-register {
+  display: none;
+}
+
+.input-box {
+  margin: 15px auto;
+  position: relative;
   display: flex;
-  gap: 10px;
-  margin-top: 20px;
-}
-.save-btn {
-  flex: 1;
-  background: #a78bfa;
-  border: none;
-  padding: 10px;
-  border-radius: 8px;
-  color: white;
-  cursor: pointer;
-}
-.cancel-btn {
-  flex: 1;
-  background: #2a2a2a;
-  border: 1px solid #444;
-  color: white;
-  padding: 10px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-/* ===============================
-   HEADER DROPDOWN MENU (STEP 2)
-================================ */
-.menu-panel {
-  position: fixed;
-  top: 65px; /* just below header */
-  right: 15px;
-  width: 200px;
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 12px;
-  z-index: 999;
-
-  /* hidden state */
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-10px);
-  transition: all 0.25s ease;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
-.menu-panel.active {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.menu-item {
+.input-wrapper {
+  position: relative;
+  width: 100%;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 15px;
-  font-size: 14px;
-  cursor: pointer;
-  border-bottom: 1px solid #2a2a2a;
-  color: #ddd;
 }
 
-.menu-item i {
+.input-box input {
+  padding: 12px 45px 12px 40px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  outline: none;
+  height: 45px;
+  width: 100%;
+  font-size: 15px;
+  background: rgba(255, 255, 255, 0.95);
+  transition: border-color 0.3s;
+}
+
+.input-box input.error {
+  border-color: #ef4444;
+}
+
+.input-box i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
   font-size: 18px;
 }
 
-.menu-item:hover {
-  background: #2a2a2a;
+.toggle-password {
+  position: absolute;
+  right: 12px !important;
+  left: auto !important;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+  font-size: 20px;
+  cursor: pointer !important;
+  transition: color 0.3s;
+  z-index: 100;
+  pointer-events: auto !important;
 }
 
-.menu-item.logout {
+.toggle-password:hover {
+  color: #a78bfa;
+}
+
+.error-message {
   color: #ef4444;
-  border-bottom: none;
-}
-
-/* ===============================
-   NOTIFICATION DROPDOWN (STEP 2)
-================================ */
-
-.notification-panel {
-  position: fixed;
-  top: 65px; /* just below header */
-  right: 70px; /* slightly left of menu */
-  width: 300px;
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 14px;
-  z-index: 998;
-
-  /* hidden state */
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-12px);
-  transition: all 0.25s ease;
-}
-
-.notification-panel.active {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.notification-item {
-  display: flex;
-  gap: 12px;
-  padding: 14px;
-  border-bottom: 1px solid #2a2a2a;
-  cursor: pointer;
-}
-
-.notification-item i {
-  font-size: 22px;
-  color: #a78bfa;
-  margin-top: 2px;
-}
-
-.notification-text strong {
-  font-size: 14px;
-  color: #fff;
-}
-
-.notification-text p {
-  font-size: 12px;
-  color: #aaa;
-  margin-top: 3px;
-}
-
-.notification-item:hover {
-  background: #2a2a2a;
-}
-
-.notification-footer {
-  padding: 12px;
-  text-align: center;
   font-size: 13px;
+  margin-top: 5px;
+  display: none;
+  align-self: flex-start;
+  font-weight: 500;
+}
+
+.error-message.show {
+  display: block;
+}
+
+@keyframes blinkRed {
+  0%,
+  100% {
+    color: aliceblue;
+  }
+  50% {
+    color: #ef4444;
+  }
+}
+
+.remember.blink-error {
+  animation: blinkRed 0.5s ease-in-out 3;
+}
+
+.remember.blink-error label {
+  color: #ef4444;
+}
+
+.login-button button,
+.Register-button button {
+  width: 100%;
+  height: 45px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 20px 0;
+  transition: 0.3s;
+}
+
+.login-button button:hover,
+.Register-button button:hover {
+  transform: scale(1.02);
+  box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
+.google-login {
+  width: 100%;
+  height: 45px;
+  background: white;
+  color: #444;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 15px;
+}
+
+.google-login:hover {
+  background: #f8f8f8;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.remember-forgot,
+.remember {
+  display: flex;
+  justify-content: space-between;
+  color: aliceblue;
+  font-size: 14px;
+  margin: 15px 0;
+}
+
+.remember-forgot a,
+.creat-acc,
+.Login-acc {
   color: #a78bfa;
+  text-decoration: none;
+  font-weight: 500;
   cursor: pointer;
 }
 
-.notification-footer:hover {
-  background: #252525;
+.remember,
+.account,
+.have-account {
+  color: aliceblue;
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
 }
 
-/* ===============================
-   MOBILE RESPONSIVE FIXES
-================================ */
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0;
+  color: aliceblue;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.divider span {
+  padding: 0 15px;
+  font-size: 14px;
+}
+
 @media (max-width: 768px) {
-  /* Header icons spacing */
-  .header-icons {
-    gap: 14px;
-    font-size: 22px;
+  .login-box {
+    width: 90%;
+    padding: 30px 25px;
   }
-
-  /* Dropdown panels */
-  .menu-panel,
-  .notification-panel {
-    width: calc(100% - 30px);
-    right: 15px;
-    left: 15px;
-    border-radius: 16px;
+  .logo h1 {
+    font-size: 36px;
   }
+}
+.objects,
+.objects-register {
+  animation: fadeSlide 0.4s ease;
+}
 
-  /* Notification text smaller */
-  .notification-text strong {
-    font-size: 13px;
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
   }
-
-  .notification-text p {
-    font-size: 11px;
-  }
-
-  /* Page content padding for bottom nav */
-  .page-content {
-    padding-bottom: 90px;
-  }
-
-  /* Bottom nav icon size */
-  .bottom-nav i {
-    font-size: 22px;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
