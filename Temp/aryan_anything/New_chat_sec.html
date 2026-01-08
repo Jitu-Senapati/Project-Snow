@@ -9,6 +9,7 @@
       rel="stylesheet"
     />
     <style>
+      * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
@@ -373,7 +374,12 @@
         </div>
 
         <div class="chat-list" id="chatList">
-          <div class="chat-item" data-user-id="1" data-user-name="Amit Kumar" data-user-initials="AK">
+          <div
+            class="chat-item"
+            data-user-id="1"
+            data-user-name="Amit Kumar"
+            data-user-initials="AK"
+          >
             <div class="chat-avatar">AK</div>
             <div class="chat-info">
               <div class="chat-name">Amit Kumar</div>
@@ -382,7 +388,12 @@
             <div class="chat-time">2m</div>
           </div>
 
-          <div class="chat-item" data-user-id="2" data-user-name="Priya Sharma" data-user-initials="PS">
+          <div
+            class="chat-item"
+            data-user-id="2"
+            data-user-name="Priya Sharma"
+            data-user-initials="PS"
+          >
             <div class="chat-avatar">PS</div>
             <div class="chat-info">
               <div class="chat-name">Priya Sharma</div>
@@ -391,7 +402,12 @@
             <div class="chat-time">15m</div>
           </div>
 
-          <div class="chat-item" data-user-id="3" data-user-name="Rahul Verma" data-user-initials="RV">
+          <div
+            class="chat-item"
+            data-user-id="3"
+            data-user-name="Rahul Verma"
+            data-user-initials="RV"
+          >
             <div class="chat-avatar">RV</div>
             <div class="chat-info">
               <div class="chat-name">Rahul Verma</div>
@@ -437,46 +453,70 @@
       // Sample message data for each user
       const messageData = {
         1: [
-          { type: 'received', text: 'Hey, are you coming to the lab?', time: '10:30 AM' },
-          { type: 'sent', text: 'Yes, I will be there in 15 minutes', time: '10:32 AM' },
-          { type: 'received', text: 'Great! I will wait for you', time: '10:33 AM' }
+          {
+            type: "received",
+            text: "Hey, are you coming to the lab?",
+            time: "10:30 AM",
+          },
+          {
+            type: "sent",
+            text: "Yes, I will be there in 15 minutes",
+            time: "10:32 AM",
+          },
+          {
+            type: "received",
+            text: "Great! I will wait for you",
+            time: "10:33 AM",
+          },
         ],
         2: [
-          { type: 'received', text: 'Can you share the notes?', time: '9:45 AM' },
-          { type: 'sent', text: 'Sure, I will send them right away', time: '9:50 AM' },
-          { type: 'sent', text: 'Check your email', time: '9:51 AM' },
-          { type: 'received', text: 'Got it, thanks!', time: '9:52 AM' }
+          {
+            type: "received",
+            text: "Can you share the notes?",
+            time: "9:45 AM",
+          },
+          {
+            type: "sent",
+            text: "Sure, I will send them right away",
+            time: "9:50 AM",
+          },
+          { type: "sent", text: "Check your email", time: "9:51 AM" },
+          { type: "received", text: "Got it, thanks!", time: "9:52 AM" },
         ],
         3: [
-          { type: 'received', text: 'Thanks for the help!', time: '8:20 AM' },
-          { type: 'sent', text: 'No problem, happy to help!', time: '8:25 AM' },
-          { type: 'received', text: 'Let me know if you need anything', time: '8:26 AM' }
-        ]
+          { type: "received", text: "Thanks for the help!", time: "8:20 AM" },
+          { type: "sent", text: "No problem, happy to help!", time: "8:25 AM" },
+          {
+            type: "received",
+            text: "Let me know if you need anything",
+            time: "8:26 AM",
+          },
+        ],
       };
 
       let currentUserId = null;
       let currentUserInitials = null;
 
       // Elements
-      const contactsView = document.getElementById('contactsView');
-      const chatView = document.getElementById('chatView');
-      const chatList = document.getElementById('chatList');
-      const backButton = document.getElementById('backButton');
-      const chatHeaderName = document.getElementById('chatHeaderName');
-      const chatHeaderAvatar = document.getElementById('chatHeaderAvatar');
-      const messagesContainer = document.getElementById('messagesContainer');
-      const messageInput = document.getElementById('messageInput');
-      const sendButton = document.getElementById('sendButton');
-      const searchInput = document.getElementById('chatSearchInput');
+      const contactsView = document.getElementById("contactsView");
+      const chatView = document.getElementById("chatView");
+      const chatList = document.getElementById("chatList");
+      const backButton = document.getElementById("backButton");
+      const chatHeaderName = document.getElementById("chatHeaderName");
+      const chatHeaderAvatar = document.getElementById("chatHeaderAvatar");
+      const messagesContainer = document.getElementById("messagesContainer");
+      const messageInput = document.getElementById("messageInput");
+      const sendButton = document.getElementById("sendButton");
+      const searchInput = document.getElementById("chatSearchInput");
 
       // Open chat conversation
-      chatList.addEventListener('click', (e) => {
-        const chatItem = e.target.closest('.chat-item');
+      chatList.addEventListener("click", (e) => {
+        const chatItem = e.target.closest(".chat-item");
         if (chatItem) {
           currentUserId = chatItem.dataset.userId;
           currentUserInitials = chatItem.dataset.userInitials;
           const userName = chatItem.dataset.userName;
-          
+
           openChat(userName, currentUserInitials, currentUserId);
         }
       });
@@ -484,36 +524,36 @@
       function openChat(userName, initials, userId) {
         chatHeaderName.textContent = userName;
         chatHeaderAvatar.textContent = initials;
-        
+
         // Load messages
         loadMessages(userId);
-        
+
         // Switch views
-        contactsView.classList.add('hidden');
-        chatView.classList.add('active');
+        contactsView.classList.add("hidden");
+        chatView.classList.add("active");
       }
 
       function loadMessages(userId) {
-        messagesContainer.innerHTML = '';
+        messagesContainer.innerHTML = "";
         const messages = messageData[userId] || [];
-        
-        messages.forEach(msg => {
+
+        messages.forEach((msg) => {
           addMessage(msg.text, msg.type, msg.time);
         });
-        
+
         // Scroll to bottom
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
       }
 
       function addMessage(text, type, time) {
-        const messageDiv = document.createElement('div');
+        const messageDiv = document.createElement("div");
         messageDiv.className = `message ${type}`;
-        
-        let avatarHTML = '';
-        if (type === 'received') {
+
+        let avatarHTML = "";
+        if (type === "received") {
           avatarHTML = `<div class="message-avatar">${currentUserInitials}</div>`;
         }
-        
+
         messageDiv.innerHTML = `
           ${avatarHTML}
           <div class="message-content">
@@ -521,16 +561,16 @@
             <div class="message-time">${time}</div>
           </div>
         `;
-        
+
         messagesContainer.appendChild(messageDiv);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
       }
 
       // Back button
-      backButton.addEventListener('click', () => {
-        chatView.classList.remove('active');
-        contactsView.classList.remove('hidden');
-        messageInput.value = '';
+      backButton.addEventListener("click", () => {
+        chatView.classList.remove("active");
+        contactsView.classList.remove("hidden");
+        messageInput.value = "";
       });
 
       // Send message
@@ -538,38 +578,43 @@
         const text = messageInput.value.trim();
         if (text) {
           const now = new Date();
-          const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-          
-          addMessage(text, 'sent', time);
-          messageInput.value = '';
-          
+          const time = now.toLocaleTimeString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+
+          addMessage(text, "sent", time);
+          messageInput.value = "";
+
           // Store message
           if (!messageData[currentUserId]) {
             messageData[currentUserId] = [];
           }
-          messageData[currentUserId].push({ type: 'sent', text, time });
+          messageData[currentUserId].push({ type: "sent", text, time });
         }
       }
 
-      sendButton.addEventListener('click', sendMessage);
+      sendButton.addEventListener("click", sendMessage);
 
-      messageInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
+      messageInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
           sendMessage();
         }
       });
 
       // Search functionality
-      searchInput.addEventListener('input', (e) => {
+      searchInput.addEventListener("input", (e) => {
         const searchTerm = e.target.value.toLowerCase();
-        const chatItems = chatList.querySelectorAll('.chat-item');
-        
-        chatItems.forEach(item => {
-          const name = item.querySelector('.chat-name').textContent.toLowerCase();
+        const chatItems = chatList.querySelectorAll(".chat-item");
+
+        chatItems.forEach((item) => {
+          const name = item
+            .querySelector(".chat-name")
+            .textContent.toLowerCase();
           if (name.includes(searchTerm)) {
-            item.style.display = 'flex';
+            item.style.display = "flex";
           } else {
-            item.style.display = 'none';
+            item.style.display = "none";
           }
         });
       });
