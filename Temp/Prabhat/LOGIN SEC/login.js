@@ -12,7 +12,6 @@ const registerEmailError = document.getElementById("registerEmailError");
 const registerPasswordError = document.getElementById("registerPasswordError");
 const registerUsernameError = document.getElementById("registerUsernameError");
 const termsCheckbox = document.getElementById("termsCheckbox");
-const termsError = document.getElementById("termsError");
 const rememberDiv = document.querySelector(".remember");
 
 const creatAccBtn = document.querySelector(".creat-acc");
@@ -23,7 +22,7 @@ const objectsRegister = document.querySelector(".objects-register");
 // Password toggle elements
 const toggleLoginPassword = document.getElementById("toggleLoginPassword");
 const toggleRegisterPassword = document.getElementById(
-  "toggleRegisterPassword"
+  "toggleRegisterPassword",
 );
 
 // Toggle password visibility for login
@@ -137,14 +136,11 @@ registerForm.addEventListener("submit", function (e) {
   e.preventDefault();
   let isValid = true;
 
-  [
-    registerEmailError,
-    registerPasswordError,
-    registerUsernameError,
-    termsError,
-  ].forEach((err) => err.classList.remove("show"));
+  [registerEmailError, registerPasswordError, registerUsernameError].forEach(
+    (err) => err.classList.remove("show"),
+  );
   [registerEmail, registerPassword, registerUsername].forEach((inp) =>
-    inp.classList.remove("error")
+    inp.classList.remove("error"),
   );
 
   if (!registerEmail.value.trim()) {
@@ -181,7 +177,6 @@ registerForm.addEventListener("submit", function (e) {
   }
 
   if (!termsCheckbox.checked) {
-    termsError.classList.add("show");
     rememberDiv.classList.add("blink-error");
     setTimeout(() => {
       rememberDiv.classList.remove("blink-error");
@@ -208,6 +203,5 @@ registerForm.addEventListener("submit", function (e) {
 });
 
 termsCheckbox.addEventListener("change", function () {
-  termsError.classList.remove("show");
   rememberDiv.classList.remove("blink-error");
 });
