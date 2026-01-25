@@ -124,7 +124,7 @@
         </div>
       </div>
 
-      <div class="page-content" id="chatPage">
+       <div class="page-content" id="chatPage">
         <h2 style="margin-bottom: 20px">Messages</h2>
         <div class="chat-list">
           <div class="chat-item">
@@ -190,30 +190,58 @@
             </button>
           </div>
         </div>
+     
+        <!-- academic part added by aryan 25/01/26-->
 
         <div class="info-section">
-          <h3 class="section-title">Academic Information</h3>
-          <div class="info-card">
-            <div class="info-card-header">
-              <div class="info-card-title">
-                <i class="bx bx-calendar-check"></i><span>Attendance</span>
-              </div>
-              <span class="attendance-percentage">85%</span>
+        <h3 class="section-title">Academic Information</h3>
+
+        <div class="info-card">
+          <div class="info-card-header">
+            <div class="info-card-title">
+              <i class="bx bx-file"></i><span>Marksheet</span>
             </div>
-            <div class="attendance-details">
-              <div class="attendance-item">
-                <span class="detail-label">Present</span
-                ><span class="detail-value">170</span>
-              </div>
-              <div class="attendance-item">
-                <span class="detail-label">Total</span
-                ><span class="detail-value">200</span>
-              </div>
-              <div class="attendance-item">
-                <span class="detail-label">Absent</span
-                ><span class="detail-value">30</span>
-              </div>
+            <span class="cgpa-badge" id="gpa-badge">CGPA 8.5</span>
+          </div>
+          <div class="subjects-list" id="subjects-container"></div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-header">
+            <div class="info-card-title">
+              <i class="bx bx-book"></i><span>Semester Records</span>
             </div>
+          </div>
+
+          <div class="combo-container">
+            <label for="semester-select" class="info-label">Select Term:</label>
+            <select id="semester-select" class="sem-combo-box">
+              <option value="1">Semester 1</option>
+              <option value="2">Semester 2</option>
+              <option value="3">Semester 3</option>
+              <option value="4">Semester 4</option>
+              <option value="5">Semester 5</option>
+              <option value="6" selected>Semester 6</option>
+              <option value="7">Semester 7</option>
+              <option value="8">Semester 8</option>
+            </select>
+          </div>
+
+          <div class="semester-info" style="margin-top: 15px">
+            <div class="info-row">
+              <span class="info-label">Roll Number</span>
+              <span class="info-value">CS2026-045</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Status</span>
+              <span class="info-value" id="current-sem-text"
+                >Active - Semester 6</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
             <div class="progress-bar">
               <div class="progress-fill" style="width: 85%"></div>
             </div>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>STUVO - Messages</title>
+    <title>STRUVO - Messages</title>
     <link
       href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
       rel="stylesheet"
@@ -11,46 +11,134 @@
     <link rel="stylesheet" href="chat_style.css" />
   </head>
   <body>
-    <div class="page-content active" id="chatPage">
-      <h2 style="margin-bottom: 20px; color: white">Messages</h2>
+    <div class="page-content">
+      <!-- Contacts List View -->
+      <div class="contacts-view" id="contactsView">
+        <h2>Messages</h2>
 
-      <div class="search-bar">
-        <i class="bx bx-search"></i>
-        <input
-          type="text"
-          id="chatSearchInput"
-          placeholder="Search contacts..."
-        />
+        <div class="search-bar">
+          <i class="bx bx-search"></i>
+          <input
+            type="text"
+            id="chatSearchInput"
+            placeholder="Search contacts..."
+          />
+        </div>
+
+        <div class="chat-list" id="chatList">
+          <div
+            class="chat-item"
+            data-user-id="1"
+            data-user-name="Amit Kumar"
+            data-user-initials="AK"
+          >
+            <div class="chat-avatar">AK</div>
+            <div class="chat-info">
+              <div class="chat-name">Amit Kumar</div>
+              <div class="chat-message">Hey, are you coming to the lab?</div>
+            </div>
+            <div class="chat-time">2m</div>
+          </div>
+
+          <div
+            class="chat-item"
+            data-user-id="2"
+            data-user-name="Priya Sharma"
+            data-user-initials="PS"
+          >
+            <div class="chat-avatar">PS</div>
+            <div class="chat-info">
+              <div class="chat-name">Priya Sharma</div>
+              <div class="chat-message">Can you share the notes?</div>
+            </div>
+            <div class="chat-time">15m</div>
+          </div>
+
+          <div
+            class="chat-item"
+            data-user-id="3"
+            data-user-name="Rahul Verma"
+            data-user-initials="RV"
+          >
+            <div class="chat-avatar">RV</div>
+            <div class="chat-info">
+              <div class="chat-name">Rahul Verma</div>
+              <div class="chat-message">Thanks for the help!</div>
+            </div>
+            <div class="chat-time">1h</div>
+          </div>
+        </div>
       </div>
 
-      <div class="chat-list">
-        <div class="chat-item">
-          <div class="chat-avatar">AK</div>
-          <div class="chat-info">
-            <div class="chat-name">Amit Kumar</div>
-            <div class="chat-message">Hey, are you coming to the lab?</div>
+      <!-- Chat Conversation View -->
+      <div class="chat-view" id="chatView">
+        <div class="chat-header">
+          <button class="back-button" id="backButton">
+            <i class="bx bx-arrow-back"></i>
+          </button>
+          <div class="chat-avatar" id="chatHeaderAvatar">AK</div>
+          <div class="chat-header-info">
+            <div class="chat-header-name" id="chatHeaderName">Amit Kumar</div>
+            <div class="chat-header-status">Online</div>
           </div>
-          <div style="color: #888; font-size: 12px">2m</div>
+          <div class="chat-menu">
+            <button class="menu-button" id="menuButton">
+              <i class="bx bx-dots-vertical-rounded"></i>
+            </button>
+            <div class="menu-dropdown" id="menuDropdown">
+              <div class="menu-item" id="searchInChatBtn">
+                <i class="bx bx-search"></i>
+                <span>Search in chat</span>
+              </div>
+              <div class="menu-item" id="blockUserBtn">
+                <i class="bx bx-block"></i>
+                <span>Block user</span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="chat-item">
-          <div class="chat-avatar">PS</div>
-          <div class="chat-info">
-            <div class="chat-name">Priya Sharma</div>
-            <div class="chat-message">Can you share the notes?</div>
-          </div>
-          <div style="color: #888; font-size: 12px">15m</div>
+        <!-- Search in Chat Bar -->
+        <div class="chat-search-bar" id="chatSearchBar">
+          <i class="bx bx-search"></i>
+          <input
+            type="text"
+            id="chatMessageSearch"
+            placeholder="Search messages..."
+          />
+          <button class="close-search" id="closeSearchBtn">
+            <i class="bx bx-x"></i>
+          </button>
         </div>
 
-        <div class="chat-item">
-          <div class="chat-avatar">RV</div>
-          <div class="chat-info">
-            <div class="chat-name">Rahul Verma</div>
-            <div class="chat-message">Thanks for the help!</div>
-          </div>
-          <div style="color: #888; font-size: 12px">1h</div>
+        <div class="messages-container" id="messagesContainer">
+          <!-- Messages will be dynamically inserted here -->
+        </div>
+
+        <div class="message-input-container" id="messageInputContainer">
+          <i class="bx bx-smile"></i>
+          <input
+            type="text"
+            id="messageInput"
+            placeholder="Type a message..."
+          />
+          <button class="send-button" id="sendButton">
+            <i class="bx bx-send"></i>
+          </button>
+        </div>
+
+        <!-- Blocked User Overlay -->
+        <div class="blocked-overlay" id="blockedOverlay">
+          <i class="bx bx-block"></i>
+          <h3>User Blocked</h3>
+          <p>You have blocked this user. Unblock to send messages.</p>
+          <button class="unblock-button" id="unblockButton">
+            Unblock User
+          </button>
         </div>
       </div>
     </div>
+
+    <script src="chat_style.js"></script>
   </body>
 </html>
