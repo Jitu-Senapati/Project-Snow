@@ -1,151 +1,207 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>STUVO - Login</title>
+    <title>STUVO - Student Dashboard</title>
     <link
       href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
       rel="stylesheet"
     />
-
     <link rel="stylesheet" href="DELETE.CSS" />
   </head>
+
   <body>
-    <div class="auth-section" id="authSection">
-      <video autoplay muted loop id="bg-video">
-        <source src="website.mp4" type="video/mp4" />
-      </video>
-      <div class="video-overlay"></div>
-
-      <div class="logo">
-        <img src="logo.png" alt="STRUVO" class="logo-icon" />
-        <h1>STUVO</h1>
-      </div>
-
-      <div class="login-box">
-        <div class="objects">
-          <div class="box-head">
-            <h1>Log in</h1>
-          </div>
-          <form id="loginForm">
-            <div class="input-box">
-              <div class="input-wrapper">
-                <i class="bx bx-envelope"></i>
-                <input
-                  type="email"
-                  id="loginEmail"
-                  placeholder="Enter your email"
-                />
-              </div>
-              <div class="error-message" id="emailError">
-                Please enter a valid email
-              </div>
-            </div>
-            <div class="input-box">
-              <div class="input-wrapper">
-                <i class="bx bx-lock"></i>
-                <input
-                  type="password"
-                  id="loginPassword"
-                  placeholder="Password"
-                />
-                <i
-                  class="bx bx-hide toggle-password"
-                  id="toggleLoginPassword"
-                ></i>
-              </div>
-              <div class="error-message" id="passwordError">
-                Please enter your password
-              </div>
-            </div>
-            <div class="remember-forgot">
-              <label><input type="checkbox" /> Remember me</label>
-              <a href="#">Forgot password?</a>
-            </div>
-            <div class="login-button">
-              <button type="submit" id="loginBtn">Log in</button>
-            </div>
-            <div class="divider"><span>OR</span></div>
-            <button type="button" class="google-login">
-              Continue with Google
-            </button>
-            <div class="account">
-              <p>
-                Don't have an account?
-                <a href="#" class="creat-acc">Create an account</a>
-              </p>
-            </div>
-          </form>
+    <div class="main-app" id="mainApp" style="display: block">
+      <!-- ================= HEADER ================= -->
+      <div class="app-header">
+        <div class="app-logo">
+          <img src="logo.png" alt="STRUVO" class="header-logo-icon" />
+          STUVO
+        </div>
+        <div class="header-icons">
+          <i class="bx bx-bell" id="notificationToggle"></i>
+          <i class="bx bx-menu" id="menuToggle"></i>
         </div>
 
-        <div class="objects-register">
-          <div class="box-head-2">
-            <h1>Register</h1>
+        <div class="notification-panel" id="notificationPanel">
+          <div class="notification-item">
+            <i class="bx bx-bus"></i>
+            <div class="notification-text">
+              <strong>Bus #101</strong>
+              <p>Arriving in 5 minutes</p>
+            </div>
           </div>
-          <form id="registerForm">
-            <div class="input-box">
-              <div class="input-wrapper">
-                <i class="bx bx-envelope"></i>
-                <input
-                  type="email"
-                  id="registerEmail"
-                  placeholder="Enter your email"
-                />
+          <div class="notification-item">
+            <i class="bx bx-calendar"></i>
+            <div class="notification-text">
+              <strong>New Event</strong>
+              <p>Tech Fest starts tomorrow</p>
+            </div>
+          </div>
+          <div class="notification-item">
+            <i class="bx bx-book"></i>
+            <div class="notification-text">
+              <strong>Attendance Updated</strong>
+              <p>Your attendance has been updated</p>
+            </div>
+          </div>
+          <div class="notification-footer">View all notifications</div>
+        </div>
+
+        <div class="menu-panel" id="menuPanel">
+          <div class="menu-item">
+            <i class="bx bx-cog"></i><span>Settings</span>
+          </div>
+          <div class="menu-item">
+            <i class="bx bx-message-dots"></i><span>Feedback</span>
+          </div>
+          <div class="menu-item">
+            <i class="bx bx-help-circle"></i><span>Help</span>
+          </div>
+          <div class="menu-item logout">
+            <i class="bx bx-log-out"></i><span>Logout</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= BUS PAGE ================= -->
+      <div class="page-content active" id="busPage">
+        <h2 style="margin-bottom: 20px">Bus Tracking</h2>
+      </div>
+
+      <!-- ================= EXPLORER PAGE ================= -->
+      <div class="page-content" id="explorerPage">
+        <h2 style="margin-bottom: 20px">Explorer</h2>
+      </div>
+
+      <!-- ================= CHAT PAGE ================= -->
+      <div class="page-content" id="chatPage">
+        <h2 style="margin-bottom: 20px">Messages</h2>
+      </div>
+
+      <!-- ================= PROFILE PAGE ================= -->
+      <div class="page-content" id="profilePage">
+        <!-- Profile Header -->
+        <div class="profile-header-section">
+          <div class="profile-top-row">
+            <div class="profile-avatar-small">PB</div>
+            <div class="profile-stats-inline">
+              <div class="stat-box">
+                <div class="stat-number">156</div>
+                <div class="stat-text">Followers</div>
               </div>
-              <div class="error-message" id="registerEmailError">
-                Please enter a valid email
+              <div class="stat-box">
+                <div class="stat-number">89</div>
+                <div class="stat-text">Following</div>
               </div>
             </div>
-            <div class="input-box">
-              <div class="input-wrapper">
-                <i class="bx bx-lock"></i>
-                <input
-                  type="password"
-                  id="registerPassword"
-                  placeholder="Password"
-                />
-                <i
-                  class="bx bx-hide toggle-password"
-                  id="toggleRegisterPassword"
-                ></i>
+          </div>
+
+          <div class="profile-info">
+            <h2 class="profile-name-main">Prabhat Behera</h2>
+            <p class="profile-username">@Prabhat4a</p>
+            <p class="profile-bio">
+              Computer Science Student | Tech Enthusiast | Coffee Lover ☕
+            </p>
+          </div>
+        </div>
+
+        <!-- Academic Information -->
+        <div class="info-section">
+          <h3 class="section-title">Academic Information</h3>
+
+          <!-- Attendance -->
+          <div class="info-card">
+            <div class="info-card-header">
+              <div class="info-card-title">
+                <i class="bx bx-calendar-check"></i><span>Attendance</span>
               </div>
-              <div class="error-message" id="registerPasswordError">
-                Please enter your password
+              <span class="attendance-percentage">85%</span>
+            </div>
+
+            <div class="attendance-details">
+              <div class="attendance-item">
+                <span class="detail-label">Present</span>
+                <span class="detail-value">170</span>
+              </div>
+              <div class="attendance-item">
+                <span class="detail-label">Total</span>
+                <span class="detail-value">200</span>
+              </div>
+              <div class="attendance-item">
+                <span class="detail-label">Absent</span>
+                <span class="detail-value">30</span>
               </div>
             </div>
-            <div class="input-box">
-              <div class="input-wrapper">
-                <i class="bx bx-user"></i>
-                <input
-                  type="text"
-                  id="registerUsername"
-                  placeholder="Username"
-                />
+
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 85%"></div>
+            </div>
+          </div>
+
+          <!-- Marksheet -->
+          <div class="info-card">
+            <div class="info-card-header">
+              <div class="info-card-title">
+                <i class="bx bx-file"></i><span>Marksheet</span>
               </div>
-              <div class="error-message" id="registerUsernameError">
-                Please enter a username
+              <span class="cgpa-badge">CGPA 8.5</span>
+            </div>
+            <div class="subjects-list">
+              <!-- subjects will come via JS later -->
+            </div>
+          </div>
+
+          <!-- Semester Records -->
+          <div class="info-card">
+            <div class="info-card-header">
+              <div class="info-card-title">
+                <i class="bx bx-book"></i><span>Semester Records</span>
               </div>
             </div>
-            <div class="remember">
-              <label
-                ><input type="checkbox" id="termsCheckbox" /> I agree with terms
-                and conditions</label
-              >
+
+            <div class="combo-container">
+              <label class="info-label">Select Term:</label>
+              <select class="sem-combo-box">
+                <option>Semester 1</option>
+                <option>Semester 2</option>
+                <option>Semester 3</option>
+                <option>Semester 4</option>
+                <option>Semester 5</option>
+                <option selected>Semester 6</option>
+                <option>Semester 7</option>
+                <option>Semester 8</option>
+              </select>
             </div>
-            <div class="Register-button">
-              <button type="submit">Register</button>
+
+            <div class="semester-info" style="margin-top: 15px">
+              <div class="info-row">
+                <span class="info-label">Roll Number</span>
+                <span class="info-value">CS2026-045</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Status</span>
+                <span class="info-value">Active - Semester 6</span>
+              </div>
             </div>
-            <div class="divider"><span>OR</span></div>
-            <button type="button" class="google-login">
-              Continue with Google
-            </button>
-            <div class="have-account">
-              <p>
-                Already have an account? <a href="#" class="Login-acc">Login</a>
-              </p>
-            </div>
-          </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= BOTTOM NAV ================= -->
+      <div class="bottom-nav">
+        <div class="nav-item active" data-page="busPage">
+          <i class="bx bx-bus"></i><span>Bus</span>
+        </div>
+        <div class="nav-item" data-page="explorerPage">
+          <i class="bx bx-compass"></i><span>Explorer</span>
+        </div>
+        <div class="nav-item" data-page="chatPage">
+          <i class="bx bx-message-rounded-dots"></i><span>Chat</span>
+        </div>
+        <div class="nav-item" data-page="profilePage">
+          <i class="bx bx-user"></i><span>Profile</span>
         </div>
       </div>
     </div>
