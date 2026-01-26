@@ -557,3 +557,11 @@ h2 {
 ::-webkit-scrollbar-thumb:hover {
   background: #764ba2;
 }
+
+.send-button i {
+  color: #ffffff; /* makes the send icon white */
+  font-size: 18px; /* optional: keeps it crisp */
+}
+.send-button:disabled i {
+  color: #cccccc; /* makes the send icon gray when disabled */
+}
