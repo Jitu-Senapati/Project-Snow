@@ -3,205 +3,151 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>STUVO - Student Dashboard</title>
+    <title>STRUVO - Messages</title>
     <link
       href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="DELETE.CSS" />
   </head>
-
   <body>
-    <div class="main-app" id="mainApp" style="display: block">
-      <!-- ================= HEADER ================= -->
-      <div class="app-header">
-        <div class="app-logo">
-          <img src="logo.png" alt="STRUVO" class="header-logo-icon" />
-          STUVO
-        </div>
-        <div class="header-icons">
-          <i class="bx bx-bell" id="notificationToggle"></i>
-          <i class="bx bx-menu" id="menuToggle"></i>
-        </div>
+    <div class="page-content">
+      <!-- Contacts List View -->
+      <div class="contacts-view" id="contactsView">
+        <h2>Messages</h2>
 
-        <div class="notification-panel" id="notificationPanel">
-          <div class="notification-item">
-            <i class="bx bx-bus"></i>
-            <div class="notification-text">
-              <strong>Bus #101</strong>
-              <p>Arriving in 5 minutes</p>
-            </div>
-          </div>
-          <div class="notification-item">
-            <i class="bx bx-calendar"></i>
-            <div class="notification-text">
-              <strong>New Event</strong>
-              <p>Tech Fest starts tomorrow</p>
-            </div>
-          </div>
-          <div class="notification-item">
-            <i class="bx bx-book"></i>
-            <div class="notification-text">
-              <strong>Attendance Updated</strong>
-              <p>Your attendance has been updated</p>
-            </div>
-          </div>
-          <div class="notification-footer">View all notifications</div>
+        <div class="search-bar">
+          <i class="bx bx-search"></i>
+          <input
+            type="text"
+            id="chatSearchInput"
+            placeholder="Search contacts..."
+          />
         </div>
 
-        <div class="menu-panel" id="menuPanel">
-          <div class="menu-item">
-            <i class="bx bx-cog"></i><span>Settings</span>
-          </div>
-          <div class="menu-item">
-            <i class="bx bx-message-dots"></i><span>Feedback</span>
-          </div>
-          <div class="menu-item">
-            <i class="bx bx-help-circle"></i><span>Help</span>
-          </div>
-          <div class="menu-item logout">
-            <i class="bx bx-log-out"></i><span>Logout</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- ================= BUS PAGE ================= -->
-      <div class="page-content active" id="busPage">
-        <h2 style="margin-bottom: 20px">Bus Tracking</h2>
-      </div>
-
-      <!-- ================= EXPLORER PAGE ================= -->
-      <div class="page-content" id="explorerPage">
-        <h2 style="margin-bottom: 20px">Explorer</h2>
-      </div>
-
-      <!-- ================= CHAT PAGE ================= -->
-      <div class="page-content" id="chatPage">
-        <h2 style="margin-bottom: 20px">Messages</h2>
-      </div>
-
-      <!-- ================= PROFILE PAGE ================= -->
-      <div class="page-content" id="profilePage">
-        <!-- Profile Header -->
-        <div class="profile-header-section">
-          <div class="profile-top-row">
-            <div class="profile-avatar-small">PB</div>
-            <div class="profile-stats-inline">
-              <div class="stat-box">
-                <div class="stat-number">156</div>
-                <div class="stat-text">Followers</div>
-              </div>
-              <div class="stat-box">
-                <div class="stat-number">89</div>
-                <div class="stat-text">Following</div>
-              </div>
+        <div class="chat-list" id="chatList">
+          <div
+            class="chat-item"
+            data-user-id="1"
+            data-user-name="Amit Kumar"
+            data-user-initials="AK"
+          >
+            <div class="chat-avatar">AK</div>
+            <div class="chat-info">
+              <div class="chat-name">Amit Kumar</div>
+              <div class="chat-message">Hey, are you coming to the lab?</div>
             </div>
+            <div class="chat-time">2m</div>
           </div>
 
-          <div class="profile-info">
-            <h2 class="profile-name-main">Prabhat Behera</h2>
-            <p class="profile-username">@Prabhat4a</p>
-            <p class="profile-bio">
-              Computer Science Student | Tech Enthusiast | Coffee Lover ☕
-            </p>
-          </div>
-        </div>
-
-        <!-- Academic Information -->
-        <div class="info-section">
-          <h3 class="section-title">Academic Information</h3>
-
-          <!-- Attendance -->
-          <div class="info-card">
-            <div class="info-card-header">
-              <div class="info-card-title">
-                <i class="bx bx-calendar-check"></i><span>Attendance</span>
-              </div>
-              <span class="attendance-percentage">85%</span>
+          <div
+            class="chat-item"
+            data-user-id="2"
+            data-user-name="Priya Sharma"
+            data-user-initials="PS"
+          >
+            <div class="chat-avatar">PS</div>
+            <div class="chat-info">
+              <div class="chat-name">Priya Sharma</div>
+              <div class="chat-message">Can you share the notes?</div>
             </div>
-
-            <div class="attendance-details">
-              <div class="attendance-item">
-                <span class="detail-label">Present</span>
-                <span class="detail-value">170</span>
-              </div>
-              <div class="attendance-item">
-                <span class="detail-label">Total</span>
-                <span class="detail-value">200</span>
-              </div>
-              <div class="attendance-item">
-                <span class="detail-label">Absent</span>
-                <span class="detail-value">30</span>
-              </div>
-            </div>
-
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: 85%"></div>
-            </div>
+            <div class="chat-time">15m</div>
           </div>
 
-          <!-- Marksheet -->
-          <div class="info-card">
-            <div class="info-card-header">
-              <div class="info-card-title">
-                <i class="bx bx-file"></i><span>Marksheet</span>
-              </div>
-              <span class="cgpa-badge">CGPA 8.5</span>
+          <div
+            class="chat-item"
+            data-user-id="3"
+            data-user-name="Rahul Verma"
+            data-user-initials="RV"
+          >
+            <div class="chat-avatar">RV</div>
+            <div class="chat-info">
+              <div class="chat-name">Rahul Verma</div>
+              <div class="chat-message">Thanks for the help!</div>
             </div>
-            <div class="subjects-list">
-              <!-- subjects will come via JS later -->
-            </div>
-          </div>
-
-          <!-- Semester Records -->
-          <div class="info-card">
-            <div class="info-card-header">
-              <div class="info-card-title">
-                <i class="bx bx-book"></i><span>Semester Records</span>
-              </div>
-            </div>
-
-            <div class="combo-container">
-              <label class="info-label">Select Term:</label>
-              <select class="sem-combo-box">
-                <option>Semester 1</option>
-                <option>Semester 2</option>
-                <option>Semester 3</option>
-                <option>Semester 4</option>
-                <option>Semester 5</option>
-                <option selected>Semester 6</option>
-                <option>Semester 7</option>
-                <option>Semester 8</option>
-              </select>
-            </div>
-
-            <div class="semester-info" style="margin-top: 15px">
-              <div class="info-row">
-                <span class="info-label">Roll Number</span>
-                <span class="info-value">CS2026-045</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Status</span>
-                <span class="info-value">Active - Semester 6</span>
-              </div>
-            </div>
+            <div class="chat-time">1h</div>
           </div>
         </div>
       </div>
 
-      <!-- ================= BOTTOM NAV ================= -->
-      <div class="bottom-nav">
-        <div class="nav-item active" data-page="busPage">
-          <i class="bx bx-bus"></i><span>Bus</span>
+      <!-- Chat Conversation View -->
+      <div class="chat-view" id="chatView">
+        <div class="chat-header">
+          <button class="back-button" id="backButton">
+            <i class="bx bx-arrow-back"></i>
+          </button>
+          <div class="chat-avatar" id="chatHeaderAvatar">AK</div>
+          <div class="chat-header-info">
+            <div class="chat-header-name" id="chatHeaderName">Amit Kumar</div>
+            <div class="chat-header-status">Online</div>
+          </div>
+          <div class="chat-menu">
+            <button class="menu-button" id="menuButton">
+              <i class="bx bx-dots-vertical-rounded"></i>
+            </button>
+            <div class="menu-dropdown" id="menuDropdown">
+              <div class="menu-item" id="searchInChatBtn">
+                <i class="bx bx-search"></i>
+                <span>Search in chat</span>
+              </div>
+              <div class="menu-item" id="blockUserBtn">
+                <i class="bx bx-block"></i>
+                <span>Block user</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="nav-item" data-page="explorerPage">
-          <i class="bx bx-compass"></i><span>Explorer</span>
+
+        <!-- Search in Chat Bar -->
+        <div class="chat-search-bar" id="chatSearchBar">
+          <i class="bx bx-search"></i>
+          <input
+            type="text"
+            id="chatMessageSearch"
+            placeholder="Search messages..."
+          />
+          <button class="close-search" id="closeSearchBtn">
+            <i class="bx bx-x"></i>
+          </button>
         </div>
-        <div class="nav-item" data-page="chatPage">
-          <i class="bx bx-message-rounded-dots"></i><span>Chat</span>
+
+        <div class="messages-container" id="messagesContainer">
+          <!-- Messages will be dynamically inserted here -->
         </div>
-        <div class="nav-item" data-page="profilePage">
-          <i class="bx bx-user"></i><span>Profile</span>
+
+        <!-- Emoji Panel (ADD THIS) -->
+        <div class="emoji-panel" id="emojiPanel">
+          <span>😀</span>
+          <span>😍</span>
+          <span>😂</span>
+          <span>😎</span>
+          <span>😢</span>
+          <span>😡</span>
+          <span>👍</span>
+          <span>❤️</span>
+        </div>
+
+        <!-- Message Input -->
+        <div class="message-input-container" id="messageInputContainer">
+          <i class="bx bx-smile"></i>
+          <input
+            type="text"
+            id="messageInput"
+            placeholder="Type a message..."
+          />
+          <button class="send-button" id="sendButton">
+            <i class="bx bx-send"></i>
+          </button>
+        </div>
+
+        <!-- Blocked User Overlay -->
+        <div class="blocked-overlay" id="blockedOverlay">
+          <i class="bx bx-block"></i>
+          <h3>User Blocked</h3>
+          <p>You have blocked this user. Unblock to send messages.</p>
+          <button class="unblock-button" id="unblockButton">
+            Unblock User
+          </button>
         </div>
       </div>
     </div>
