@@ -90,7 +90,6 @@ h2 {
 
 .chat-item.blocked {
   opacity: 0.5;
-  pointer-events: none;
 }
 
 .chat-avatar {
@@ -485,60 +484,66 @@ h2 {
   cursor: not-allowed;
 }
 
-/* Blocked User Overlay */
+/* Blocked User Overlay - Bottom Sheet Style */
 .blocked-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+  position: fixed;
   bottom: 0;
-  background: rgba(10, 10, 10, 0.95);
+  left: 50%;
+  transform: translateX(-50%) translateY(100%);
+  max-width: 600px;
+  width: 100%;
+  background: #2a2a2a;
+  border-radius: 20px 20px 0 0;
+  padding: 25px 20px 30px;
   display: none;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 20px;
-  z-index: 50;
-  border-radius: 15px;
+  z-index: 1000;
+  transition: transform 0.3s ease;
 }
 
 .blocked-overlay.active {
   display: flex;
-}
-
-.blocked-overlay i {
-  font-size: 80px;
-  color: #ef4444;
+  transform: translateX(-50%) translateY(0);
 }
 
 .blocked-overlay h3 {
   color: white;
-  font-size: 24px;
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0;
 }
 
 .blocked-overlay p {
-  color: #888;
-  font-size: 16px;
+  color: #999;
+  font-size: 14px;
   text-align: center;
-  max-width: 300px;
+  max-width: 350px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.blocked-overlay i {
+  display: none;
 }
 
 .unblock-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: transparent;
   border: none;
-  color: white;
-  padding: 12px 30px;
-  border-radius: 25px;
+  color: #4a9eff;
+  padding: 0;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   transition: 0.3s;
+  margin-top: 10px;
 }
 
 .unblock-button:hover {
-  transform: scale(1.05);
+  color: #6bb0ff;
+  transform: none;
 }
-
 .contacts-view {
   display: flex;
   flex-direction: column;
@@ -625,6 +630,7 @@ h2 {
 
 .chat-view {
   padding-bottom: env(safe-area-inset-bottom);
+  position: relative;
 }
 .chat-header {
   margin-bottom: 10px;
@@ -636,4 +642,18 @@ h2 {
 
 .emoji-panel {
   margin-bottom: 10px;
+}
+.chat-item.blocked {
+  opacity: 1;
+  pointer-events: auto;
+  background: #252525;
+}
+
+.chat-item.blocked .chat-message {
+  color: #ef4444;
+  font-style: italic;
+}
+
+.chat-item.blocked .chat-message::before {
+  content: "Blocked • ";
 }

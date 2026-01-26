@@ -72,10 +72,9 @@ const unblockButton = document.getElementById("unblockButton");
 const emojiBtn = document.querySelector(".bx-smile");
 const emojiPanel = document.getElementById("emojiPanel");
 
-// Open chat conversation
 chatList.addEventListener("click", (e) => {
   const chatItem = e.target.closest(".chat-item");
-  if (chatItem && !chatItem.classList.contains("blocked")) {
+  if (chatItem) {
     currentUserId = chatItem.dataset.userId;
     currentUserInitials = chatItem.dataset.userInitials;
     const userName = chatItem.dataset.userName;
