@@ -22,7 +22,6 @@ body {
   padding: clamp(12px, 4vw, 20px);
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* ❌ stops page scrolling */
 }
 
 h2 {
@@ -388,13 +387,17 @@ h2 {
   flex-direction: column;
   gap: 5px;
   position: relative;
-  padding-bottom: 12px;
+  padding-bottom: 14px;
+}
+.messages-container {
+  flex: 1;
+  overflow-y: auto;
 }
 
 .reaction {
   position: absolute;
   bottom: -8px;
-  right: 8px;
+  right: 10px;
   background: #1f1f1f;
   border-radius: 12px;
   padding: 2px 6px;
@@ -437,8 +440,7 @@ h2 {
   align-items: center;
   gap: 10px;
   border: 1px solid #333;
-  position: sticky;
-  bottom: 0;
+  margin-top: 8px;
 }
 
 .message-input-container.disabled {
@@ -590,15 +592,23 @@ h2 {
 }
 /* Emoji Panel */
 .emoji-panel {
+  position: absolute;
+  bottom: 70px; /* above input */
+  left: 16px;
+  right: 16px;
+
   background: #1a1a1a;
   border: 1px solid #333;
   border-radius: 15px;
   padding: 10px;
+
   display: none;
   gap: 10px;
   flex-wrap: wrap;
+
   max-height: 200px;
   overflow-y: auto;
+  z-index: 200;
 }
 
 .emoji-panel.active {
