@@ -394,3 +394,42 @@ document.addEventListener("click", (e) => {
 
 // Restore blocked users on page load
 updateChatList();
+// Handle reply, copy, delete buttons
+messagesContainer.addEventListener("click", (e) => {
+  const message = e.target.closest(".message");
+
+  // Copy button
+  if (e.target.classList.contains("copy-btn")) {
+    const bubble = message.querySelector(".message-bubble");
+    const text = bubble.textContent.replace(/Reply|Copy|Delete/g, "").trim();
+    navigator.clipboard.writeText(text);
+    message.classList.remove("show-menu");
+    alert("Message copied!");
+  }
+
+  // Delete button
+  if (e.target.classList.contains("delete-btn")) {
+    const bubble = message.querySelector(".message-bubble");
+    const text = bubble.textContent.replace(/Reply|Copy|Delete/g, "").trim();
+    const time = message.querySelector(".message-time").textContent;
+
+    // Remove from messageData
+    if (messageData[currentUserId]) {
+      messageData[currentUserId] = messageData[currentUserId].filter(
+        (msg) => !(msg.text === text && msg.time === time),
+      );
+    }
+
+    message.remove();
+    message.classList.remove("show-menu");
+  }
+
+  // Reply button
+  if (e.target.classList.contains("reply-btn")) {
+    const bubble = message.querySelector(".message-bubble");
+    const text = bubble.textContent.replace(/Reply|Copy|Delete/g, "").trim();
+    messageInput.value = `Replying to: "${text}" - `;
+    messageInput.focus();
+    message.classList.remove("show-menu");
+  }
+});
