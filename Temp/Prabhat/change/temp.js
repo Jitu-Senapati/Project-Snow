@@ -74,13 +74,13 @@ const emojiPanel = document.getElementById("emojiPanel");
 
 chatList.addEventListener("click", (e) => {
   const chatItem = e.target.closest(".chat-item");
-  if (!chatItem) return;
+  if (chatItem) {
+    currentUserId = chatItem.dataset.userId;
+    currentUserInitials = chatItem.dataset.userInitials;
+    const userName = chatItem.dataset.userName;
 
-  currentUserId = chatItem.dataset.userId;
-  currentUserInitials = chatItem.dataset.userInitials;
-  const userName = chatItem.dataset.userName;
-
-  openChat(userName, currentUserInitials, currentUserId);
+    openChat(userName, currentUserInitials, currentUserId);
+  }
 });
 
 function openChat(userName, initials, userId) {
@@ -123,27 +123,25 @@ function addMessage(text, type, time) {
   }
 
   messageDiv.innerHTML = `
-  ${avatarHTML}
-  <div class="message-content">
-    <div class="message-bubble">
-      ${text}
+    ${avatarHTML}
+    <div class="message-content">
+      <div class="message-bubble">
+        ${text}
+        <i class="bx bx-chevron-down msg-options-btn"></i>
 
-      <!-- arrow icon -->
-      <span class="msg-options-btn">
-        <i class="bx bx-chevron-down"></i>
-      </span>
-
-      <!-- menu -->
-      <div class="inline-menu">
-        <div class="menu-option">Reply</div>
-        <div class="menu-option">Copy</div>
-        <div class="menu-option">Delete</div>
+        <div class="bubble-menu">
+          <span>👍</span>
+          <span>❤️</span>
+          <span>😂</span>
+          <hr />
+          <button class="reply-btn">Reply</button>
+          <button class="copy-btn">Copy</button>
+          <button class="delete-btn">Delete</button>
+        </div>
       </div>
+      <div class="message-time">${time}</div>
     </div>
-
-    <div class="message-time">${time}</div>
-  </div>
-`;
+  `;
 
   messagesContainer.appendChild(messageDiv);
   messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -200,6 +198,14 @@ messageInput.addEventListener("keypress", (e) => {
   if (e.key === "Enter") {
     sendMessage();
   }
+});
+
+emojiPanel.addEventListener("click", (e) => {
+  if (!e.target.matches("span")) return;
+
+  // insert emoji at cursor position
+  messageInput.value += e.target.textContent;
+  messageInput.focus();
 });
 
 // Contact search functionality
@@ -325,6 +331,49 @@ function updateBlockedState() {
   }
 }
 
+// Message options menu
+messagesContainer.addEventListener("click", (e) => {
+  const btn = e.target.closest(".msg-options-btn");
+  if (!btn) return;
+
+  e.stopPropagation();
+
+  const message = btn.closest(".message");
+
+  // close others
+  document.querySelectorAll(".message.show-menu").forEach((m) => {
+    if (m !== message) m.classList.remove("show-menu");
+  });
+
+  // toggle current
+  message.classList.toggle("show-menu");
+});
+
+// close menu on outside click
+document.addEventListener("click", (e) => {
+  if (!e.target.closest(".message")) {
+    document
+      .querySelectorAll(".message.show-menu")
+      .forEach((m) => m.classList.remove("show-menu"));
+  }
+});
+
+// Handle reactions
+messagesContainer.addEventListener("click", (e) => {
+  if (e.target.matches(".bubble-menu span")) {
+    const message = e.target.closest(".message");
+    let reaction = message.querySelector(".reaction");
+
+    if (!reaction) {
+      reaction = document.createElement("div");
+      reaction.className = "reaction";
+      message.appendChild(reaction);
+    }
+
+    reaction.textContent = e.target.textContent;
+    message.classList.remove("show-menu");
+  }
+});
 function updateChatList() {
   const chatItems = chatList.querySelectorAll(".chat-item");
   chatItems.forEach((item) => {
@@ -342,5 +391,6 @@ document.addEventListener("click", (e) => {
     emojiPanel.classList.remove("active");
   }
 });
+
 // Restore blocked users on page load
 updateChatList();

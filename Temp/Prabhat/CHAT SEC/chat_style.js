@@ -43,7 +43,7 @@ const messageData = {
 };
 
 // Blocked users storage
-let blockedUsers = {};
+let blockedUsers = JSON.parse(localStorage.getItem("blockedUsers")) || {};
 
 let currentUserId = null;
 let currentUserInitials = null;
@@ -69,11 +69,12 @@ const closeSearchBtn = document.getElementById("closeSearchBtn");
 const messageInputContainer = document.getElementById("messageInputContainer");
 const blockedOverlay = document.getElementById("blockedOverlay");
 const unblockButton = document.getElementById("unblockButton");
+const emojiBtn = document.querySelector(".bx-smile");
+const emojiPanel = document.getElementById("emojiPanel");
 
-// Open chat conversation
 chatList.addEventListener("click", (e) => {
   const chatItem = e.target.closest(".chat-item");
-  if (chatItem && !chatItem.classList.contains("blocked")) {
+  if (chatItem) {
     currentUserId = chatItem.dataset.userId;
     currentUserInitials = chatItem.dataset.userInitials;
     const userName = chatItem.dataset.userName;
@@ -167,10 +168,31 @@ function sendMessage() {
 
 sendButton.addEventListener("click", sendMessage);
 
+// Emoji button click (STEP 2)
+emojiBtn.addEventListener("click", (e) => {
+  e.stopPropagation(); // 🔥 important
+
+  // if user is blocked, do nothing
+  if (blockedOverlay.classList.contains("active")) {
+    return;
+  }
+
+  // open / close emoji panel
+  emojiPanel.classList.toggle("active");
+});
+
 messageInput.addEventListener("keypress", (e) => {
   if (e.key === "Enter") {
     sendMessage();
   }
+});
+
+emojiPanel.addEventListener("click", (e) => {
+  if (!e.target.matches("span")) return;
+
+  // insert emoji at cursor position
+  messageInput.value += e.target.textContent;
+  messageInput.focus();
 });
 
 // Contact search functionality
@@ -257,6 +279,10 @@ function clearMessageHighlights() {
 blockUserBtn.addEventListener("click", () => {
   if (!blockedUsers[currentUserId]) {
     blockedUsers[currentUserId] = true;
+
+    // ✅ save to localStorage
+    localStorage.setItem("blockedUsers", JSON.stringify(blockedUsers));
+
     updateBlockedState();
     updateChatList();
     menuDropdown.classList.remove("active");
@@ -265,7 +291,11 @@ blockUserBtn.addEventListener("click", () => {
 
 // Unblock user functionality
 unblockButton.addEventListener("click", () => {
-  blockedUsers[currentUserId] = false;
+  delete blockedUsers[currentUserId];
+
+  // ✅ update localStorage
+  localStorage.setItem("blockedUsers", JSON.stringify(blockedUsers));
+
   updateBlockedState();
   updateChatList();
 });
@@ -299,3 +329,11 @@ function updateChatList() {
     }
   });
 }
+
+document.addEventListener("click", (e) => {
+  if (!emojiPanel.contains(e.target) && !emojiBtn.contains(e.target)) {
+    emojiPanel.classList.remove("active");
+  }
+});
+// Restore blocked users on page load
+updateChatList();
