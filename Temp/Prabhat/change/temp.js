@@ -36,8 +36,28 @@ if (cancelBtn) {
 }
 if (saveBtn) {
   saveBtn.addEventListener("click", () => {
+    // Get values from form
+    const name = document.getElementById("editName").value;
+    const username = document.getElementById("editUsername").value;
+    const bio = document.getElementById("editBio").value;
+
+    // Update profile display
+    document.querySelector(".profile-name-main").textContent = name;
+    document.querySelector(".profile-username").textContent = username;
+    document.querySelector(".profile-bio").textContent = bio;
+
+    // Show success message
     alert("Profile updated successfully!");
     editModal.classList.remove("active");
+  });
+}
+
+// Close modal when clicking outside
+if (editModal) {
+  editModal.addEventListener("click", (e) => {
+    if (e.target === editModal) {
+      editModal.classList.remove("active");
+    }
   });
 }
 
@@ -200,15 +220,22 @@ const homeSlides = document.querySelectorAll(".home-slide");
 const dots = document.querySelectorAll(".dot");
 let homeIndex = 0;
 
+// Auto-advance slider every 3.5 seconds
 setInterval(() => {
+  changeSlide(1);
+}, 3500);
+
+// UNIFIED changeSlide function (handles auto-advance, arrows, swipe, and dots)
+function changeSlide(direction) {
   homeSlides[homeIndex].classList.remove("active");
   dots[homeIndex].classList.remove("active");
 
-  homeIndex = (homeIndex + 1) % homeSlides.length;
+  homeIndex = (homeIndex + direction + homeSlides.length) % homeSlides.length;
 
   homeSlides[homeIndex].classList.add("active");
   dots[homeIndex].classList.add("active");
-}, 3500);
+}
+
 // HOME SLIDER SWIPE SUPPORT
 const slider = document.querySelector(".home-slider");
 let startX = 0;
@@ -237,12 +264,24 @@ function handleSwipe() {
   }
 }
 
-function changeSlide(direction) {
-  homeSlides[homeIndex].classList.remove("active");
-  dots[homeIndex].classList.remove("active");
+// DESKTOP ARROW CONTROLS
+const prevBtn = document.querySelector(".slider-arrow.left");
+const nextBtn = document.querySelector(".slider-arrow.right");
 
-  homeIndex = (homeIndex + direction + homeSlides.length) % homeSlides.length;
-
-  homeSlides[homeIndex].classList.add("active");
-  dots[homeIndex].classList.add("active");
+if (prevBtn && nextBtn) {
+  prevBtn.addEventListener("click", () => changeSlide(-1));
+  nextBtn.addEventListener("click", () => changeSlide(1));
 }
+
+// DOT CLICK NAVIGATION
+dots.forEach((dot, index) => {
+  dot.addEventListener("click", () => {
+    homeSlides[homeIndex].classList.remove("active");
+    dots[homeIndex].classList.remove("active");
+
+    homeIndex = index;
+
+    homeSlides[homeIndex].classList.add("active");
+    dots[homeIndex].classList.add("active");
+  });
+});

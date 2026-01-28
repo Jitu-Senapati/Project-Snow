@@ -75,38 +75,44 @@
         </div>
       </div>
 
-      <!-- HOME TOP SLIDER -->
-      <div class="home-slider">
-        <div class="home-slide active">
-          <div class="slide-text">
-            <h3>Attendance & Leave Tracking</h3>
-            <p>Receive daily attendance updates and apply for leave easily.</p>
-          </div>
-        </div>
-
-        <div class="home-slide">
-          <div class="slide-text">
-            <h3>Upcoming Exams</h3>
-            <p>Check exam schedules, seating arrangements and syllabus.</p>
-          </div>
-        </div>
-
-        <div class="home-slide">
-          <div class="slide-text">
-            <h3>Campus Events</h3>
-            <p>Stay updated with tech fests, workshops and activities.</p>
-          </div>
-        </div>
-
-        <div class="slider-dots">
-          <span class="dot active"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </div>
-      </div>
-
-      <!-- ================= HOME PAGE (ADDED) ================= -->
+      <!-- ================= HOME PAGE ================= -->
       <div class="page-content active" id="homePage">
+        <!-- HOME TOP SLIDER - NOW ONLY IN HOME PAGE -->
+        <div class="home-slider">
+          <!-- SLIDER ARROWS -->
+          <button class="slider-arrow left">&#10094;</button>
+          <button class="slider-arrow right">&#10095;</button>
+
+          <div class="home-slide active">
+            <div class="slide-text">
+              <h3>Attendance & Leave Tracking</h3>
+              <p>
+                Receive daily attendance updates and apply for leave easily.
+              </p>
+            </div>
+          </div>
+
+          <div class="home-slide">
+            <div class="slide-text">
+              <h3>Upcoming Exams</h3>
+              <p>Check exam schedules, seating arrangements and syllabus.</p>
+            </div>
+          </div>
+
+          <div class="home-slide">
+            <div class="slide-text">
+              <h3>Campus Events</h3>
+              <p>Stay updated with tech fests, workshops and activities.</p>
+            </div>
+          </div>
+
+          <div class="slider-dots">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+        </div>
+
         <h2 style="margin-bottom: 20px">Home</h2>
 
         <div class="bus-card">
@@ -119,7 +125,7 @@
         </div>
       </div>
 
-      <!-- ================= BUS PAGE (UNCHANGED CONTENT) ================= -->
+      <!-- ================= BUS PAGE ================= -->
       <div class="page-content" id="busPage">
         <h2 style="margin-bottom: 20px">Bus Tracking</h2>
         <div class="bus-card">
@@ -192,7 +198,7 @@
         </div>
       </div>
 
-      <!-- ================= PROFILE PAGE (UNCHANGED) ================= -->
+      <!-- ================= PROFILE PAGE ================= -->
       <div class="page-content" id="profilePage">
         <div class="profile-header-section">
           <div class="profile-top-row">
@@ -309,6 +315,92 @@
         <div class="nav-item" data-page="profilePage">
           <i class="bx bx-user"></i><span>Profile</span>
         </div>
+      </div>
+    </div>
+
+    <!-- ================= EDIT PROFILE MODAL ================= -->
+    <div class="edit-modal" id="editModal">
+      <div class="edit-modal-content">
+        <div class="modal-header">
+          <h2>Edit Profile</h2>
+          <i
+            class="bx bx-x"
+            id="closeModal"
+            style="font-size: 28px; cursor: pointer"
+          ></i>
+        </div>
+
+        <form id="editProfileForm">
+          <div class="form-group">
+            <label>Profile Picture</label>
+            <div class="profile-pic-upload">
+              <div class="current-pic">PB</div>
+              <button type="button" class="upload-pic-btn">
+                <i class="bx bx-camera"></i> Change Photo
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="editName">Full Name</label>
+            <input
+              type="text"
+              id="editName"
+              value="Prabhat Behera"
+              placeholder="Enter your name"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="editUsername">Username</label>
+            <input
+              type="text"
+              id="editUsername"
+              value="@Prabhat4a"
+              placeholder="@username"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="editBio">Bio</label>
+            <textarea
+              id="editBio"
+              rows="3"
+              placeholder="Tell us about yourself..."
+            >
+Computer Science Student | Tech Enthusiast | Coffee Lover ☕</textarea
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="editEmail">Email</label>
+            <input
+              type="email"
+              id="editEmail"
+              value="prabhat@example.com"
+              placeholder="your@email.com"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="editPhone">Phone Number</label>
+            <input
+              type="tel"
+              id="editPhone"
+              value="+91 98765 43210"
+              placeholder="+91 XXXXX XXXXX"
+            />
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="cancel-btn" id="cancelBtn">
+              Cancel
+            </button>
+            <button type="button" class="save-btn" id="saveBtn">
+              Save Changes
+            </button>
+          </div>
+        </form>
       </div>
     </div>
 

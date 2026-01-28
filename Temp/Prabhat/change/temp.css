@@ -162,25 +162,50 @@ body {
 .profile-buttons {
   display: flex;
   gap: 10px;
+  margin-top: 15px;
 }
 .edit-profile-btn-main,
 .share-profile-btn,
 .follow-btn,
 .message-btn,
 .more-btn {
-  padding: 10px;
+  padding: 8px 16px;
   border-radius: 8px;
   cursor: pointer;
   border: 1px solid #444;
   background: #2a2a2a;
   color: white;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
 }
+
+.edit-profile-btn-main:hover,
+.share-profile-btn:hover,
+.follow-btn:hover,
+.message-btn:hover,
+.more-btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
 .edit-profile-btn-main {
   flex: 1;
 }
+
+.share-profile-btn,
+.more-btn {
+  width: 40px;
+  padding: 8px;
+}
+
 .follow-btn {
   background: #a78bfa;
   border: none;
+  flex: 1;
+}
+
+.message-btn {
   flex: 1;
 }
 
@@ -251,60 +276,196 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.85);
   z-index: 1000;
   align-items: center;
   justify-content: center;
+  backdrop-filter: blur(5px);
 }
+
 .edit-modal.active {
   display: flex;
+  animation: fadeIn 0.3s ease;
 }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .edit-modal-content {
   background: #1a1a1a;
-  padding: 20px;
-  border-radius: 15px;
+  padding: 25px;
+  border-radius: 20px;
   width: 90%;
   max-width: 500px;
+  max-height: 85vh;
+  overflow-y: auto;
+  border: 1px solid #333;
+  animation: slideUp 0.3s ease;
 }
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #333;
+}
+
+.modal-header h2 {
+  font-size: 22px;
+  color: #fff;
+}
+
+.modal-header i {
+  color: #888;
+  transition: color 0.2s;
+}
+
+.modal-header i:hover {
+  color: #fff;
+}
+
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
+
 .form-group label {
   display: block;
-  margin-bottom: 5px;
-  color: #888;
+  margin-bottom: 8px;
+  color: #aaa;
+  font-size: 14px;
+  font-weight: 500;
 }
+
 .form-group input,
 .form-group textarea {
   width: 100%;
-  padding: 10px;
+  padding: 12px 15px;
   background: #252525;
   border: 1px solid #333;
   color: white;
-  border-radius: 8px;
+  border-radius: 10px;
+  font-size: 15px;
+  transition: border-color 0.3s;
 }
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #a78bfa;
+}
+
+.form-group textarea {
+  resize: vertical;
+  font-family: inherit;
+}
+
+/* Profile Picture Upload */
+.profile-pic-upload {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 15px;
+  background: #252525;
+  border-radius: 12px;
+  border: 1px solid #333;
+}
+
+.current-pic {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.upload-pic-btn {
+  padding: 10px 20px;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.upload-pic-btn:hover {
+  background: #333;
+  border-color: #a78bfa;
+}
+
+.upload-pic-btn i {
+  font-size: 18px;
+}
+
 .modal-footer {
   display: flex;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 12px;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid #333;
 }
+
 .save-btn {
   flex: 1;
   background: #a78bfa;
   border: none;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 12px 20px;
+  border-radius: 10px;
   color: white;
   cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.2s;
 }
+
+.save-btn:hover {
+  background: #9270f5;
+  transform: translateY(-1px);
+}
+
 .cancel-btn {
   flex: 1;
   background: #2a2a2a;
   border: 1px solid #444;
   color: white;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 12px 20px;
+  border-radius: 10px;
   cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.2s;
+}
+
+.cancel-btn:hover {
+  background: #333;
+  border-color: #666;
 }
 /* ===============================
    HEADER DROPDOWN MENU (STEP 2)
@@ -560,6 +721,10 @@ body {
   position: relative;
   overflow: hidden;
   margin-bottom: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+  min-height: 120px;
+  touch-action: pan-y;
 }
 
 .home-slide {
@@ -585,6 +750,7 @@ body {
   display: flex;
   gap: 6px;
   margin-top: 12px;
+  justify-content: center;
 }
 
 .slider-dots .dot {
@@ -592,6 +758,7 @@ body {
   height: 8px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
 }
 
 .slider-dots .dot.active {
@@ -608,18 +775,215 @@ body {
     transform: translateX(0);
   }
 }
-/* FIX HOME SLIDER EDGE GAP */
-.home-slider {
-  margin-left: 10px;
-  margin-right: 10px;
+
+/* SLIDER ARROWS */
+.slider-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.3);
+  border: none;
+  color: white;
+  font-size: 22px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
 }
+
+.slider-arrow.left {
+  left: 10px;
+}
+
+.slider-arrow.right {
+  right: 10px;
+}
+
+.slider-arrow:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* RESPONSIVE ADJUSTMENTS */
 @media (min-width: 768px) {
   .home-slider {
     margin-left: 0;
     margin-right: 0;
+    min-height: 150px;
   }
 }
-/* CENTER SLIDER DOTS */
-.slider-dots {
+
+@media (max-width: 768px) {
+  .slider-arrow {
+    display: none;
+  }
+}
+
+/* ===============================
+   FIXED SCROLLING BEHAVIOR
+================================ */
+
+/* Lock HTML and Body to viewport height */
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Make main app container full height with flex */
+.main-app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header stays fixed at top */
+.app-header {
+  flex-shrink: 0;
+}
+
+/* Bottom nav stays fixed at bottom */
+.bottom-nav {
+  flex-shrink: 0;
+}
+
+/* Page content area is scrollable */
+.page-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 20px;
+  -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
+}
+
+/* Ensure hidden pages don't take up space */
+.page-content:not(.active) {
+  display: none;
+}
+
+/* ===============================
+   EXPLORER PAGE STYLES
+================================ */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+}
+
+.search-bar i {
+  color: #888;
+  font-size: 20px;
+}
+
+.search-bar input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 15px;
+}
+
+.search-bar input::placeholder {
+  color: #666;
+}
+
+.event-card {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 15px;
+}
+
+.event-tag {
+  display: inline-block;
+  background: #a78bfa;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.event-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.event-date {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #888;
+  font-size: 14px;
+}
+
+.event-date i {
+  color: #a78bfa;
+}
+
+/* ===============================
+   CHAT PAGE STYLES
+================================ */
+.chat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chat-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.chat-item:hover {
+  background: #252525;
+}
+
+.chat-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
   justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.chat-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.chat-name {
+  font-weight: 600;
+  color: white;
+  margin-bottom: 4px;
+}
+
+.chat-message {
+  color: #888;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
