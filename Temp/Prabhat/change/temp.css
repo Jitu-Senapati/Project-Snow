@@ -146,7 +146,7 @@ h2 {
   display: flex;
   align-items: center;
   gap: 15px;
-  margin-bottom: 0px;
+  margin-bottom: 6px;
   border: 1px solid #333;
   position: relative;
 }
@@ -404,6 +404,14 @@ h2 {
   font-size: 14px;
   border: 1px solid #333;
 }
+
+.message-text {
+  color: #e9edef;
+  font-size: 14px;
+  line-height: 19px;
+  word-wrap: break-word;
+}
+
 .message-bubble {
   padding: 12px 16px;
   border-radius: 18px;
@@ -440,7 +448,7 @@ h2 {
   align-items: center;
   gap: 10px;
   border: 1px solid #333;
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 .message-input-container.disabled {
@@ -592,23 +600,15 @@ h2 {
 }
 /* Emoji Panel */
 .emoji-panel {
-  position: absolute;
-  bottom: 70px; /* above input */
-  left: 16px;
-  right: 16px;
-
   background: #1a1a1a;
   border: 1px solid #333;
   border-radius: 15px;
   padding: 10px;
-
   display: none;
   gap: 10px;
   flex-wrap: wrap;
-
   max-height: 200px;
   overflow-y: auto;
-  z-index: 200;
 }
 
 .emoji-panel.active {
@@ -651,7 +651,13 @@ h2 {
   padding-bottom: env(safe-area-inset-bottom);
   position: relative;
 }
+.chat-header {
+  margin-bottom: 10px;
+}
 
+.messages-container {
+  margin-bottom: 10px;
+}
 .emoji-panel {
   margin-bottom: 10px;
 }
@@ -671,12 +677,15 @@ h2 {
 }
 .reaction {
   position: absolute;
-  bottom: -10px;
-  right: 12px;
-  background: #1f1f1f;
-  border-radius: 12px;
-  padding: 2px 6px;
-  font-size: 14px;
+  bottom: -12px;
+  right: 4px;
+  background: #2a2a2a;
+  border-radius: 14px;
+  padding: 3px 8px;
+  font-size: 13px;
+  border: 1px solid #444;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  z-index: 10;
 }
 /* ===== Message menu (WhatsApp style) ===== */
 
@@ -748,4 +757,233 @@ h2 {
 }
 .message {
   position: relative;
+}
+/* Reply preview above input */
+.reply-preview {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(167, 139, 250, 0.15);
+  border-left: 3px solid #a78bfa;
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+}
+
+.reply-bar {
+  width: 4px;
+  height: 100%;
+  background: #25d366;
+  border-radius: 4px;
+}
+
+.reply-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+}
+
+.reply-content strong {
+  color: #25d366;
+  font-size: 12px;
+}
+
+.reply-content span {
+  color: #aaa;
+}
+
+.close-reply {
+  background: none;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+}
+
+/* Reply quote inside message */
+.reply-quote {
+  background: rgba(255, 255, 255, 0.08);
+  border-left: 3px solid #25d366;
+  padding: 6px 8px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.reply-user {
+  display: block;
+  color: #25d366;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.reply-text {
+  color: #ccc;
+  font-size: 12px;
+  display: block;
+}
+
+.message-text {
+  color: #e9edef;
+  font-size: 14px;
+  line-height: 19px;
+}
+
+.reply-preview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #1f2937;
+  padding: 8px;
+  border-radius: 10px;
+  margin-bottom: 6px;
+}
+
+.reply-preview .close-reply {
+  background: none;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+}
+.reply-preview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #1f1f1f;
+  border-radius: 10px;
+  padding: 8px;
+  margin-bottom: 6px;
+}
+
+.reply-bar {
+  width: 4px;
+  height: 100%;
+  background: #a78bfa;
+  border-radius: 4px;
+}
+
+.reply-content {
+  flex: 1;
+  font-size: 13px;
+  color: #ccc;
+}
+
+.reply-content strong {
+  display: block;
+  color: #a78bfa;
+}
+
+.reply-quote {
+  background: rgba(255, 255, 255, 0.08);
+  border-left: 3px solid #a78bfa;
+  padding: 6px 8px;
+  margin-bottom: 6px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+#clearChatBtn {
+  color: #ef4444;
+}
+
+#clearChatBtn i {
+  color: #ef4444;
+}
+
+/* ===== Confirmation Modal ===== */
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.confirm-overlay.active {
+  display: flex;
+}
+
+.confirm-box {
+  background: #1f1f1f;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 360px;
+  padding: 20px;
+  animation: scaleIn 0.25s ease;
+}
+
+.confirm-box h3 {
+  color: #fff;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.confirm-box p {
+  color: #aaa;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-cancel {
+  background: transparent;
+  border: none;
+  color: #a78bfa;
+  font-size: 14px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.btn-danger {
+  background: #ef4444;
+  border: none;
+  color: white;
+  font-size: 14px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-danger:hover {
+  background: #dc2626;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.empty-contacts {
+  display: none;
+  height: 100%;
+  color: #9ca3af;
+  text-align: center;
+  font-size: 15px;
+  padding: 40px 20px;
+}
+
+.empty-contacts p {
+  font-size: 18px;
+  color: #e5e7eb;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.empty-contacts span {
+  font-size: 14px;
+  color: #9ca3af;
 }

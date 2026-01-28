@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>STRUVO - Messages</title>
+    <title>STUVO 5 - Messages</title>
     <link
       href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
       rel="stylesheet"
@@ -68,6 +68,11 @@
             <div class="chat-time">1h</div>
           </div>
         </div>
+        <div id="emptyContacts" class="empty-contacts">
+  <p>No chats yet</p>
+  <span>Start a new conversation 👋</span>
+</div>
+
       </div>
 
       <!-- Chat Conversation View -->
@@ -94,6 +99,11 @@
                 <i class="bx bx-block"></i>
                 <span>Block user</span>
               </div>
+              <div class="menu-item" id="clearChatBtn">
+  <i class="bx bx-trash"></i>
+  <span>Clear chat</span>
+</div>
+
             </div>
           </div>
         </div>
@@ -149,6 +159,19 @@
         Unblock User
       </button>
     </div>
+
+<!-- Clear Chat Confirmation Modal -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <h3>Clear this chat?</h3>
+    <p>This will permanently delete all messages in this chat.</p>
+    <div class="confirm-actions">
+      <button class="btn-cancel" id="cancelClearChat">Cancel</button>
+      <button class="btn-danger" id="confirmClearChat">Clear chat</button>
+    </div>
+  </div>
+</div>
+
 
     <script src="chat_style.js"></script>
   </body>

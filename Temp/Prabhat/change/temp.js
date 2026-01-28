@@ -42,9 +42,8 @@ const messageData = {
   ],
 };
 
-// Blocked users storage
+let replyData = null;
 let blockedUsers = JSON.parse(localStorage.getItem("blockedUsers")) || {};
-
 let currentUserId = null;
 let currentUserInitials = null;
 
@@ -71,6 +70,7 @@ const blockedOverlay = document.getElementById("blockedOverlay");
 const unblockButton = document.getElementById("unblockButton");
 const emojiBtn = document.querySelector(".bx-smile");
 const emojiPanel = document.getElementById("emojiPanel");
+const clearChatBtn = document.getElementById("clearChatBtn");
 
 chatList.addEventListener("click", (e) => {
   const chatItem = e.target.closest(".chat-item");
@@ -78,7 +78,6 @@ chatList.addEventListener("click", (e) => {
     currentUserId = chatItem.dataset.userId;
     currentUserInitials = chatItem.dataset.userInitials;
     const userName = chatItem.dataset.userName;
-
     openChat(userName, currentUserInitials, currentUserId);
   }
 });
@@ -86,34 +85,24 @@ chatList.addEventListener("click", (e) => {
 function openChat(userName, initials, userId) {
   chatHeaderName.textContent = userName;
   chatHeaderAvatar.textContent = initials;
-
-  // Load messages
   loadMessages(userId);
-
-  // Check if user is blocked
   updateBlockedState();
-
-  // Switch views
   contactsView.classList.add("hidden");
   chatView.classList.add("active");
-
-  // Close menu if open
   menuDropdown.classList.remove("active");
 }
 
 function loadMessages(userId) {
   messagesContainer.innerHTML = "";
   const messages = messageData[userId] || [];
-
   messages.forEach((msg) => {
-    addMessage(msg.text, msg.type, msg.time);
+    addMessage(msg.text, msg.type, msg.time, msg.reply || null);
   });
-
-  // Scroll to bottom
   messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
-function addMessage(text, type, time) {
+// ✅ FIXED addMessage - now includes full HTML with reply
+function addMessage(text, type, time, reply = null) {
   const messageDiv = document.createElement("div");
   messageDiv.className = `message ${type}`;
 
@@ -122,13 +111,23 @@ function addMessage(text, type, time) {
     avatarHTML = `<div class="message-avatar">${currentUserInitials}</div>`;
   }
 
+  let replyHTML = "";
+  if (reply) {
+    replyHTML = `
+      <div class="reply-quote">
+        <span class="reply-user">${reply.user}</span>
+        <span class="reply-text">${reply.text}</span>
+      </div>
+    `;
+  }
+
   messageDiv.innerHTML = `
     ${avatarHTML}
     <div class="message-content">
       <div class="message-bubble">
-        ${text}
+        ${replyHTML}
+        <div class="message-text">${text}</div>
         <i class="bx bx-chevron-down msg-options-btn"></i>
-
         <div class="bubble-menu">
           <span>👍</span>
           <span>❤️</span>
@@ -147,7 +146,6 @@ function addMessage(text, type, time) {
   messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
-// Back button
 backButton.addEventListener("click", () => {
   chatView.classList.remove("active");
   contactsView.classList.remove("hidden");
@@ -158,39 +156,42 @@ backButton.addEventListener("click", () => {
   clearMessageHighlights();
 });
 
-// Send message
+// ✅ FIXED sendMessage - clean single version
 function sendMessage() {
   const text = messageInput.value.trim();
-  if (text && !blockedUsers[currentUserId]) {
-    const now = new Date();
-    const time = now.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  if (!text || blockedUsers[currentUserId]) return;
 
-    addMessage(text, "sent", time);
-    messageInput.value = "";
+  const now = new Date();
+  const time = now.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
-    // Store message
-    if (!messageData[currentUserId]) {
-      messageData[currentUserId] = [];
-    }
-    messageData[currentUserId].push({ type: "sent", text, time });
+  const currentReply = replyData ? { ...replyData } : null;
+
+  addMessage(text, "sent", time, currentReply);
+
+  if (!messageData[currentUserId]) {
+    messageData[currentUserId] = [];
   }
+  messageData[currentUserId].push({
+    type: "sent",
+    text,
+    time,
+    reply: currentReply,
+  });
+
+  replyData = null;
+  removeReplyPreview();
+  messageInput.value = "";
+  messageInput.focus();
 }
 
 sendButton.addEventListener("click", sendMessage);
 
-// Emoji button click (STEP 2)
 emojiBtn.addEventListener("click", (e) => {
-  e.stopPropagation(); // 🔥 important
-
-  // if user is blocked, do nothing
-  if (blockedOverlay.classList.contains("active")) {
-    return;
-  }
-
-  // open / close emoji panel
+  e.stopPropagation();
+  if (blockedOverlay.classList.contains("active")) return;
   emojiPanel.classList.toggle("active");
 });
 
@@ -202,41 +203,30 @@ messageInput.addEventListener("keypress", (e) => {
 
 emojiPanel.addEventListener("click", (e) => {
   if (!e.target.matches("span")) return;
-
-  // insert emoji at cursor position
   messageInput.value += e.target.textContent;
   messageInput.focus();
 });
 
-// Contact search functionality
 searchInput.addEventListener("input", (e) => {
   const searchTerm = e.target.value.toLowerCase();
   const chatItems = chatList.querySelectorAll(".chat-item");
-
   chatItems.forEach((item) => {
     const name = item.querySelector(".chat-name").textContent.toLowerCase();
-    if (name.includes(searchTerm)) {
-      item.style.display = "flex";
-    } else {
-      item.style.display = "none";
-    }
+    item.style.display = name.includes(searchTerm) ? "flex" : "none";
   });
 });
 
-// Menu dropdown toggle
 menuButton.addEventListener("click", (e) => {
   e.stopPropagation();
   menuDropdown.classList.toggle("active");
 });
 
-// Close dropdown when clicking outside
 document.addEventListener("click", (e) => {
   if (!menuButton.contains(e.target) && !menuDropdown.contains(e.target)) {
     menuDropdown.classList.remove("active");
   }
 });
 
-// Search in chat functionality
 searchInChatBtn.addEventListener("click", () => {
   chatSearchBar.classList.add("active");
   menuDropdown.classList.remove("active");
@@ -249,7 +239,6 @@ closeSearchBtn.addEventListener("click", () => {
   clearMessageHighlights();
 });
 
-// Message search functionality
 chatMessageSearch.addEventListener("input", (e) => {
   const searchTerm = e.target.value.toLowerCase();
   const messages = messagesContainer.querySelectorAll(".message");
@@ -260,7 +249,6 @@ chatMessageSearch.addEventListener("input", (e) => {
     messages.forEach((message) => {
       const bubble = message.querySelector(".message-bubble");
       const text = bubble.textContent.toLowerCase();
-
       if (text.includes(searchTerm)) {
         message.classList.add("highlight");
         message.classList.remove("hidden");
@@ -269,7 +257,6 @@ chatMessageSearch.addEventListener("input", (e) => {
       }
     });
 
-    // Scroll to first match
     const firstMatch = messagesContainer.querySelector(".message.highlight");
     if (firstMatch) {
       firstMatch.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -288,27 +275,19 @@ function clearMessageHighlights() {
   });
 }
 
-// Block user functionality
 blockUserBtn.addEventListener("click", () => {
   if (!blockedUsers[currentUserId]) {
     blockedUsers[currentUserId] = true;
-
-    // ✅ save to localStorage
     localStorage.setItem("blockedUsers", JSON.stringify(blockedUsers));
-
     updateBlockedState();
     updateChatList();
     menuDropdown.classList.remove("active");
   }
 });
 
-// Unblock user functionality
 unblockButton.addEventListener("click", () => {
   delete blockedUsers[currentUserId];
-
-  // ✅ update localStorage
   localStorage.setItem("blockedUsers", JSON.stringify(blockedUsers));
-
   updateBlockedState();
   updateChatList();
 });
@@ -317,39 +296,28 @@ function updateBlockedState() {
   if (blockedUsers[currentUserId]) {
     blockedOverlay.classList.add("active");
     messageInputContainer.classList.add("disabled");
-    blockUserBtn.innerHTML = `
-      <i class='bx bx-check'></i>
-      <span>User blocked</span>
-    `;
+    blockUserBtn.innerHTML = `<i class='bx bx-check'></i><span>User blocked</span>`;
   } else {
     blockedOverlay.classList.remove("active");
     messageInputContainer.classList.remove("disabled");
-    blockUserBtn.innerHTML = `
-      <i class='bx bx-block'></i>
-      <span>Block user</span>
-    `;
+    blockUserBtn.innerHTML = `<i class='bx bx-block'></i><span>Block user</span>`;
   }
 }
 
-// Message options menu
 messagesContainer.addEventListener("click", (e) => {
   const btn = e.target.closest(".msg-options-btn");
   if (!btn) return;
 
   e.stopPropagation();
-
   const message = btn.closest(".message");
 
-  // close others
   document.querySelectorAll(".message.show-menu").forEach((m) => {
     if (m !== message) m.classList.remove("show-menu");
   });
 
-  // toggle current
   message.classList.toggle("show-menu");
 });
 
-// close menu on outside click
 document.addEventListener("click", (e) => {
   if (!e.target.closest(".message")) {
     document
@@ -358,7 +326,6 @@ document.addEventListener("click", (e) => {
   }
 });
 
-// Handle reactions
 messagesContainer.addEventListener("click", (e) => {
   if (e.target.matches(".bubble-menu span")) {
     const message = e.target.closest(".message");
@@ -374,6 +341,7 @@ messagesContainer.addEventListener("click", (e) => {
     message.classList.remove("show-menu");
   }
 });
+
 function updateChatList() {
   const chatItems = chatList.querySelectorAll(".chat-item");
   chatItems.forEach((item) => {
@@ -392,16 +360,17 @@ document.addEventListener("click", (e) => {
   }
 });
 
-// Restore blocked users on page load
 updateChatList();
+
 // Handle reply, copy, delete buttons
 messagesContainer.addEventListener("click", (e) => {
   const message = e.target.closest(".message");
+  if (!message) return;
 
   // Copy button
   if (e.target.classList.contains("copy-btn")) {
-    const bubble = message.querySelector(".message-bubble");
-    const text = bubble.textContent.replace(/Reply|Copy|Delete/g, "").trim();
+    const textEl = message.querySelector(".message-text");
+    const text = textEl ? textEl.textContent.trim() : "";
     navigator.clipboard.writeText(text);
     message.classList.remove("show-menu");
     alert("Message copied!");
@@ -409,11 +378,10 @@ messagesContainer.addEventListener("click", (e) => {
 
   // Delete button
   if (e.target.classList.contains("delete-btn")) {
-    const bubble = message.querySelector(".message-bubble");
-    const text = bubble.textContent.replace(/Reply|Copy|Delete/g, "").trim();
+    const textEl = message.querySelector(".message-text");
+    const text = textEl ? textEl.textContent.trim() : "";
     const time = message.querySelector(".message-time").textContent;
 
-    // Remove from messageData
     if (messageData[currentUserId]) {
       messageData[currentUserId] = messageData[currentUserId].filter(
         (msg) => !(msg.text === text && msg.time === time),
@@ -424,12 +392,88 @@ messagesContainer.addEventListener("click", (e) => {
     message.classList.remove("show-menu");
   }
 
-  // Reply button
+  // ✅ FIXED Reply button - now uses .message-text
   if (e.target.classList.contains("reply-btn")) {
-    const bubble = message.querySelector(".message-bubble");
-    const text = bubble.textContent.replace(/Reply|Copy|Delete/g, "").trim();
-    messageInput.value = `Replying to: "${text}" - `;
-    messageInput.focus();
+    const textEl = message.querySelector(".message-text");
+    if (!textEl) return;
+
+    replyData = {
+      user: message.classList.contains("sent")
+        ? "You"
+        : chatHeaderName.textContent,
+      text: textEl.textContent.trim(),
+    };
+
+    showReplyPreview(replyData);
     message.classList.remove("show-menu");
+    messageInput.focus();
   }
 });
+
+function showReplyPreview({ user, text }) {
+  removeReplyPreview();
+
+  const preview = document.createElement("div");
+  preview.className = "reply-preview";
+
+  preview.innerHTML = `
+    <div class="reply-bar"></div>
+    <div class="reply-content">
+      <strong>${user}</strong>
+      <span>${text}</span>
+    </div>
+    <button class="close-reply">✕</button>
+  `;
+
+  messageInputContainer.prepend(preview);
+}
+
+function removeReplyPreview() {
+  document.querySelector(".reply-preview")?.remove();
+  replyData = null;
+}
+
+messageInputContainer.addEventListener("click", (e) => {
+  if (e.target.classList.contains("close-reply")) {
+    removeReplyPreview();
+  }
+});
+
+// Clear Chat button functionality
+
+// ===== Clear Chat Modal Logic =====
+const confirmOverlay = document.getElementById("confirmOverlay");
+const confirmClearChat = document.getElementById("confirmClearChat");
+const cancelClearChat = document.getElementById("cancelClearChat");
+
+// Open modal when Clear Chat is clicked
+clearChatBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  confirmOverlay.classList.add("active");
+  menuDropdown.classList.remove("active");
+});
+
+// Cancel button
+cancelClearChat.addEventListener("click", () => {
+  confirmOverlay.classList.remove("active");
+});
+
+// Confirm clear chat
+confirmClearChat.addEventListener("click", () => {
+  if (!currentUserId) return;
+
+  messageData[currentUserId] = [];
+  messagesContainer.innerHTML = "";
+
+  confirmOverlay.classList.remove("active");
+});
+function updateEmptyContactsState() {
+  const chatItems = chatList.querySelectorAll(".chat-item");
+  const emptyState = document.getElementById("emptyContacts");
+
+  if (chatItems.length === 0) {
+    emptyState.style.display = "block";
+  } else {
+    emptyState.style.display = "none";
+  }
+}

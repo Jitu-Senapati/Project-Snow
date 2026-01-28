@@ -1,162 +1,1009 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>STRUVO - Messages</title>
+    <title>WhatsApp Clone</title>
     <link
       href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="DELETE.CSS" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      }
+
+      body {
+        background: #111b21;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        height: 100vh;
+        display: flex;
+        background: #0b141a;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        width: 400px;
+        background: #111b21;
+        border-right: 1px solid #2a3942;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .sidebar-header {
+        padding: 15px;
+        background: #202c33;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .sidebar-header h2 {
+        color: #e9edef;
+        font-size: 22px;
+      }
+
+      .header-icons {
+        display: flex;
+        gap: 20px;
+      }
+
+      .header-icons i {
+        color: #aebac1;
+        font-size: 24px;
+        cursor: pointer;
+      }
+
+      .search-bar {
+        padding: 8px 15px;
+        background: #202c33;
+      }
+
+      .search-input {
+        width: 100%;
+        background: #111b21;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 8px;
+        color: #e9edef;
+        font-size: 14px;
+      }
+
+      .chat-list {
+        flex: 1;
+        overflow-y: auto;
+        background: #111b21;
+      }
+
+      .chat-item {
+        padding: 15px;
+        display: flex;
+        gap: 15px;
+        cursor: pointer;
+        border-bottom: 1px solid #2a3942;
+        transition: 0.2s;
+      }
+
+      .chat-item:hover {
+        background: #202c33;
+      }
+
+      .chat-item.active {
+        background: #2a3942;
+      }
+
+      .avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #25d366, #128c7e);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 20px;
+        flex-shrink: 0;
+      }
+
+      .chat-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .chat-top {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 3px;
+      }
+
+      .chat-name {
+        color: #e9edef;
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      .chat-time {
+        color: #8696a0;
+        font-size: 12px;
+      }
+
+      .chat-preview {
+        color: #8696a0;
+        font-size: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* Chat View */
+      .chat-view {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: #0b141a;
+      }
+
+      .chat-header {
+        padding: 10px 15px;
+        background: #202c33;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .chat-header-info {
+        flex: 1;
+      }
+
+      .chat-header-name {
+        color: #e9edef;
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      .chat-header-status {
+        color: #8696a0;
+        font-size: 13px;
+      }
+
+      .chat-header-actions {
+        display: flex;
+        gap: 20px;
+      }
+
+      .chat-header-actions i {
+        color: #aebac1;
+        font-size: 24px;
+        cursor: pointer;
+      }
+
+      /* Messages */
+      .messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px 8%;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="%230b141a" width="100" height="100"/><circle fill="%23111b21" cx="10" cy="10" r="1"/></svg>');
+        background-size: 50px 50px;
+      }
+
+      .message {
+        display: flex;
+        margin-bottom: 12px;
+        gap: 5px;
+        animation: messageSlide 0.3s ease;
+      }
+
+      @keyframes messageSlide {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .message.sent {
+        justify-content: flex-end;
+      }
+
+      .message-bubble {
+        max-width: 65%;
+        padding: 8px 12px;
+        border-radius: 8px;
+        position: relative;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      }
+
+      .message.received .message-bubble {
+        background: #202c33;
+        border-radius: 0 8px 8px 8px;
+      }
+
+      .message.sent .message-bubble {
+        background: #005c4b;
+        border-radius: 8px 0 8px 8px;
+      }
+
+      .reply-quote {
+        background: rgba(0, 0, 0, 0.2);
+        border-left: 3px solid #25d366;
+        padding: 6px 8px;
+        margin-bottom: 6px;
+        border-radius: 5px;
+        font-size: 13px;
+      }
+
+      .reply-user {
+        color: #25d366;
+        font-weight: 600;
+        display: block;
+        margin-bottom: 2px;
+      }
+
+      .reply-text {
+        color: #aebac1;
+        font-size: 13px;
+      }
+
+      .message-text {
+        color: #e9edef;
+        font-size: 14.2px;
+        line-height: 19px;
+        word-wrap: break-word;
+      }
+
+      .message-footer {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 4px;
+        margin-top: 4px;
+      }
+
+      .message-time {
+        color: #8696a0;
+        font-size: 11px;
+      }
+
+      .message.sent .message-time {
+        color: #aebac1;
+      }
+
+      .message-status {
+        color: #53bdeb;
+        font-size: 16px;
+      }
+
+      /* Message Menu */
+      .message-menu-btn {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+
+      .message-bubble:hover .message-menu-btn {
+        display: flex;
+      }
+
+      .message-menu-btn i {
+        color: #8696a0;
+        font-size: 18px;
+      }
+
+      .message-menu {
+        position: absolute;
+        top: 30px;
+        right: 0;
+        background: #233138;
+        border-radius: 8px;
+        padding: 8px 0;
+        min-width: 200px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        z-index: 100;
+        display: none;
+      }
+
+      .message-menu.active {
+        display: block;
+      }
+
+      .message.sent .message-menu {
+        right: auto;
+        left: 0;
+      }
+
+      .menu-item {
+        padding: 10px 16px;
+        color: #e9edef;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 14px;
+      }
+
+      .menu-item:hover {
+        background: #182229;
+      }
+
+      .menu-item i {
+        font-size: 18px;
+        color: #8696a0;
+      }
+
+      /* Reactions */
+      .reaction-bar {
+        position: absolute;
+        bottom: calc(100% + 5px);
+        right: 10px;
+        background: #233138;
+        border-radius: 20px;
+        padding: 8px 12px;
+        display: none;
+        gap: 6px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        z-index: 99;
+      }
+
+      .reaction-bar.active {
+        display: flex;
+      }
+
+      .reaction-bar span {
+        font-size: 20px;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+
+      .reaction-bar span:hover {
+        transform: scale(1.3);
+      }
+
+      .reaction {
+        position: absolute;
+        bottom: -8px;
+        right: 8px;
+        background: #1f2c34;
+        border: 2px solid #0b141a;
+        border-radius: 12px;
+        padding: 2px 6px;
+        font-size: 13px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Input */
+      .input-container {
+        padding: 10px 15px;
+        background: #202c33;
+        display: flex;
+        align-items: flex-end;
+        gap: 10px;
+      }
+
+      .reply-preview {
+        position: absolute;
+        bottom: 100%;
+        left: 0;
+        right: 0;
+        background: #1f2c34;
+        padding: 10px 15px;
+        display: none;
+        align-items: center;
+        gap: 10px;
+        border-top: 1px solid #2a3942;
+      }
+
+      .reply-preview.active {
+        display: flex;
+      }
+
+      .reply-bar {
+        width: 4px;
+        height: 40px;
+        background: #25d366;
+        border-radius: 2px;
+      }
+
+      .reply-content {
+        flex: 1;
+      }
+
+      .reply-content strong {
+        color: #25d366;
+        font-size: 13px;
+        display: block;
+      }
+
+      .reply-content span {
+        color: #8696a0;
+        font-size: 13px;
+      }
+
+      .close-reply {
+        background: none;
+        border: none;
+        color: #8696a0;
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      .input-wrapper {
+        position: relative;
+        flex: 1;
+      }
+
+      .input-icons {
+        display: flex;
+        gap: 8px;
+      }
+
+      .input-icons i {
+        color: #8696a0;
+        font-size: 24px;
+        cursor: pointer;
+      }
+
+      .message-input {
+        width: 100%;
+        background: #2a3942;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 8px;
+        color: #e9edef;
+        font-size: 15px;
+        resize: none;
+        max-height: 100px;
+      }
+
+      .send-btn {
+        width: 45px;
+        height: 45px;
+        background: #25d366;
+        border: none;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+
+      .send-btn:hover {
+        background: #20bd5b;
+      }
+
+      .send-btn i {
+        color: #111b21;
+        font-size: 20px;
+      }
+
+      /* Emoji Picker */
+      .emoji-picker {
+        position: absolute;
+        bottom: 60px;
+        left: 50px;
+        background: #233138;
+        border-radius: 12px;
+        padding: 15px;
+        display: none;
+        flex-wrap: wrap;
+        gap: 8px;
+        max-width: 320px;
+        max-height: 250px;
+        overflow-y: auto;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        z-index: 100;
+      }
+
+      .emoji-picker.active {
+        display: flex;
+      }
+
+      .emoji-picker span {
+        font-size: 24px;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 6px;
+      }
+
+      .emoji-picker span:hover {
+        background: #182229;
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #2a3942;
+        border-radius: 10px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #374850;
+      }
+    </style>
   </head>
   <body>
-    <div class="page-content">
-      <!-- Contacts List View -->
-      <div class="contacts-view" id="contactsView">
-        <h2>Messages</h2>
-
+    <div class="container">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="sidebar-header">
+          <h2>Chats</h2>
+          <div class="header-icons">
+            <i class="bx bx-message-square-add"></i>
+            <i class="bx bx-dots-vertical-rounded"></i>
+          </div>
+        </div>
         <div class="search-bar">
-          <i class="bx bx-search"></i>
           <input
             type="text"
-            id="chatSearchInput"
-            placeholder="Search contacts..."
+            class="search-input"
+            placeholder="Search or start new chat"
           />
         </div>
-
         <div class="chat-list" id="chatList">
           <div
-            class="chat-item"
+            class="chat-item active"
             data-user-id="1"
-            data-user-name="Amit Kumar"
-            data-user-initials="AK"
+            data-name="John Doe"
+            data-initials="JD"
           >
-            <div class="chat-avatar">AK</div>
+            <div class="avatar">JD</div>
             <div class="chat-info">
-              <div class="chat-name">Amit Kumar</div>
-              <div class="chat-message">Hey, are you coming to the lab?</div>
+              <div class="chat-top">
+                <span class="chat-name">John Doe</span>
+                <span class="chat-time">12:30 PM</span>
+              </div>
+              <div class="chat-preview">Hey! How are you doing?</div>
             </div>
-            <div class="chat-time">2m</div>
           </div>
-
           <div
             class="chat-item"
             data-user-id="2"
-            data-user-name="Priya Sharma"
-            data-user-initials="PS"
+            data-name="Sarah Smith"
+            data-initials="SS"
           >
-            <div class="chat-avatar">PS</div>
+            <div class="avatar">SS</div>
             <div class="chat-info">
-              <div class="chat-name">Priya Sharma</div>
-              <div class="chat-message">Can you share the notes?</div>
+              <div class="chat-top">
+                <span class="chat-name">Sarah Smith</span>
+                <span class="chat-time">Yesterday</span>
+              </div>
+              <div class="chat-preview">Thanks for your help!</div>
             </div>
-            <div class="chat-time">15m</div>
-          </div>
-
-          <div
-            class="chat-item"
-            data-user-id="3"
-            data-user-name="Rahul Verma"
-            data-user-initials="RV"
-          >
-            <div class="chat-avatar">RV</div>
-            <div class="chat-info">
-              <div class="chat-name">Rahul Verma</div>
-              <div class="chat-message">Thanks for the help!</div>
-            </div>
-            <div class="chat-time">1h</div>
           </div>
         </div>
       </div>
 
-      <!-- Chat Conversation View -->
-      <div class="chat-view" id="chatView">
+      <!-- Chat View -->
+      <div class="chat-view">
         <div class="chat-header">
-          <button class="back-button" id="backButton">
-            <i class="bx bx-arrow-back"></i>
-          </button>
-          <div class="chat-avatar" id="chatHeaderAvatar">AK</div>
+          <div class="avatar" id="chatAvatar">JD</div>
           <div class="chat-header-info">
-            <div class="chat-header-name" id="chatHeaderName">Amit Kumar</div>
-            <div class="chat-header-status">Online</div>
+            <div class="chat-header-name" id="chatName">John Doe</div>
+            <div class="chat-header-status">online</div>
           </div>
-          <div class="chat-menu">
-            <button class="menu-button" id="menuButton">
-              <i class="bx bx-dots-vertical-rounded"></i>
-            </button>
-            <div class="menu-dropdown" id="menuDropdown">
-              <div class="menu-item" id="searchInChatBtn">
-                <i class="bx bx-search"></i>
-                <span>Search in chat</span>
-              </div>
-              <div class="menu-item" id="blockUserBtn">
-                <i class="bx bx-block"></i>
-                <span>Block user</span>
-              </div>
-            </div>
+          <div class="chat-header-actions">
+            <i class="bx bx-search-alt-2"></i>
+            <i class="bx bx-dots-vertical-rounded"></i>
           </div>
         </div>
 
-        <!-- Search in Chat Bar -->
-        <div class="chat-search-bar" id="chatSearchBar">
-          <i class="bx bx-search"></i>
-          <input
-            type="text"
-            id="chatMessageSearch"
-            placeholder="Search messages..."
-          />
-          <button class="close-search" id="closeSearchBtn">
-            <i class="bx bx-x"></i>
-          </button>
-        </div>
+        <div class="messages" id="messages"></div>
 
-        <div class="messages-container" id="messagesContainer">
-          <!-- Messages will be dynamically inserted here -->
-        </div>
-
-       <!-- Reaction Bar -->
-<div class="reaction-bar" id="reactionBar">
-  <span>👍</span>
-  <span>❤️</span>
-  <span>😂</span>
-  <span>😮</span>
-  <span>😢</span>
-  <span>🙏</span>
-  <span class="add-reaction">+</span>
-</div>
-
-<!-- Message Options Menu -->
-<div class="message-menu" id="messageMenu">
-  <div class="menu-option">Reply</div>
-  <div class="menu-option">Forward</div>
-  <div class="menu-option">Copy</div>
-  <div class="menu-option">Delete</div>
-</div>
-
-        <!-- Message Input -->
-        <div class="message-input-container" id="messageInputContainer">
-          <i class="bx bx-smile"></i>
-          <input
-            type="text"
-            id="messageInput"
-            placeholder="Type a message..."
-          />
-          <button class="send-button" id="sendButton">
+        <div class="input-container">
+          <div class="reply-preview" id="replyPreview"></div>
+          <div class="input-wrapper">
+            <div class="emoji-picker" id="emojiPicker"></div>
+            <textarea
+              class="message-input"
+              id="messageInput"
+              placeholder="Type a message"
+              rows="1"
+            ></textarea>
+          </div>
+          <div class="input-icons">
+            <i class="bx bx-smile" id="emojiBtn"></i>
+            <i class="bx bx-paperclip"></i>
+          </div>
+          <button class="send-btn" id="sendBtn">
             <i class="bx bx-send"></i>
           </button>
         </div>
-
-        <!-- Blocked User Overlay -->
-      <div class="blocked-overlay" id="blockedOverlay">
-      <i class="bx bx-block"></i>
-      <h3>User Blocked</h3>
-      <p>You have blocked this user. Unblock to send messages.</p>
-      <button class="unblock-button" id="unblockButton">
-        Unblock User
-      </button>
+      </div>
     </div>
 
-    <script src="DELETE.JS"></script>
+    <script>
+      const messages = {
+        1: [
+          {
+            type: "received",
+            text: "Hey! How are you doing?",
+            time: "12:30 PM",
+          },
+          {
+            type: "sent",
+            text: "I'm doing great, thanks! How about you?",
+            time: "12:32 PM",
+          },
+          {
+            type: "received",
+            text: "Pretty good! Working on a new project.",
+            time: "12:35 PM",
+          },
+        ],
+        2: [
+          { type: "received", text: "Thanks for your help!", time: "10:15 AM" },
+          {
+            type: "sent",
+            text: "You're welcome! Anytime 😊",
+            time: "10:20 AM",
+          },
+        ],
+      };
+
+      let currentUserId = "1";
+      let currentUserName = "John Doe";
+      let currentUserInitials = "JD";
+      let replyData = null;
+      let activeMessageMenu = null;
+
+      const messagesContainer = document.getElementById("messages");
+      const messageInput = document.getElementById("messageInput");
+      const sendBtn = document.getElementById("sendBtn");
+      const chatName = document.getElementById("chatName");
+      const chatAvatar = document.getElementById("chatAvatar");
+      const emojiBtn = document.getElementById("emojiBtn");
+      const emojiPicker = document.getElementById("emojiPicker");
+      const replyPreview = document.getElementById("replyPreview");
+
+      // Emojis
+      const emojis = [
+        "😀",
+        "😃",
+        "😄",
+        "😁",
+        "😅",
+        "😂",
+        "🤣",
+        "😊",
+        "😇",
+        "🙂",
+        "🙃",
+        "😉",
+        "😌",
+        "😍",
+        "🥰",
+        "😘",
+        "😗",
+        "😙",
+        "😚",
+        "😋",
+        "😛",
+        "😝",
+        "😜",
+        "🤪",
+        "🤨",
+        "🧐",
+        "🤓",
+        "😎",
+        "🤩",
+        "🥳",
+        "😏",
+        "😒",
+        "😞",
+        "😔",
+        "😟",
+        "😕",
+        "🙁",
+        "☹️",
+        "😣",
+        "😖",
+        "😫",
+        "😩",
+        "🥺",
+        "😢",
+        "😭",
+        "😤",
+        "😠",
+        "😡",
+        "🤬",
+        "🤯",
+        "😳",
+        "🥵",
+        "🥶",
+        "😱",
+        "😨",
+        "😰",
+        "😥",
+        "😓",
+        "🤗",
+        "🤔",
+        "🤭",
+        "🤫",
+        "🤥",
+        "😶",
+        "😐",
+        "😑",
+        "😬",
+        "🙄",
+        "😯",
+        "😦",
+        "😧",
+        "😮",
+        "😲",
+        "🥱",
+        "😴",
+        "🤤",
+        "😪",
+        "😵",
+        "🤐",
+        "🥴",
+        "🤢",
+        "🤮",
+        "🤧",
+        "😷",
+        "🤒",
+        "🤕",
+        "🤑",
+        "🤠",
+        "😈",
+        "👿",
+        "👹",
+        "👺",
+        "🤡",
+        "💩",
+        "👻",
+        "💀",
+        "☠️",
+        "👽",
+        "👾",
+        "🤖",
+        "🎃",
+        "😺",
+        "😸",
+        "😹",
+        "😻",
+        "😼",
+        "😽",
+        "🙀",
+        "😿",
+        "😾",
+      ];
+
+      emojis.forEach((emoji) => {
+        const span = document.createElement("span");
+        span.textContent = emoji;
+        span.onclick = () => {
+          messageInput.value += emoji;
+          messageInput.focus();
+        };
+        emojiPicker.appendChild(span);
+      });
+
+      emojiBtn.onclick = (e) => {
+        e.stopPropagation();
+        emojiPicker.classList.toggle("active");
+      };
+
+      document.addEventListener("click", (e) => {
+        if (!emojiPicker.contains(e.target) && e.target !== emojiBtn) {
+          emojiPicker.classList.remove("active");
+        }
+        if (!e.target.closest(".message-bubble")) {
+          document
+            .querySelectorAll(".message-menu")
+            .forEach((m) => m.classList.remove("active"));
+          document
+            .querySelectorAll(".reaction-bar")
+            .forEach((r) => r.classList.remove("active"));
+        }
+      });
+
+      function loadMessages(userId) {
+        messagesContainer.innerHTML = "";
+        const msgs = messages[userId] || [];
+        msgs.forEach((msg) =>
+          addMessage(msg.text, msg.type, msg.time, msg.reply),
+        );
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+
+      function addMessage(text, type, time, reply = null) {
+        const msgDiv = document.createElement("div");
+        msgDiv.className = `message ${type}`;
+
+        const bubbleDiv = document.createElement("div");
+        bubbleDiv.className = "message-bubble";
+
+        let replyHTML = "";
+        if (reply) {
+          replyHTML = `
+                    <div class="reply-quote">
+                        <span class="reply-user">${reply.user}</span>
+                        <span class="reply-text">${reply.text}</span>
+                    </div>
+                `;
+        }
+
+        bubbleDiv.innerHTML = `
+                ${replyHTML}
+                <div class="message-text">${text}</div>
+                <div class="message-footer">
+                    <span class="message-time">${time}</span>
+                    ${type === "sent" ? '<i class="bx bxs-check-double message-status"></i>' : ""}
+                </div>
+                <div class="message-menu-btn"><i class='bx bx-chevron-down'></i></div>
+                <div class="reaction-bar">
+                    <span>👍</span><span>❤️</span><span>😂</span><span>😮</span><span>😢</span><span>🙏</span>
+                </div>
+                <div class="message-menu">
+                    <div class="menu-item reply-msg"><i class='bx bx-reply'></i> Reply</div>
+                    <div class="menu-item react-msg"><i class='bx bx-smile'></i> React</div>
+                    <div class="menu-item forward-msg"><i class='bx bx-share'></i> Forward</div>
+                    <div class="menu-item copy-msg"><i class='bx bx-copy'></i> Copy</div>
+                    <div class="menu-item delete-msg"><i class='bx bx-trash'></i> Delete</div>
+                </div>
+            `;
+
+        msgDiv.appendChild(bubbleDiv);
+        messagesContainer.appendChild(msgDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        // Menu button
+        const menuBtn = bubbleDiv.querySelector(".message-menu-btn");
+        const menu = bubbleDiv.querySelector(".message-menu");
+        const reactionBar = bubbleDiv.querySelector(".reaction-bar");
+
+        menuBtn.onclick = (e) => {
+          e.stopPropagation();
+          document
+            .querySelectorAll(".message-menu")
+            .forEach((m) => m !== menu && m.classList.remove("active"));
+          menu.classList.toggle("active");
+        };
+
+        // Menu actions
+        bubbleDiv.querySelector(".reply-msg").onclick = () => {
+          replyData = { user: type === "sent" ? "You" : currentUserName, text };
+          showReplyPreview();
+          menu.classList.remove("active");
+          messageInput.focus();
+        };
+
+        bubbleDiv.querySelector(".react-msg").onclick = () => {
+          menu.classList.remove("active");
+          reactionBar.classList.add("active");
+        };
+
+        bubbleDiv.querySelector(".copy-msg").onclick = () => {
+          navigator.clipboard.writeText(text);
+          menu.classList.remove("active");
+        };
+
+        bubbleDiv.querySelector(".delete-msg").onclick = () => {
+          msgDiv.remove();
+          menu.classList.remove("active");
+        };
+
+        bubbleDiv.querySelector(".forward-msg").onclick = () => {
+          alert("Forward feature - select chat to forward to");
+          menu.classList.remove("active");
+        };
+
+        // Reactions
+        reactionBar.querySelectorAll("span").forEach((emoji) => {
+          emoji.onclick = (e) => {
+            e.stopPropagation();
+            let reaction = bubbleDiv.querySelector(".reaction");
+            if (!reaction) {
+              reaction = document.createElement("div");
+              reaction.className = "reaction";
+              bubbleDiv.appendChild(reaction);
+            }
+            reaction.textContent = emoji.textContent;
+            reactionBar.classList.remove("active");
+          };
+        });
+      }
+
+      function showReplyPreview() {
+        replyPreview.className = "reply-preview active";
+        replyPreview.innerHTML = `
+                <div class="reply-bar"></div>
+                <div class="reply-content">
+                    <strong>${replyData.user}</strong>
+                    <span>${replyData.text}</span>
+                </div>
+                <button class="close-reply">✕</button>
+            `;
+        replyPreview.querySelector(".close-reply").onclick = () => {
+          replyData = null;
+          replyPreview.classList.remove("active");
+        };
+      }
+
+      function sendMessage() {
+        const text = messageInput.value.trim();
+        if (!text) return;
+
+        const now = new Date();
+        const time = now.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+
+        addMessage(text, "sent", time, replyData);
+
+        if (!messages[currentUserId]) messages[currentUserId] = [];
+        messages[currentUserId].push({
+          type: "sent",
+          text,
+          time,
+          reply: replyData,
+        });
+
+        messageInput.value = "";
+        replyData = null;
+        replyPreview.classList.remove("active");
+      }
+
+      sendBtn.onclick = sendMessage;
+      messageInput.onkeypress = (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
+      };
+
+      // Chat selection
+      document.querySelectorAll(".chat-item").forEach((item) => {
+        item.onclick = () => {
+          document
+            .querySelectorAll(".chat-item")
+            .forEach((i) => i.classList.remove("active"));
+          item.classList.add("active");
+
+          currentUserId = item.dataset.userId;
+          currentUserName = item.dataset.name;
+          currentUserInitials = item.dataset.initials;
+
+          chatName.textContent = currentUserName;
+          chatAvatar.textContent = currentUserInitials;
+
+          loadMessages(currentUserId);
+        };
+      });
+
+      // Initial load
+      loadMessages("1");
+    </script>
   </body>
 </html>
