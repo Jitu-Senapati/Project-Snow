@@ -63,7 +63,10 @@ if (editModal) {
 
 // Follow Button Logic
 const followBtn = document.getElementById("followBtn");
+const messageBtn = document.querySelector(".message-btn");
 let isFollowing = false;
+let isFollower = false; // Does this person follow you back?
+
 if (followBtn) {
   followBtn.addEventListener("click", () => {
     isFollowing = !isFollowing;
@@ -71,6 +74,104 @@ if (followBtn) {
       ? '<i class="bx bx-check"></i> Following'
       : '<i class="bx bx-plus"></i> Follow';
     followBtn.style.background = isFollowing ? "#2a2a2a" : "#a78bfa";
+
+    // Update message button state
+    updateMessageButton();
+  });
+}
+
+// Function to update message button availability
+function updateMessageButton() {
+  if (messageBtn) {
+    // Can only message if both follow each other (mutual follow)
+    const canMessage = isFollowing && isFollower;
+
+    if (canMessage) {
+      messageBtn.disabled = false;
+      messageBtn.style.opacity = "1";
+      messageBtn.style.cursor = "pointer";
+      messageBtn.title = "";
+    } else {
+      messageBtn.disabled = true;
+      messageBtn.style.opacity = "0.5";
+      messageBtn.style.cursor = "not-allowed";
+
+      if (!isFollowing) {
+        messageBtn.title = "You need to follow this person to message them";
+      } else if (!isFollower) {
+        messageBtn.title =
+          "This person needs to follow you back before you can message them";
+      }
+    }
+  }
+}
+
+// Message button click handler
+if (messageBtn) {
+  messageBtn.addEventListener("click", (e) => {
+    if (messageBtn.disabled) {
+      e.preventDefault();
+
+      if (!isFollowing) {
+        alert("You need to follow this person first before sending a message.");
+      } else if (!isFollower) {
+        alert(
+          "You can only message people who follow you back. Wait for them to follow you!",
+        );
+      }
+    } else {
+      // Navigate to chat or open message dialog
+      alert("Opening message dialog...");
+      // You can add actual messaging functionality here
+    }
+  });
+
+  // Initial state - disabled until mutual follow
+  updateMessageButton();
+}
+
+// Demo: Simulate the other person following you back after 3 seconds of you following them
+// (Remove this in production - this is just for testing)
+if (followBtn) {
+  followBtn.addEventListener("click", () => {
+    if (isFollowing && !isFollower) {
+      // Simulate them following back after 3 seconds
+      setTimeout(() => {
+        isFollower = true;
+        updateMessageButton();
+
+        // Show notification
+        const notification = document.createElement("div");
+        notification.style.cssText = `
+          position: fixed;
+          top: 80px;
+          right: 20px;
+          background: #1a1a1a;
+          border: 1px solid #a78bfa;
+          padding: 15px 20px;
+          border-radius: 12px;
+          color: white;
+          z-index: 1001;
+          animation: slideInRight 0.3s ease;
+        `;
+        notification.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <i class="bx bx-check-circle" style="color: #10b981; font-size: 24px;"></i>
+            <div>
+              <strong>They followed you back!</strong>
+              <p style="font-size: 12px; color: #aaa; margin-top: 3px;">You can now send messages</p>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(notification);
+
+        // Remove notification after 3 seconds
+        setTimeout(() => {
+          notification.style.animation = "slideOutRight 0.3s ease";
+          setTimeout(() => notification.remove(), 300);
+        }, 3000);
+      }, 3000);
+    }
   });
 }
 
