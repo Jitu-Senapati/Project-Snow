@@ -8,7 +8,7 @@
       href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="explorer.css" />
+    <link rel="stylesheet" href="temp.css" />
   </head>
   <body>
     <div class="main-app" id="mainApp" style="display: block">
@@ -19,7 +19,6 @@
         </div>
         <div class="header-icons">
           <i class="bx bx-bell" id="notificationToggle"></i>
-
           <i class="bx bx-menu" id="menuToggle"></i>
         </div>
 
@@ -76,7 +75,22 @@
         </div>
       </div>
 
-      <div class="page-content active" id="busPage">
+      <!-- ================= HOME PAGE (ADDED) ================= -->
+      <div class="page-content active" id="homePage">
+        <h2 style="margin-bottom: 20px">Home</h2>
+
+        <div class="bus-card">
+          <h3 style="color: #a78bfa; margin-bottom: 10px">
+            Welcome to STUVO 👋
+          </h3>
+          <p style="color: #aaa">
+            Track buses, explore events, chat, and manage your profile.
+          </p>
+        </div>
+      </div>
+
+      <!-- ================= BUS PAGE (UNCHANGED CONTENT) ================= -->
+      <div class="page-content" id="busPage">
         <h2 style="margin-bottom: 20px">Bus Tracking</h2>
         <div class="bus-card">
           <div class="bus-header">
@@ -106,6 +120,7 @@
         </div>
       </div>
 
+      <!-- ================= EXPLORER PAGE ================= -->
       <div class="page-content" id="explorerPage">
         <h2 style="margin-bottom: 20px">Explorer</h2>
         <div class="search-bar">
@@ -124,7 +139,8 @@
         </div>
       </div>
 
-       <div class="page-content" id="chatPage">
+      <!-- ================= CHAT PAGE ================= -->
+      <div class="page-content" id="chatPage">
         <h2 style="margin-bottom: 20px">Messages</h2>
         <div class="chat-list">
           <div class="chat-item">
@@ -146,6 +162,7 @@
         </div>
       </div>
 
+      <!-- ================= PROFILE PAGE (UNCHANGED) ================= -->
       <div class="page-content" id="profilePage">
         <div class="profile-header-section">
           <div class="profile-top-row">
@@ -190,67 +207,67 @@
             </button>
           </div>
         </div>
-     
+
         <!-- academic part added by aryan 25/01/26-->
 
         <div class="info-section">
-        <h3 class="section-title">Academic Information</h3>
+          <h3 class="section-title">Academic Information</h3>
 
-        <div class="info-card">
-          <div class="info-card-header">
-            <div class="info-card-title">
-              <i class="bx bx-file"></i><span>Marksheet</span>
+          <div class="info-card">
+            <div class="info-card-header">
+              <div class="info-card-title">
+                <i class="bx bx-file"></i><span>Marksheet</span>
+              </div>
+              <span class="cgpa-badge" id="gpa-badge">CGPA 8.5</span>
             </div>
-            <span class="cgpa-badge" id="gpa-badge">CGPA 8.5</span>
-          </div>
-          <div class="subjects-list" id="subjects-container"></div>
-        </div>
-
-        <div class="info-card">
-          <div class="info-card-header">
-            <div class="info-card-title">
-              <i class="bx bx-book"></i><span>Semester Records</span>
-            </div>
+            <div class="subjects-list" id="subjects-container"></div>
           </div>
 
-          <div class="combo-container">
-            <label for="semester-select" class="info-label">Select Term:</label>
-            <select id="semester-select" class="sem-combo-box">
-              <option value="1">Semester 1</option>
-              <option value="2">Semester 2</option>
-              <option value="3">Semester 3</option>
-              <option value="4">Semester 4</option>
-              <option value="5">Semester 5</option>
-              <option value="6" selected>Semester 6</option>
-              <option value="7">Semester 7</option>
-              <option value="8">Semester 8</option>
-            </select>
-          </div>
-
-          <div class="semester-info" style="margin-top: 15px">
-            <div class="info-row">
-              <span class="info-label">Roll Number</span>
-              <span class="info-value">CS2026-045</span>
+          <div class="info-card">
+            <div class="info-card-header">
+              <div class="info-card-title">
+                <i class="bx bx-book"></i><span>Semester Records</span>
+              </div>
             </div>
-            <div class="info-row">
-              <span class="info-label">Status</span>
-              <span class="info-value" id="current-sem-text"
-                >Active - Semester 6</span
+
+            <div class="combo-container">
+              <label for="semester-select" class="info-label"
+                >Select Term:</label
               >
+              <select id="semester-select" class="sem-combo-box">
+                <option value="1">Semester 1</option>
+                <option value="2">Semester 2</option>
+                <option value="3">Semester 3</option>
+                <option value="4">Semester 4</option>
+                <option value="5">Semester 5</option>
+                <option value="6" selected>Semester 6</option>
+                <option value="7">Semester 7</option>
+                <option value="8">Semester 8</option>
+              </select>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: 85%"></div>
+
+            <div class="semester-info" style="margin-top: 15px">
+              <div class="info-row">
+                <span class="info-label">Roll Number</span>
+                <span class="info-value">CS2026-045</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Status</span>
+                <span class="info-value" id="current-sem-text"
+                  >Active - Semester 6</span
+                >
+              </div>
             </div>
           </div>
         </div>
       </div>
 
+      <!-- ================= BOTTOM NAV ================= -->
       <div class="bottom-nav">
-        <div class="nav-item active" data-page="busPage">
+        <div class="nav-item active" data-page="homePage">
+          <i class="bx bx-home"></i><span>Home</span>
+        </div>
+        <div class="nav-item" data-page="busPage">
           <i class="bx bx-bus"></i><span>Bus</span>
         </div>
         <div class="nav-item" data-page="explorerPage">
@@ -265,33 +282,6 @@
       </div>
     </div>
 
-    <div class="edit-modal" id="editModal">
-      <div class="edit-modal-content">
-        <div class="modal-header">
-          <h2>Edit Profile</h2>
-          <i class="bx bx-x" id="closeModal"></i>
-        </div>
-        <div class="modal-body">
-          <div class="edit-form">
-            <div class="form-group">
-              <label>Full Name</label
-              ><input type="text" value="Prabhat Behera" />
-            </div>
-            <div class="form-group">
-              <label>Bio</label
-              ><textarea rows="3">
-Computer Science Student | Tech Enthusiast | Coffee Lover ☕</textarea
-              >
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button class="cancel-btn" id="cancelBtn">Cancel</button>
-          <button class="save-btn" id="saveBtn">Save Changes</button>
-        </div>
-      </div>
-    </div>
-
-    <script src="explorer.js"></script>
+    <script src="temp.js"></script>
   </body>
 </html>
