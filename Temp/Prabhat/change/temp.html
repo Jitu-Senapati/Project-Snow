@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>STUVO - Student Dashboard</title>
+    <title>STUVO5 - Study Platform for Students</title>
     <link
       href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
       rel="stylesheet"
@@ -11,398 +11,215 @@
     <link rel="stylesheet" href="temp.css" />
   </head>
   <body>
-    <div class="main-app" id="mainApp" style="display: block">
-      <div class="app-header">
-        <div class="app-logo">
-          <img src="logo.png" alt="STRUVO" class="header-logo-icon" />
-          STUVO
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="nav-content">
+        <div class="logo">
+          <img src="logo.png" alt="STUVO" class="logo-icon" />
+          <span class="logo-text">STUVO5</span>
         </div>
-        <div class="header-icons">
-          <i class="bx bx-bell" id="notificationToggle"></i>
-          <i class="bx bx-menu" id="menuToggle"></i>
+        <a href="temp.html" class="login-btn">Login</a>
+      </div>
+    </nav>
+
+    <!-- Background Video -->
+    <video autoplay muted loop id="bg-video">
+      <source src="website.mp4" type="video/mp4" />
+    </video>
+    <div class="video-overlay"></div>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <div class="hero-logo">
+          <img src="logo.png" alt="STUVO" class="hero-logo-icon" />
+          <h1 class="hero-title">STUVO5</h1>
         </div>
-
-        <!-- NOTIFICATION DROPDOWN -->
-        <div class="notification-panel" id="notificationPanel">
-          <div class="notification-item">
-            <i class="bx bx-bus"></i>
-            <div class="notification-text">
-              <strong>Bus #101</strong>
-              <p>Arriving in 5 minutes</p>
-            </div>
-          </div>
-
-          <div class="notification-item">
-            <i class="bx bx-calendar"></i>
-            <div class="notification-text">
-              <strong>New Event</strong>
-              <p>Tech Fest starts tomorrow</p>
-            </div>
-          </div>
-
-          <div class="notification-item">
-            <i class="bx bx-book"></i>
-            <div class="notification-text">
-              <strong>Attendance Updated</strong>
-              <p>Your attendance has been updated</p>
-            </div>
-          </div>
-
-          <div class="notification-footer">View all notifications</div>
-        </div>
-
-        <!-- HEADER DROPDOWN MENU -->
-        <div class="menu-panel" id="menuPanel">
-          <div class="menu-item" id="settingsBtn">
-            <i class="bx bx-cog"></i>
-            <span>Settings</span>
-          </div>
-
-          <div class="menu-item" id="feedbackBtn">
-            <i class="bx bx-message-dots"></i>
-            <span>Feedback</span>
-          </div>
-
-          <div class="menu-item" id="helpBtn">
-            <i class="bx bx-help-circle"></i>
-            <span>Help</span>
-          </div>
-
-          <div class="menu-item logout" id="logoutBtn">
-            <i class="bx bx-log-out"></i>
-            <span>Logout</span>
-          </div>
+        <p class="hero-subtitle">Empowering Students, Enabling Success</p>
+        <div class="hero-buttons">
+          <a href="temp.html" class="btn btn-primary">Get Started</a>
+          <a href="#about" class="btn btn-secondary">Learn More</a>
         </div>
       </div>
+      <div class="scroll-indicator">
+        <i class="bx bx-chevron-down"></i>
+      </div>
+    </section>
 
-      <!-- ================= HOME PAGE ================= -->
-      <div class="page-content active" id="homePage">
-        <!-- HOME TOP SLIDER - NOW ONLY IN HOME PAGE -->
-        <div class="home-slider">
-          <!-- SLIDER ARROWS -->
-          <button class="slider-arrow left">&#10094;</button>
-          <button class="slider-arrow right">&#10095;</button>
-
-          <div class="home-slide active">
-            <div class="slide-text">
-              <h3>Attendance & Leave Tracking</h3>
-              <p>
-                Receive daily attendance updates and apply for leave easily.
-              </p>
-            </div>
+    <!-- About Section -->
+    <section class="about-section" id="about">
+      <div class="about-container">
+        <div class="about-animation">
+          <div class="floating-element element-1">
+            <i class="bx bxs-book-bookmark"></i>
           </div>
-
-          <div class="home-slide">
-            <div class="slide-text">
-              <h3>Upcoming Exams</h3>
-              <p>Check exam schedules, seating arrangements and syllabus.</p>
-            </div>
+          <div class="floating-element element-2">
+            <i class="bx bxs-graduation"></i>
           </div>
-
-          <div class="home-slide">
-            <div class="slide-text">
-              <h3>Campus Events</h3>
-              <p>Stay updated with tech fests, workshops and activities.</p>
-            </div>
+          <div class="floating-element element-3">
+            <i class="bx bxs-file-doc"></i>
           </div>
-
-          <div class="slider-dots">
-            <span class="dot active"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
+          <div class="floating-element element-4">
+            <i class="bx bxs-group"></i>
           </div>
+          <div class="floating-element element-5">
+            <i class="bx bxs-bulb"></i>
+          </div>
+          <div class="animated-orb orb-1"></div>
+          <div class="animated-orb orb-2"></div>
+          <div class="animated-orb orb-3"></div>
         </div>
-
-        <h2 style="margin-bottom: 20px">Home</h2>
-
-        <div class="bus-card">
-          <h3 style="color: #a78bfa; margin-bottom: 10px">
-            Welcome to STUVO 👋
-          </h3>
-          <p style="color: #aaa">
-            Track buses, explore events, chat, and manage your profile.
+        <div class="about-content">
+          <h2 class="about-title">
+            Your Ultimate Study <br />Companion Platform
+          </h2>
+          <p class="about-description">
+            STUVO is a comprehensive platform designed exclusively for college
+            students to streamline their academic journey. Access study
+            materials, collaborate with peers, share notes, find valuable
+            resources, and achieve academic excellence - all in one integrated
+            platform.
           </p>
-        </div>
-      </div>
-
-      <!-- ================= BUS PAGE ================= -->
-      <div class="page-content" id="busPage">
-        <h2 style="margin-bottom: 20px">Bus Tracking</h2>
-        <div class="bus-card">
-          <div class="bus-header">
-            <div class="bus-number">Bus #101</div>
-            <div class="bus-status status-active">Active</div>
-          </div>
-          <p style="color: #888; margin-bottom: 10px">
-            Route: Main Campus → City Center
-          </p>
-          <p style="color: #888">ETA: 5 minutes</p>
-          <div class="map-placeholder">
-            <i class="bx bx-map" style="font-size: 48px"></i>
-          </div>
-        </div>
-        <div class="bus-card">
-          <div class="bus-header">
-            <div class="bus-number">Bus #202</div>
-            <div class="bus-status status-active">Active</div>
-          </div>
-          <p style="color: #888; margin-bottom: 10px">
-            Route: Hostel → Main Campus
-          </p>
-          <p style="color: #888">ETA: 12 minutes</p>
-          <div class="map-placeholder">
-            <i class="bx bx-map" style="font-size: 48px"></i>
-          </div>
-        </div>
-      </div>
-
-      <!-- ================= EXPLORER PAGE ================= -->
-      <div class="page-content" id="explorerPage">
-        <h2 style="margin-bottom: 20px">Explorer</h2>
-        <div class="search-bar">
-          <i class="bx bx-search"></i>
-          <input type="text" placeholder="Search events, announcements..." />
-        </div>
-        <div class="event-card">
-          <span class="event-tag">UPCOMING</span>
-          <div class="event-title">Tech Fest 2026</div>
-          <p style="color: #ccc; margin: 10px 0">
-            Join us for the biggest tech event of the year!
-          </p>
-          <div class="event-date">
-            <i class="bx bx-calendar"></i> January 15-17, 2026
-          </div>
-        </div>
-      </div>
-
-      <!-- ================= CHAT PAGE ================= -->
-      <div class="page-content" id="chatPage">
-        <h2 style="margin-bottom: 20px">Messages</h2>
-        <div class="chat-list">
-          <div class="chat-item">
-            <div class="chat-avatar">AK</div>
-            <div class="chat-info">
-              <div class="chat-name">Amit Kumar</div>
-              <div class="chat-message">Hey, are you coming to the lab?</div>
+          <div class="about-features">
+            <div class="feature-item">
+              <i class="bx bx-check-circle"></i>
+              <span>Access quality study materials anytime, anywhere</span>
             </div>
-            <div style="color: #888; font-size: 12px">2m</div>
-          </div>
-          <div class="chat-item">
-            <div class="chat-avatar">PS</div>
-            <div class="chat-info">
-              <div class="chat-name">Priya Sharma</div>
-              <div class="chat-message">Can you share the notes?</div>
+            <div class="feature-item">
+              <i class="bx bx-check-circle"></i>
+              <span>Collaborate seamlessly with fellow students</span>
             </div>
-            <div style="color: #888; font-size: 12px">15m</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ================= PROFILE PAGE ================= -->
-      <div class="page-content" id="profilePage">
-        <div class="profile-header-section">
-          <div class="profile-top-row">
-            <div class="profile-avatar-small">PB</div>
-            <div class="profile-stats-inline">
-              <div class="stat-box">
-                <div class="stat-number">156</div>
-                <div class="stat-text">Followers</div>
-              </div>
-              <div class="stat-box">
-                <div class="stat-number">89</div>
-                <div class="stat-text">Following</div>
-              </div>
+            <div class="feature-item">
+              <i class="bx bx-check-circle"></i>
+              <span>Share and discover comprehensive notes</span>
             </div>
-          </div>
-          <div class="profile-info">
-            <h2 class="profile-name-main">Prabhat Behera</h2>
-            <p class="profile-username">@Prabhat4a</p>
-            <p class="profile-bio">
-              Computer Science Student | Tech Enthusiast | Coffee Lover ☕
-            </p>
-          </div>
-
-          <div class="profile-buttons own-profile">
-            <button class="edit-profile-btn-main">
-              <i class="bx bx-edit"></i> Edit Profile
-            </button>
-            <button class="share-profile-btn">
-              <i class="bx bx-share-alt"></i>
-            </button>
-          </div>
-
-          <div class="profile-buttons other-profile" style="display: none">
-            <button class="follow-btn" id="followBtn">
-              <i class="bx bx-plus"></i> Follow
-            </button>
-            <button class="message-btn">
-              <i class="bx bx-message-rounded"></i> Message
-            </button>
-            <button class="more-btn">
-              <i class="bx bx-dots-horizontal-rounded"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- academic part added by aryan 25/01/26-->
-
-        <div class="info-section">
-          <h3 class="section-title">Academic Information</h3>
-
-          <div class="info-card">
-            <div class="info-card-header">
-              <div class="info-card-title">
-                <i class="bx bx-file"></i><span>Marksheet</span>
-              </div>
-              <span class="cgpa-badge" id="gpa-badge">CGPA 8.5</span>
-            </div>
-            <div class="subjects-list" id="subjects-container"></div>
-          </div>
-
-          <div class="info-card">
-            <div class="info-card-header">
-              <div class="info-card-title">
-                <i class="bx bx-book"></i><span>Semester Records</span>
-              </div>
-            </div>
-
-            <div class="combo-container">
-              <label for="semester-select" class="info-label"
-                >Select Term:</label
-              >
-              <select id="semester-select" class="sem-combo-box">
-                <option value="1">Semester 1</option>
-                <option value="2">Semester 2</option>
-                <option value="3">Semester 3</option>
-                <option value="4">Semester 4</option>
-                <option value="5">Semester 5</option>
-                <option value="6" selected>Semester 6</option>
-                <option value="7">Semester 7</option>
-                <option value="8">Semester 8</option>
-              </select>
-            </div>
-
-            <div class="semester-info" style="margin-top: 15px">
-              <div class="info-row">
-                <span class="info-label">Roll Number</span>
-                <span class="info-value">CS2026-045</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Status</span>
-                <span class="info-value" id="current-sem-text"
-                  >Active - Semester 6</span
-                >
-              </div>
+            <div class="feature-item">
+              <i class="bx bx-check-circle"></i>
+              <span>Find resources tailored to your curriculum</span>
             </div>
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- ================= BOTTOM NAV ================= -->
-      <div class="bottom-nav">
-        <div class="nav-item active" data-page="homePage">
-          <i class="bx bx-home"></i><span>Home</span>
+    <!-- Creators Section -->
+    <section class="creators-section" id="creators">
+      <h2 class="creators-title">Meet the Creators</h2>
+      <div class="creators-container">
+        <!-- Creator 1 -->
+        <div class="creator-card">
+          <div class="creator-image">
+            <img src="creator1.jpg" alt="Creator 1" />
+          </div>
+          <h3 class="creator-name">Your Name</h3>
+          <p class="creator-role">Full Stack Developer</p>
+          <div class="creator-socials">
+            <a href="#" class="social-link" aria-label="Instagram">
+              <i class="bx bxl-instagram"></i>
+            </a>
+            <a href="#" class="social-link" aria-label="GitHub">
+              <i class="bx bxl-github"></i>
+            </a>
+            <a href="#" class="social-link" aria-label="LinkedIn">
+              <i class="bx bxl-linkedin"></i>
+            </a>
+          </div>
         </div>
-        <div class="nav-item" data-page="busPage">
-          <i class="bx bx-bus"></i><span>Bus</span>
+
+        <!-- Creator 2 -->
+        <div class="creator-card">
+          <div class="creator-image">
+            <img src="creator2.jpg" alt="Creator 2" />
+          </div>
+          <h3 class="creator-name">Team Member 2</h3>
+          <p class="creator-role">UI/UX Designer</p>
+          <div class="creator-socials">
+            <a href="#" class="social-link" aria-label="Instagram">
+              <i class="bx bxl-instagram"></i>
+            </a>
+            <a href="#" class="social-link" aria-label="GitHub">
+              <i class="bx bxl-github"></i>
+            </a>
+            <a href="#" class="social-link" aria-label="LinkedIn">
+              <i class="bx bxl-linkedin"></i>
+            </a>
+          </div>
         </div>
-        <div class="nav-item" data-page="explorerPage">
-          <i class="bx bx-compass"></i><span>Explorer</span>
+
+        <!-- Creator 3 -->
+        <div class="creator-card">
+          <div class="creator-image">
+            <img src="creator3.jpg" alt="Creator 3" />
+          </div>
+          <h3 class="creator-name">Team Member 3</h3>
+          <p class="creator-role">Backend Developer</p>
+          <div class="creator-socials">
+            <a href="#" class="social-link" aria-label="Instagram">
+              <i class="bx bxl-instagram"></i>
+            </a>
+            <a href="#" class="social-link" aria-label="GitHub">
+              <i class="bx bxl-github"></i>
+            </a>
+            <a href="#" class="social-link" aria-label="LinkedIn">
+              <i class="bx bxl-linkedin"></i>
+            </a>
+          </div>
         </div>
-        <div class="nav-item" data-page="chatPage">
-          <i class="bx bx-message-rounded-dots"></i><span>Chat</span>
+
+        <!-- Creator 4 -->
+        <div class="creator-card">
+          <div class="creator-image">
+            <img src="creator4.jpg" alt="Creator 4" />
+          </div>
+          <h3 class="creator-name">Team Member 4</h3>
+          <p class="creator-role">Content Strategist</p>
+          <div class="creator-socials">
+            <a href="#" class="social-link" aria-label="Instagram">
+              <i class="bx bxl-instagram"></i>
+            </a>
+            <a href="#" class="social-link" aria-label="GitHub">
+              <i class="bx bxl-github"></i>
+            </a>
+            <a href="#" class="social-link" aria-label="LinkedIn">
+              <i class="bx bxl-linkedin"></i>
+            </a>
+          </div>
         </div>
-        <div class="nav-item" data-page="profilePage">
-          <i class="bx bx-user"></i><span>Profile</span>
+
+        <!-- Creator 5 -->
+        <div class="creator-card">
+          <div class="creator-image">
+            <img src="creator5.jpg" alt="Creator 5" />
+          </div>
+          <h3 class="creator-name">Team Member 5</h3>
+          <p class="creator-role">Marketing Lead</p>
+          <div class="creator-socials">
+            <a href="#" class="social-link" aria-label="Instagram">
+              <i class="bx bxl-instagram"></i>
+            </a>
+            <a href="#" class="social-link" aria-label="GitHub">
+              <i class="bx bxl-github"></i>
+            </a>
+            <a href="#" class="social-link" aria-label="LinkedIn">
+              <i class="bx bxl-linkedin"></i>
+            </a>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- ================= EDIT PROFILE MODAL ================= -->
-    <div class="edit-modal" id="editModal">
-      <div class="edit-modal-content">
-        <div class="modal-header">
-          <h2>Edit Profile</h2>
-          <i
-            class="bx bx-x"
-            id="closeModal"
-            style="font-size: 28px; cursor: pointer"
-          ></i>
-        </div>
-
-        <form id="editProfileForm">
-          <div class="form-group">
-            <label>Profile Picture</label>
-            <div class="profile-pic-upload">
-              <div class="current-pic">PB</div>
-              <button type="button" class="upload-pic-btn">
-                <i class="bx bx-camera"></i> Change Photo
-              </button>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="editName">Full Name</label>
-            <input
-              type="text"
-              id="editName"
-              value="Prabhat Behera"
-              placeholder="Enter your name"
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="editUsername">Username</label>
-            <input
-              type="text"
-              id="editUsername"
-              value="@Prabhat4a"
-              placeholder="@username"
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="editBio">Bio</label>
-            <textarea
-              id="editBio"
-              rows="3"
-              placeholder="Tell us about yourself..."
-            >
-Computer Science Student | Tech Enthusiast | Coffee Lover ☕</textarea
-            >
-          </div>
-
-          <div class="form-group">
-            <label for="editEmail">Email</label>
-            <input
-              type="email"
-              id="editEmail"
-              value="prabhat@example.com"
-              placeholder="your@email.com"
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="editPhone">Phone Number</label>
-            <input
-              type="tel"
-              id="editPhone"
-              value="+91 98765 43210"
-              placeholder="+91 XXXXX XXXXX"
-            />
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" class="cancel-btn" id="cancelBtn">
-              Cancel
-            </button>
-            <button type="button" class="save-btn" id="saveBtn">
-              Save Changes
-            </button>
-          </div>
-        </form>
+      <!-- CTA Section -->
+      <div class="cta-section">
+        <h3 class="cta-title">
+          Create your account and experience STUVO5 for yourself
+        </h3>
+        <a href="temp.html" class="cta-button">Join STUVO</a>
       </div>
-    </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>&copy; 2026 STUVO5. All rights reserved.</p>
+    </footer>
 
     <script src="temp.js"></script>
   </body>
