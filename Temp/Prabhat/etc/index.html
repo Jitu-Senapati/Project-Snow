@@ -1,0 +1,1302 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>STUVO5 - Study Platform</title>
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --bg-dark: #0a0a0a;
+        --bg-section: #000000;
+        --text-primary: #ffffff;
+        --text-secondary: rgba(255, 255, 255, 0.7);
+        --accent-start: #667eea;
+        --accent-end: #764ba2;
+        --glass-bg: rgba(255, 255, 255, 0.05);
+        --glass-border: rgba(255, 255, 255, 0.1);
+      }
+
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+
+      body {
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        background-color: var(--bg-dark);
+        color: var(--text-primary);
+        overflow-x: hidden;
+        line-height: 1.6;
+      }
+
+      /* Navigation */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        padding: 1.25rem 4%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.8) 0%,
+          transparent 100%
+        );
+        backdrop-filter: blur(10px);
+      }
+
+      .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+      }
+
+      .logo-icon {
+        width: 2rem;
+        height: 2rem;
+        background: linear-gradient(
+          135deg,
+          var(--accent-start) 0%,
+          var(--accent-end) 100%
+        );
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+
+      .logo-icon::before {
+        content: "";
+        width: 1.2rem;
+        height: 0.8rem;
+        background: white;
+        border-radius: 50% 50% 0 0;
+        position: relative;
+      }
+
+      .login-btn {
+        background: linear-gradient(
+          135deg,
+          var(--accent-start) 0%,
+          var(--accent-end) 100%
+        );
+        color: white;
+        padding: 0.6rem 1.5rem;
+        border-radius: 2rem;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+        border: none;
+        cursor: pointer;
+      }
+
+      .login-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+      }
+
+      /* Hero Section with Parallax Grid */
+      .hero {
+        position: relative;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .hero-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+      }
+
+      .parallax-grid {
+        position: absolute;
+        width: 100%;
+        height: 150%;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 1rem;
+        padding: 2%;
+        pointer-events: none;
+      }
+
+      .grid-column {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        will-change: transform;
+      }
+
+      .grid-item {
+        width: 100%;
+        aspect-ratio: 2/3;
+        background: linear-gradient(
+          135deg,
+          rgba(102, 126, 234, 0.3),
+          rgba(118, 75, 162, 0.3)
+        );
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        position: relative;
+      }
+
+      .grid-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.8;
+        transition: opacity 0.3s;
+      }
+
+      .grid-item::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          transparent 0%,
+          rgba(0, 0, 0, 0.4) 100%
+        );
+      }
+
+      /* Offset columns for parallax depth */
+      .col-1 {
+        margin-top: -10%;
+      }
+      .col-2 {
+        margin-top: 5%;
+      }
+      .col-3 {
+        margin-top: -5%;
+      }
+      .col-4 {
+        margin-top: 8%;
+      }
+      .col-5 {
+        margin-top: -8%;
+      }
+
+      .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(
+            circle at top,
+            rgba(102, 126, 234, 0.15) 0%,
+            transparent 60%
+          ),
+          linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, var(--bg-dark) 100%);
+        z-index: 2;
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 10;
+        text-align: center;
+        padding: 0 2rem;
+        max-width: 900px;
+      }
+
+      .hero-logo-large {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .hero-logo-icon-large {
+        width: 4rem;
+        height: 4rem;
+        background: linear-gradient(
+          135deg,
+          var(--accent-start) 0%,
+          var(--accent-end) 100%
+        );
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 60px rgba(102, 126, 234, 0.5);
+      }
+
+      .hero-logo-icon-large::before {
+        content: "";
+        width: 2rem;
+        height: 1.5rem;
+        background: white;
+        border-radius: 50% 50% 0 0;
+      }
+
+      .hero-title {
+        font-size: clamp(2.5rem, 8vw, 5rem);
+        font-weight: 800;
+        letter-spacing: -2px;
+        background: linear-gradient(135deg, #fff 0%, var(--accent-start) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      /* Features Sections */
+      .features-container {
+        position: relative;
+        z-index: 20;
+        background: var(--bg-dark);
+      }
+
+      .feature-section {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding: 5rem 4%;
+        background: var(--bg-dark);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .feature-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6rem;
+        align-items: center;
+        width: 100%;
+      }
+
+      /* Phone Mockup */
+      .phone-mockup {
+        width: 300px;
+        height: 600px;
+        background: #1a1a1a;
+        border-radius: 40px;
+        padding: 12px;
+        box-shadow:
+          0 50px 100px rgba(0, 0, 0, 0.8),
+          0 0 0 1px rgba(255, 255, 255, 0.1),
+          inset 0 0 20px rgba(0, 0, 0, 0.5);
+        position: relative;
+        justify-self: center;
+        transform: perspective(1000px) rotateY(-5deg);
+        transition: transform 0.6s ease;
+      }
+
+      .phone-mockup:hover {
+        transform: perspective(1000px) rotateY(0deg) scale(1.02);
+      }
+
+      .phone-notch {
+        position: absolute;
+        top: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 120px;
+        height: 30px;
+        background: #1a1a1a;
+        border-radius: 0 0 20px 20px;
+        z-index: 10;
+      }
+
+      .phone-screen {
+        width: 100%;
+        height: 100%;
+        background: var(--bg-dark);
+        border-radius: 32px;
+        overflow: hidden;
+        position: relative;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .screen-content {
+        padding: 3rem 1.5rem 1.5rem;
+        height: 100%;
+        overflow-y: auto;
+        background: linear-gradient(to bottom, #1a1a2e 0%, #0a0a0a 100%);
+      }
+
+      .app-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .app-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        backdrop-filter: blur(10px);
+      }
+
+      .card-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+        margin-top: 1rem;
+      }
+
+      .mini-card {
+        aspect-ratio: 1;
+        background: linear-gradient(
+          135deg,
+          rgba(102, 126, 234, 0.2),
+          rgba(118, 75, 162, 0.2)
+        );
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .feature-text h2 {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        line-height: 1.2;
+        letter-spacing: -1px;
+      }
+
+      .feature-text p {
+        font-size: 1.25rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        max-width: 500px;
+      }
+
+      /* Founders Section */
+      .founders {
+        padding: 8rem 4%;
+        background: var(--bg-dark);
+        position: relative;
+      }
+
+      .founders::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 60%;
+        background: linear-gradient(
+          to top,
+          rgba(102, 126, 234, 0.15),
+          transparent
+        );
+        pointer-events: none;
+      }
+
+      .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 4rem;
+        text-align: left;
+        padding-left: 2%;
+      }
+
+      .founders-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 3rem;
+        max-width: 1400px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 10;
+      }
+
+      .founder-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        overflow: hidden;
+        transition:
+          transform 0.4s ease,
+          box-shadow 0.4s ease;
+      }
+
+      .founder-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        border-color: rgba(102, 126, 234, 0.3);
+      }
+
+      .founder-image {
+        width: 100%;
+        aspect-ratio: 1;
+        background: linear-gradient(
+          135deg,
+          rgba(102, 126, 234, 0.2),
+          rgba(118, 75, 162, 0.2)
+        );
+        position: relative;
+        overflow: hidden;
+      }
+
+      .founder-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: grayscale(20%);
+        transition: filter 0.3s;
+      }
+
+      .founder-card:hover .founder-image img {
+        filter: grayscale(0%);
+      }
+
+      .founder-info {
+        padding: 2rem;
+      }
+
+      .founder-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+
+      .founder-stats {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        margin-bottom: 1.5rem;
+      }
+
+      .founder-socials {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .social-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.05);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-decoration: none;
+        transition:
+          background 0.3s,
+          transform 0.3s;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .social-icon:hover {
+        background: linear-gradient(
+          135deg,
+          var(--accent-start),
+          var(--accent-end)
+        );
+        transform: translateY(-3px);
+        border-color: transparent;
+      }
+
+      /* CTA Section */
+      .cta-section {
+        position: relative;
+        padding: 6rem 4%;
+        background: linear-gradient(
+          135deg,
+          rgba(102, 126, 234, 0.2) 0%,
+          rgba(118, 75, 162, 0.4) 100%
+        );
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+      }
+
+      .cta-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 3rem;
+        position: relative;
+        z-index: 10;
+      }
+
+      .cta-text h3 {
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 700;
+        max-width: 600px;
+        line-height: 1.2;
+      }
+
+      .cta-btn {
+        background: linear-gradient(
+          135deg,
+          var(--accent-start) 0%,
+          var(--accent-end) 100%
+        );
+        color: white;
+        padding: 1rem 2.5rem;
+        border-radius: 2rem;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.1rem;
+        white-space: nowrap;
+        transition:
+          transform 0.3s,
+          box-shadow 0.3s;
+        border: none;
+        cursor: pointer;
+        display: inline-block;
+      }
+
+      .cta-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+      }
+
+      /* Animations */
+      .fade-in {
+        opacity: 0;
+        transform: translateY(30px);
+        transition:
+          opacity 0.8s ease,
+          transform 0.8s ease;
+      }
+
+      .fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @media (max-width: 968px) {
+        .feature-content {
+          grid-template-columns: 1fr;
+          text-align: center;
+          gap: 3rem;
+        }
+
+        .feature-text p {
+          margin: 0 auto;
+        }
+
+        .phone-mockup {
+          order: -1;
+          transform: none;
+        }
+
+        .founders-grid {
+          grid-template-columns: 1fr;
+          max-width: 500px;
+        }
+
+        .cta-content {
+          flex-direction: column;
+          text-align: center;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .parallax-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .col-4,
+        .col-5 {
+          display: none;
+        }
+        nav {
+          padding: 1rem 4%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav>
+      <div class="nav-logo">
+        <div class="logo-icon"></div>
+        <span>STUVO5</span>
+        <span
+          style="
+            color: var(--text-secondary);
+            font-weight: 400;
+            font-size: 0.9em;
+          "
+          >β</span
+        >
+      </div>
+      <a href="#" class="login-btn">Login</a>
+    </nav>
+
+    <!-- Hero Section with Parallax -->
+    <section class="hero">
+      <div class="hero-bg">
+        <div class="parallax-grid" id="parallaxGrid">
+          <!-- Column 1 -->
+          <div class="grid-column col-1" data-speed="0.5">
+            <div class="grid-item">
+              <img
+                src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=400&h=600&fit=crop"
+                alt="Study"
+              />
+            </div>
+            <div class="grid-item">
+              <img
+                src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=600&fit=crop"
+                alt="Books"
+              />
+            </div>
+            <div class="grid-item">
+              <img
+                src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400&h=600&fit=crop"
+                alt="Writing"
+              />
+            </div>
+          </div>
+          <!-- Column 2 -->
+          <div class="grid-column col-2" data-speed="0.8">
+            <div class="grid-item">
+              <img
+                src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400&h=600&fit=crop"
+                alt="Reading"
+              />
+            </div>
+            <div class="grid-item">
+              <img
+                src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=600&fit=crop"
+                alt="Group Study"
+              />
+            </div>
+            <div class="grid-item">
+              <img
+                src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=600&fit=crop"
+                alt="Laptop"
+              />
+            </div>
+          </div>
+          <!-- Column 3 -->
+          <div class="grid-column col-3" data-speed="0.3">
+            <div class="grid-item">
+              <img
+                src="https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=400&h=600&fit=crop"
+                alt="Coffee Study"
+              />
+            </div>
+            <div class="grid-item">
+              <img
+                src="https://images.unsplash.com/photo-1434626881859-194d67b2b86f?w=400&h=600&fit=crop"
+                alt="Notes"
+              />
+            </div>
+            <div class="grid-item">
+              <img
+                src="https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=400&h=600&fit=crop"
+                alt="Library"
+              />
+            </div>
+          </div>
+          <!-- Column 4 -->
+          <div class="grid-column col-4" data-speed="0.6">
+            <div class="grid-item">
+              <img
+                src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&h=600&fit=crop"
+                alt="Documents"
+              />
+            </div>
+            <div class="grid-item">
+              <img
+                src="https://images.unsplash.com/photo-1432888498267-38a318d88cef?w=400&h=600&fit=crop"
+                alt="Research"
+              />
+            </div>
+            <div class="grid-item">
+              <img
+                src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=600&fit=crop"
+                alt="Graduation"
+              />
+            </div>
+          </div>
+          <!-- Column 5 -->
+          <div class="grid-column col-5" data-speed="0.4">
+            <div class="grid-item">
+              <img
+                src="https://images.unsplash.com/photo-1471107340929-a87cd0f5b5f3?w=400&h=600&fit=crop"
+                alt="Innovation"
+              />
+            </div>
+            <div class="grid-item">
+              <img
+                src="https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=400&h=600&fit=crop"
+                alt="Books"
+              />
+            </div>
+            <div class="grid-item">
+              <img
+                src="https://images.unsplash.com/photo-1463320726281-696a41370405?w=400&h=600&fit=crop"
+                alt="Writing"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="hero-overlay"></div>
+      </div>
+
+      <div class="hero-content">
+        <div class="hero-logo-large">
+          <div class="hero-logo-icon-large"></div>
+          <h1 class="hero-title">STUVO5</h1>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Container -->
+    <div class="features-container">
+      <!-- Feature 1: Discover -->
+      <section class="feature-section">
+        <div class="feature-content">
+          <div class="phone-mockup fade-in">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <div class="screen-content">
+                <div class="app-header">
+                  <span>Explore</span>
+                  <i class="bx bx-search" style="font-size: 1.2rem"></i>
+                </div>
+                <div class="app-card">
+                  <div
+                    style="
+                      font-size: 0.8rem;
+                      color: var(--text-secondary);
+                      margin-bottom: 0.5rem;
+                    "
+                  >
+                    GENRE
+                  </div>
+                  <div style="font-size: 1.3rem; font-weight: 600">
+                    Computer Science
+                  </div>
+                </div>
+                <div class="card-grid">
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                  <div class="mini-card"></div>
+                </div>
+                <div class="app-card" style="margin-top: 1rem">
+                  <div
+                    style="
+                      height: 60px;
+                      background: linear-gradient(
+                        135deg,
+                        var(--accent-start),
+                        var(--accent-end)
+                      );
+                      border-radius: 8px;
+                    "
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="feature-text fade-in">
+            <h2>Discover content across all study resources</h2>
+            <p>
+              One search to find any study material, notes, or resources across
+              all platforms and universities.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Feature 2: Watchlists -->
+      <section class="feature-section">
+        <div class="feature-content">
+          <div class="phone-mockup fade-in">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <div class="screen-content">
+                <div class="app-header">
+                  <span>My Library</span>
+                  <i class="bx bx-plus" style="font-size: 1.2rem"></i>
+                </div>
+                <div
+                  class="app-card"
+                  style="border-left: 4px solid var(--accent-start)"
+                >
+                  <div style="font-weight: 600; margin-bottom: 0.25rem">
+                    Most Interested
+                  </div>
+                  <div style="font-size: 0.8rem; color: var(--text-secondary)">
+                    This Month
+                  </div>
+                </div>
+                <div class="app-card">
+                  <div style="display: flex; gap: 1rem; align-items: center">
+                    <div
+                      style="
+                        width: 40px;
+                        height: 40px;
+                        background: rgba(102, 126, 234, 0.3);
+                        border-radius: 8px;
+                      "
+                    ></div>
+                    <div>
+                      <div style="font-weight: 600; font-size: 0.9rem">
+                        Data Structures
+                      </div>
+                      <div
+                        style="font-size: 0.75rem; color: var(--text-secondary)"
+                      >
+                        85% Complete
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="app-card">
+                  <div style="display: flex; gap: 1rem; align-items: center">
+                    <div
+                      style="
+                        width: 40px;
+                        height: 40px;
+                        background: rgba(118, 75, 162, 0.3);
+                        border-radius: 8px;
+                      "
+                    ></div>
+                    <div>
+                      <div style="font-weight: 600; font-size: 0.9rem">
+                        Web Development
+                      </div>
+                      <div
+                        style="font-size: 0.75rem; color: var(--text-secondary)"
+                      >
+                        60% Complete
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="feature-text fade-in">
+            <h2>Create your personal study lists</h2>
+            <p>
+              Build custom lists to track what you've studied and plan what to
+              learn next.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Feature 3: Clubs -->
+      <section class="feature-section">
+        <div class="feature-content">
+          <div class="phone-mockup fade-in">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <div class="screen-content">
+                <div class="app-header">
+                  <div style="display: flex; gap: 1rem; overflow-x: auto">
+                    <i class="bx bx-home" style="opacity: 1"></i>
+                    <i class="bx bx-compass" style="opacity: 0.5"></i>
+                    <i class="bx bx-grid-alt" style="opacity: 0.5"></i>
+                    <i class="bx bx-user" style="opacity: 0.5"></i>
+                  </div>
+                </div>
+                <div class="app-card" style="padding: 1rem">
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 0.75rem;
+                      margin-bottom: 0.75rem;
+                    "
+                  >
+                    <div
+                      style="
+                        width: 32px;
+                        height: 32px;
+                        background: linear-gradient(
+                          135deg,
+                          var(--accent-start),
+                          var(--accent-end)
+                        );
+                        border-radius: 50%;
+                      "
+                    ></div>
+                    <div style="font-size: 0.9rem; font-weight: 500">
+                      Study Group Alpha
+                    </div>
+                  </div>
+                  <div
+                    style="
+                      height: 80px;
+                      background: rgba(255, 255, 255, 0.05);
+                      border-radius: 8px;
+                      margin-bottom: 0.5rem;
+                    "
+                  ></div>
+                  <div
+                    style="
+                      display: flex;
+                      gap: 1rem;
+                      font-size: 1.2rem;
+                      color: var(--text-secondary);
+                    "
+                  >
+                    <i class="bx bx-heart"></i>
+                    <i class="bx bx-comment"></i>
+                  </div>
+                </div>
+                <div class="app-card" style="padding: 1rem; opacity: 0.7">
+                  <div style="display: flex; align-items: center; gap: 0.75rem">
+                    <div
+                      style="
+                        width: 32px;
+                        height: 32px;
+                        background: rgba(255, 255, 255, 0.1);
+                        border-radius: 50%;
+                      "
+                    ></div>
+                    <div style="font-size: 0.9rem; font-weight: 500">
+                      CS Majors '25
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="feature-text fade-in">
+            <h2>Discuss subjects in Clubs</h2>
+            <p>
+              Join dedicated communities to discuss and share your love for your
+              favorite subjects.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Feature 4: Upcoming -->
+      <section class="feature-section">
+        <div class="feature-content">
+          <div class="phone-mockup fade-in">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <div class="screen-content">
+                <div class="app-header">
+                  <div style="display: flex; gap: 1.5rem; font-size: 0.85rem">
+                    <span style="opacity: 0.5">Today</span>
+                    <span
+                      style="
+                        border-bottom: 2px solid white;
+                        padding-bottom: 4px;
+                      "
+                      >Upcoming</span
+                    >
+                    <span style="opacity: 0.5">Announced</span>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem">
+                  <span
+                    style="
+                      background: rgba(255, 255, 255, 0.1);
+                      padding: 0.25rem 0.75rem;
+                      border-radius: 1rem;
+                      font-size: 0.75rem;
+                    "
+                    >All</span
+                  >
+                  <span
+                    style="
+                      background: rgba(102, 126, 234, 0.3);
+                      padding: 0.25rem 0.75rem;
+                      border-radius: 1rem;
+                      font-size: 0.75rem;
+                    "
+                    >Exams</span
+                  >
+                  <span
+                    style="
+                      opacity: 0.5;
+                      padding: 0.25rem 0.75rem;
+                      font-size: 0.75rem;
+                    "
+                    >Assignments</span
+                  >
+                </div>
+                <div class="app-card" style="padding: 0.75rem">
+                  <div style="display: flex; gap: 1rem">
+                    <div
+                      style="
+                        width: 60px;
+                        height: 60px;
+                        background: linear-gradient(135deg, #667eea, #764ba2);
+                        border-radius: 12px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-weight: 700;
+                      "
+                    >
+                      JAN<br />31
+                    </div>
+                    <div>
+                      <div style="font-weight: 600; font-size: 0.95rem">
+                        Database Exam
+                      </div>
+                      <div
+                        style="
+                          font-size: 0.8rem;
+                          color: var(--text-secondary);
+                          margin-top: 0.25rem;
+                        "
+                      >
+                        Tomorrow • 10:00 AM
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="app-card" style="padding: 0.75rem">
+                  <div style="display: flex; gap: 1rem">
+                    <div
+                      style="
+                        width: 60px;
+                        height: 60px;
+                        background: rgba(255, 255, 255, 0.1);
+                        border-radius: 12px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-weight: 700;
+                      "
+                    >
+                      FEB<br />02
+                    </div>
+                    <div>
+                      <div style="font-weight: 600; font-size: 0.95rem">
+                        Project Deadline
+                      </div>
+                      <div
+                        style="
+                          font-size: 0.8rem;
+                          color: var(--text-secondary);
+                          margin-top: 0.25rem;
+                        "
+                      >
+                        In 3 days
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="feature-text fade-in">
+            <h2>Find upcoming exams and deadlines</h2>
+            <p>
+              Track upcoming exam dates, assignment deadlines, and never miss an
+              important date.
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Founders Section -->
+    <section class="founders">
+      <h2 class="section-title">Meet the Founders</h2>
+      <div class="founders-grid">
+        <!-- Founder 1 -->
+        <div class="founder-card fade-in">
+          <div class="founder-image">
+            <img
+              src="creator1.jpg"
+              alt="Creator 1"
+              onerror="
+                this.style.display = 'none';
+                this.parentElement.style.background =
+                  'linear-gradient(135deg, rgba(102,126,234,0.3), rgba(118,75,162,0.3))';
+              "
+            />
+          </div>
+          <div class="founder-info">
+            <h3 class="founder-name">Your Name</h3>
+            <div class="founder-stats">192K Followers • 1.53M Subscribers</div>
+            <div class="founder-socials">
+              <a href="#" class="social-icon"
+                ><i class="bx bxl-instagram"></i
+              ></a>
+              <a href="#" class="social-icon"><i class="bx bxl-youtube"></i></a>
+              <a href="#" class="social-icon"
+                ><i class="bx bxl-linkedin"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Founder 2 -->
+        <div class="founder-card fade-in">
+          <div class="founder-image">
+            <img
+              src="creator2.jpg"
+              alt="Creator 2"
+              onerror="
+                this.style.display = 'none';
+                this.parentElement.style.background =
+                  'linear-gradient(135deg, rgba(102,126,234,0.3), rgba(118,75,162,0.3))';
+              "
+            />
+          </div>
+          <div class="founder-info">
+            <h3 class="founder-name">Team Member 2</h3>
+            <div class="founder-stats">297K Followers • 1.44M Subscribers</div>
+            <div class="founder-socials">
+              <a href="#" class="social-icon"
+                ><i class="bx bxl-instagram"></i
+              ></a>
+              <a href="#" class="social-icon"><i class="bx bxl-youtube"></i></a>
+              <a href="#" class="social-icon"
+                ><i class="bx bxl-linkedin"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Founder 3 -->
+        <div class="founder-card fade-in">
+          <div class="founder-image">
+            <img
+              src="creator3.jpg"
+              alt="Creator 3"
+              onerror="
+                this.style.display = 'none';
+                this.parentElement.style.background =
+                  'linear-gradient(135deg, rgba(102,126,234,0.3), rgba(118,75,162,0.3))';
+              "
+            />
+          </div>
+          <div class="founder-info">
+            <h3 class="founder-name">Team Member 3</h3>
+            <div class="founder-stats">84K Followers • 2.58M Subscribers</div>
+            <div class="founder-socials">
+              <a href="#" class="social-icon"
+                ><i class="bx bxl-instagram"></i
+              ></a>
+              <a href="#" class="social-icon"><i class="bx bxl-youtube"></i></a>
+              <a href="#" class="social-icon"
+                ><i class="bx bxl-linkedin"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <div class="cta-content">
+        <h3 class="cta-text">
+          Create your account and experience STUVO5 for yourself
+        </h3>
+        <a href="#" class="cta-btn">Join STUVO5</a>
+      </div>
+    </section>
+
+    <script>
+      // Parallax Effect for Hero Grid
+      window.addEventListener("scroll", () => {
+        const scrolled = window.pageYOffset;
+        const parallaxElements = document.querySelectorAll(".grid-column");
+
+        parallaxElements.forEach((column) => {
+          const speed = parseFloat(column.getAttribute("data-speed")) || 0.5;
+          const yPos = -(scrolled * speed);
+          column.style.transform = `translateY(${yPos}px)`;
+        });
+
+        // Fade hero content on scroll
+        const heroContent = document.querySelector(".hero-content");
+        const heroOpacity = 1 - scrolled / window.innerHeight;
+        heroContent.style.opacity = Math.max(0, heroOpacity);
+      });
+
+      // Intersection Observer for fade-in animations
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -100px 0px",
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          }
+        });
+      }, observerOptions);
+
+      document
+        .querySelectorAll(".fade-in")
+        .forEach((el) => observer.observe(el));
+
+      // Smooth parallax for founder cards on mouse move
+      document.addEventListener("mousemove", (e) => {
+        const cards = document.querySelectorAll(".founder-card");
+        const x = (window.innerWidth - e.pageX) / 50;
+        const y = (window.innerHeight - e.pageY) / 50;
+
+        cards.forEach((card, index) => {
+          const speed = index % 2 === 0 ? 1 : -1;
+          card.style.transform = `translateX(${x * speed}px) translateY(${y * speed}px)`;
+        });
+      });
+
+      // Phone mockup tilt effect
+      document.querySelectorAll(".phone-mockup").forEach((phone) => {
+        phone.addEventListener("mousemove", (e) => {
+          const rect = phone.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+
+          const rotateX = (y - centerY) / 20;
+          const rotateY = (centerX - x) / 20;
+
+          phone.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+        });
+
+        phone.addEventListener("mouseleave", () => {
+          phone.style.transform = "perspective(1000px) rotateY(-5deg)";
+        });
+      });
+    </script>
+  </body>
+</html>
