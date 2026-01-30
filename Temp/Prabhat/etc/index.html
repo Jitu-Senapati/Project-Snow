@@ -8,26 +8,12 @@
       href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
       rel="stylesheet"
     />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
     <style>
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-      }
-
-      :root {
-        --bg-dark: #0a0a0a;
-        --bg-section: #000000;
-        --text-primary: #ffffff;
-        --text-secondary: rgba(255, 255, 255, 0.7);
-        --accent-start: #667eea;
-        --accent-end: #764ba2;
-        --glass-bg: rgba(255, 255, 255, 0.05);
-        --glass-border: rgba(255, 255, 255, 0.1);
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       }
 
       html {
@@ -36,126 +22,94 @@
       }
 
       body {
-        font-family:
-          "Inter",
-          -apple-system,
-          BlinkMacSystemFont,
-          "Segoe UI",
-          Roboto,
-          sans-serif;
-        background-color: var(--bg-dark);
-        color: var(--text-primary);
+        background: #0a0a0a;
+        color: #fff;
         overflow-x: hidden;
-        line-height: 1.6;
       }
 
-      /* Navigation */
-      nav {
+      /* Navigation - Compact */
+      .navbar {
         position: fixed;
         top: 0;
         left: 0;
-        right: 0;
+        width: 100%;
+        padding: 0.75rem 2%;
         z-index: 1000;
-        padding: 1.25rem 4%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(15px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background: linear-gradient(
-          to bottom,
-          rgba(0, 0, 0, 0.8) 0%,
-          transparent 100%
-        );
-        backdrop-filter: blur(10px);
       }
 
       .nav-logo {
         display: flex;
         align-items: center;
-        gap: 0.75rem;
-        font-size: 1.5rem;
-        font-weight: 700;
-        letter-spacing: -0.5px;
+        gap: 0.5rem;
       }
 
       .logo-icon {
-        width: 2rem;
-        height: 2rem;
-        background: linear-gradient(
-          135deg,
-          var(--accent-start) 0%,
-          var(--accent-end) 100%
-        );
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
+        height: 1.8rem;
+        width: auto;
+        object-fit: contain;
       }
 
-      .logo-icon::before {
-        content: "";
-        width: 1.2rem;
-        height: 0.8rem;
-        background: white;
-        border-radius: 50% 50% 0 0;
-        position: relative;
+      .logo-text {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #fff;
+      }
+
+      .beta {
+        color: rgba(255, 255, 255, 0.6);
+        font-weight: 400;
+        font-size: 1rem;
       }
 
       .login-btn {
-        background: linear-gradient(
-          135deg,
-          var(--accent-start) 0%,
-          var(--accent-end) 100%
-        );
+        padding: 0.5rem 1.25rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
-        padding: 0.6rem 1.5rem;
-        border-radius: 2rem;
+        border-radius: 1.5rem;
         text-decoration: none;
         font-weight: 600;
-        font-size: 0.9rem;
-        transition:
-          transform 0.3s ease,
-          box-shadow 0.3s ease;
-        border: none;
-        cursor: pointer;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
       }
 
       .login-btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
       }
 
-      /* Hero Section with Parallax Grid */
+      /* Hero Section - Tight Grid Like MOCTALE */
       .hero {
         position: relative;
         height: 100vh;
+        min-height: 600px;
         overflow: hidden;
         display: flex;
         align-items: center;
         justify-content: center;
       }
 
-      .hero-bg {
-        position: absolute;
-        inset: 0;
-        z-index: 1;
-      }
-
       .parallax-grid {
         position: absolute;
-        width: 100%;
-        height: 150%;
+        width: 105%;
+        height: 130%;
+        left: -2.5%;
+        top: -15%;
         display: grid;
         grid-template-columns: repeat(5, 1fr);
-        gap: 1rem;
-        padding: 2%;
-        pointer-events: none;
+        gap: 0.5rem;
+        padding: 0 1%;
       }
 
       .grid-column {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: 0.5rem;
         will-change: transform;
       }
 
@@ -164,12 +118,12 @@
         aspect-ratio: 2/3;
         background: linear-gradient(
           135deg,
-          rgba(102, 126, 234, 0.3),
-          rgba(118, 75, 162, 0.3)
+          rgba(102, 126, 234, 0.15),
+          rgba(118, 75, 162, 0.15)
         );
-        border-radius: 12px;
+        border-radius: 8px;
         overflow: hidden;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.08);
         position: relative;
       }
 
@@ -177,22 +131,9 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        opacity: 0.8;
-        transition: opacity 0.3s;
+        opacity: 0.6;
       }
 
-      .grid-item::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-          to bottom,
-          transparent 0%,
-          rgba(0, 0, 0, 0.4) 100%
-        );
-      }
-
-      /* Offset columns for parallax depth */
       .col-1 {
         margin-top: -10%;
       }
@@ -214,11 +155,16 @@
         inset: 0;
         background:
           radial-gradient(
-            circle at top,
-            rgba(102, 126, 234, 0.15) 0%,
-            transparent 60%
+            circle at 50% 0%,
+            rgba(102, 126, 234, 0.3) 0%,
+            transparent 50%
           ),
-          linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, var(--bg-dark) 100%);
+          radial-gradient(
+            circle at 30% 100%,
+            rgba(118, 75, 162, 0.2) 0%,
+            transparent 40%
+          ),
+          linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, #0a0a0a 100%);
         z-index: 2;
       }
 
@@ -226,1011 +172,748 @@
         position: relative;
         z-index: 10;
         text-align: center;
-        padding: 0 2rem;
-        max-width: 900px;
       }
 
-      .hero-logo-large {
+      .hero-logo-main {
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 1rem;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
       }
 
-      .hero-logo-icon-large {
-        width: 4rem;
+      .hero-logo-icon {
         height: 4rem;
-        background: linear-gradient(
-          135deg,
-          var(--accent-start) 0%,
-          var(--accent-end) 100%
-        );
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 0 60px rgba(102, 126, 234, 0.5);
-      }
-
-      .hero-logo-icon-large::before {
-        content: "";
-        width: 2rem;
-        height: 1.5rem;
-        background: white;
-        border-radius: 50% 50% 0 0;
+        width: auto;
+        filter: drop-shadow(0 0 30px rgba(102, 126, 234, 0.5));
       }
 
       .hero-title {
-        font-size: clamp(2.5rem, 8vw, 5rem);
+        font-size: clamp(2.5rem, 8vw, 4.5rem);
         font-weight: 800;
-        letter-spacing: -2px;
-        background: linear-gradient(135deg, #fff 0%, var(--accent-start) 100%);
+        letter-spacing: 0.3rem;
+        background: linear-gradient(135deg, #fff 0%, #a78bfa 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
       }
 
-      /* Features Sections */
-      .features-container {
-        position: relative;
+      .scroll-indicator {
+        position: absolute;
+        bottom: 1.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 1.5rem;
+        color: rgba(255, 255, 255, 0.5);
+        animation: bounce 2s infinite;
         z-index: 20;
-        background: var(--bg-dark);
       }
 
-      .feature-section {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        padding: 5rem 4%;
-        background: var(--bg-dark);
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateX(-50%) translateY(0);
+        }
+        50% {
+          transform: translateX(-50%) translateY(-8px);
+        }
+      }
+
+      /* About Section - Compact */
+      .about-section {
+        padding: 4rem 4%;
         position: relative;
-        overflow: hidden;
+        background: #0a0a0a;
       }
 
-      .feature-content {
-        max-width: 1400px;
+      .about-container {
+        max-width: 1200px;
         margin: 0 auto;
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 6rem;
+        gap: 3rem;
         align-items: center;
-        width: 100%;
       }
 
-      /* Phone Mockup */
-      .phone-mockup {
-        width: 300px;
-        height: 600px;
-        background: #1a1a1a;
-        border-radius: 40px;
-        padding: 12px;
-        box-shadow:
-          0 50px 100px rgba(0, 0, 0, 0.8),
-          0 0 0 1px rgba(255, 255, 255, 0.1),
-          inset 0 0 20px rgba(0, 0, 0, 0.5);
+      .about-animation {
         position: relative;
-        justify-self: center;
-        transform: perspective(1000px) rotateY(-5deg);
-        transition: transform 0.6s ease;
-      }
-
-      .phone-mockup:hover {
-        transform: perspective(1000px) rotateY(0deg) scale(1.02);
-      }
-
-      .phone-notch {
-        position: absolute;
-        top: 12px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 120px;
-        height: 30px;
-        background: #1a1a1a;
-        border-radius: 0 0 20px 20px;
-        z-index: 10;
-      }
-
-      .phone-screen {
-        width: 100%;
-        height: 100%;
-        background: var(--bg-dark);
-        border-radius: 32px;
-        overflow: hidden;
-        position: relative;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-      }
-
-      .screen-content {
-        padding: 3rem 1.5rem 1.5rem;
-        height: 100%;
-        overflow-y: auto;
-        background: linear-gradient(to bottom, #1a1a2e 0%, #0a0a0a 100%);
-      }
-
-      .app-header {
+        height: 400px;
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        margin-bottom: 2rem;
-        font-size: 0.9rem;
-        font-weight: 600;
+        justify-content: center;
       }
 
-      .app-card {
+      .floating-element {
+        position: absolute;
+        width: 70px;
+        height: 70px;
+        background: rgba(102, 126, 234, 0.1);
+        border: 1px solid rgba(102, 126, 234, 0.3);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(10px);
+        animation: float 3s ease-in-out infinite;
+      }
+
+      .floating-element i {
+        font-size: 1.75rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .element-1 {
+        top: 15%;
+        left: 15%;
+        animation-delay: 0s;
+      }
+      .element-2 {
+        top: 20%;
+        right: 20%;
+        animation-delay: 0.5s;
+      }
+      .element-3 {
+        bottom: 25%;
+        left: 10%;
+        animation-delay: 1s;
+      }
+      .element-4 {
+        bottom: 20%;
+        right: 15%;
+        animation-delay: 1.5s;
+      }
+      .element-5 {
+        top: 50%;
+        left: 40%;
+        animation-delay: 0.8s;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-15px);
+        }
+      }
+
+      .animated-orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(30px);
+        opacity: 0.25;
+        animation: pulseOrb 4s ease-in-out infinite;
+      }
+
+      .orb-1 {
+        width: 180px;
+        height: 180px;
+        background: #667eea;
+        top: 25%;
+        left: 25%;
+      }
+
+      .orb-2 {
+        width: 150px;
+        height: 150px;
+        background: #764ba2;
+        bottom: 35%;
+        right: 30%;
+        animation-delay: 1s;
+      }
+
+      .orb-3 {
+        width: 160px;
+        height: 160px;
+        background: #a78bfa;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation-delay: 2s;
+      }
+
+      @keyframes pulseOrb {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.25;
+        }
+        50% {
+          transform: scale(1.1);
+          opacity: 0.35;
+        }
+      }
+
+      .about-content h2 {
+        font-size: 2.25rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        line-height: 1.2;
+        background: linear-gradient(135deg, #fff 0%, #a78bfa 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .about-description {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.75);
+        margin-bottom: 1.5rem;
+      }
+
+      .about-features {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      .feature-item i {
+        font-size: 1.25rem;
+        color: #667eea;
+      }
+
+      /* Creators Section - Tight Compact Layout */
+      .creators-section {
+        padding: 3rem 4%;
+        background: linear-gradient(
+          180deg,
+          #0a0a0a 0%,
+          rgba(30, 20, 50, 0.9) 100%
+        );
+      }
+
+      .creators-title {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        color: #fff;
+        font-weight: 700;
+      }
+
+      .creators-wrapper {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .creators-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.25rem;
+        width: 100%;
+      }
+
+      .creators-row.second {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 66%;
+        margin: 0 auto;
+      }
+
+      .creator-card {
         background: rgba(255, 255, 255, 0.05);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 16px;
-        padding: 1.5rem;
-        margin-bottom: 1rem;
+        border-radius: 1rem;
+        padding: 1.25rem;
+        text-align: center;
+        transition: all 0.3s ease;
         backdrop-filter: blur(10px);
       }
 
-      .card-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.75rem;
-        margin-top: 1rem;
+      .creator-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(102, 126, 234, 0.4);
+        background: rgba(255, 255, 255, 0.08);
       }
 
-      .mini-card {
-        aspect-ratio: 1;
-        background: linear-gradient(
-          135deg,
-          rgba(102, 126, 234, 0.2),
-          rgba(118, 75, 162, 0.2)
-        );
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-      }
-
-      .feature-text h2 {
-        font-size: clamp(2rem, 5vw, 3.5rem);
-        font-weight: 700;
-        margin-bottom: 1.5rem;
-        line-height: 1.2;
-        letter-spacing: -1px;
-      }
-
-      .feature-text p {
-        font-size: 1.25rem;
-        color: var(--text-secondary);
-        line-height: 1.6;
-        max-width: 500px;
-      }
-
-      /* Founders Section */
-      .founders {
-        padding: 8rem 4%;
-        background: var(--bg-dark);
-        position: relative;
-      }
-
-      .founders::before {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 60%;
-        background: linear-gradient(
-          to top,
-          rgba(102, 126, 234, 0.15),
-          transparent
-        );
-        pointer-events: none;
-      }
-
-      .section-title {
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: 4rem;
-        text-align: left;
-        padding-left: 2%;
-      }
-
-      .founders-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 3rem;
-        max-width: 1400px;
-        margin: 0 auto;
-        position: relative;
-        z-index: 10;
-      }
-
-      .founder-card {
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 24px;
+      .creator-image {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
         overflow: hidden;
-        transition:
-          transform 0.4s ease,
-          box-shadow 0.4s ease;
+        margin: 0 auto 0.75rem;
+        border: 2px solid rgba(102, 126, 234, 0.3);
+        transition: all 0.3s ease;
       }
 
-      .founder-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
-        border-color: rgba(102, 126, 234, 0.3);
+      .creator-card:hover .creator-image {
+        border-color: rgba(102, 126, 234, 0.6);
       }
 
-      .founder-image {
-        width: 100%;
-        aspect-ratio: 1;
-        background: linear-gradient(
-          135deg,
-          rgba(102, 126, 234, 0.2),
-          rgba(118, 75, 162, 0.2)
-        );
-        position: relative;
-        overflow: hidden;
-      }
-
-      .founder-image img {
+      .creator-image img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        filter: grayscale(20%);
-        transition: filter 0.3s;
       }
 
-      .founder-card:hover .founder-image img {
-        filter: grayscale(0%);
+      .creator-name {
+        font-size: 1.1rem;
+        margin-bottom: 0.25rem;
+        color: #fff;
+        font-weight: 600;
       }
 
-      .founder-info {
-        padding: 2rem;
+      .creator-role {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 1rem;
       }
 
-      .founder-name {
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-      }
-
-      .founder-stats {
-        font-size: 0.9rem;
-        color: var(--text-secondary);
-        margin-bottom: 1.5rem;
-      }
-
-      .founder-socials {
+      .creator-socials {
         display: flex;
-        gap: 1rem;
+        justify-content: center;
+        gap: 0.5rem;
       }
 
-      .social-icon {
-        width: 2.5rem;
-        height: 2.5rem;
+      .social-link {
+        width: 2rem;
+        height: 2rem;
         border-radius: 50%;
         background: rgba(255, 255, 255, 0.05);
         display: flex;
         align-items: center;
         justify-content: center;
-        color: white;
+        color: #fff;
         text-decoration: none;
-        transition:
-          background 0.3s,
-          transform 0.3s;
+        transition: all 0.2s ease;
+        font-size: 1rem;
         border: 1px solid rgba(255, 255, 255, 0.1);
       }
 
-      .social-icon:hover {
-        background: linear-gradient(
-          135deg,
-          var(--accent-start),
-          var(--accent-end)
-        );
-        transform: translateY(-3px);
+      .social-link:hover {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        transform: translateY(-2px);
         border-color: transparent;
       }
 
-      /* CTA Section */
+      .social-link.stuvo-link:hover {
+        background: linear-gradient(135deg, #a78bfa 0%, #764ba2 100%);
+      }
+
+      .social-link img {
+        width: 50%;
+        height: 50%;
+        object-fit: contain;
+        filter: brightness(0) invert(1);
+      }
+
+      /* CTA Section - Compact */
       .cta-section {
-        position: relative;
-        padding: 6rem 4%;
-        background: linear-gradient(
-          135deg,
-          rgba(102, 126, 234, 0.2) 0%,
-          rgba(118, 75, 162, 0.4) 100%
-        );
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        overflow: hidden;
+        padding: 2.5rem 4%;
+        max-width: 800px;
+        margin: 2rem auto 3rem;
+        background: rgba(102, 126, 234, 0.1);
+        border-radius: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        text-align: center;
       }
 
-      .cta-content {
-        max-width: 1400px;
-        margin: 0 auto;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 3rem;
-        position: relative;
-        z-index: 10;
+      .cta-title {
+        font-size: 1.5rem;
+        margin-bottom: 1.25rem;
+        color: #fff;
+        font-weight: 600;
       }
 
-      .cta-text h3 {
-        font-size: clamp(2rem, 4vw, 3rem);
-        font-weight: 700;
-        max-width: 600px;
-        line-height: 1.2;
-      }
-
-      .cta-btn {
-        background: linear-gradient(
-          135deg,
-          var(--accent-start) 0%,
-          var(--accent-end) 100%
-        );
+      .cta-button {
+        padding: 0.75rem 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
-        padding: 1rem 2.5rem;
         border-radius: 2rem;
         text-decoration: none;
         font-weight: 600;
-        font-size: 1.1rem;
-        white-space: nowrap;
-        transition:
-          transform 0.3s,
-          box-shadow 0.3s;
-        border: none;
-        cursor: pointer;
+        font-size: 1rem;
         display: inline-block;
+        transition: all 0.3s ease;
       }
 
-      .cta-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+      .cta-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
       }
 
-      /* Animations */
-      .fade-in {
-        opacity: 0;
-        transform: translateY(30px);
-        transition:
-          opacity 0.8s ease,
-          transform 0.8s ease;
+      /* Footer */
+      .footer {
+        text-align: center;
+        padding: 1.5rem;
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 0.85rem;
+        background: rgba(0, 0, 0, 0.5);
       }
 
-      .fade-in.visible {
-        opacity: 1;
-        transform: translateY(0);
-      }
-
+      /* Responsive */
       @media (max-width: 968px) {
-        .feature-content {
+        .about-container {
           grid-template-columns: 1fr;
-          text-align: center;
-          gap: 3rem;
+          gap: 2rem;
         }
 
-        .feature-text p {
-          margin: 0 auto;
-        }
-
-        .phone-mockup {
+        .about-animation {
+          height: 300px;
           order: -1;
-          transform: none;
         }
 
-        .founders-grid {
-          grid-template-columns: 1fr;
-          max-width: 500px;
+        .creators-row {
+          grid-template-columns: repeat(2, 1fr);
         }
 
-        .cta-content {
-          flex-direction: column;
-          text-align: center;
+        .creators-row.second {
+          grid-template-columns: repeat(2, 1fr);
+          max-width: 100%;
         }
-      }
 
-      @media (max-width: 600px) {
         .parallax-grid {
           grid-template-columns: repeat(3, 1fr);
         }
+
         .col-4,
         .col-5 {
           display: none;
         }
-        nav {
-          padding: 1rem 4%;
+      }
+
+      @media (max-width: 600px) {
+        .creators-row,
+        .creators-row.second {
+          grid-template-columns: 1fr;
+          max-width: 300px;
+          margin: 0 auto;
+        }
+
+        .hero-logo-icon {
+          height: 3rem;
+        }
+
+        .hero-title {
+          letter-spacing: 0.2rem;
         }
       }
     </style>
   </head>
   <body>
     <!-- Navigation -->
-    <nav>
+    <nav class="navbar">
       <div class="nav-logo">
-        <div class="logo-icon"></div>
-        <span>STUVO5</span>
-        <span
-          style="
-            color: var(--text-secondary);
-            font-weight: 400;
-            font-size: 0.9em;
-          "
-          >β</span
-        >
+        <img src="logo.png" alt="STUVO" class="logo-icon" />
+        <span class="logo-text">STUVO5</span>
+        <span class="beta">β</span>
       </div>
-      <a href="#" class="login-btn">Login</a>
+      <a href="temp.html" class="login-btn">Login</a>
     </nav>
 
-    <!-- Hero Section with Parallax -->
+    <!-- Hero Section -->
     <section class="hero">
-      <div class="hero-bg">
-        <div class="parallax-grid" id="parallaxGrid">
-          <!-- Column 1 -->
-          <div class="grid-column col-1" data-speed="0.5">
-            <div class="grid-item">
-              <img
-                src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=400&h=600&fit=crop"
-                alt="Study"
-              />
-            </div>
-            <div class="grid-item">
-              <img
-                src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=600&fit=crop"
-                alt="Books"
-              />
-            </div>
-            <div class="grid-item">
-              <img
-                src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400&h=600&fit=crop"
-                alt="Writing"
-              />
-            </div>
+      <div class="parallax-grid" id="parallaxGrid">
+        <div class="grid-column col-1" data-speed="0.5">
+          <div class="grid-item">
+            <img
+              src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=400&h=600&fit=crop"
+              alt="Study"
+            />
           </div>
-          <!-- Column 2 -->
-          <div class="grid-column col-2" data-speed="0.8">
-            <div class="grid-item">
-              <img
-                src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400&h=600&fit=crop"
-                alt="Reading"
-              />
-            </div>
-            <div class="grid-item">
-              <img
-                src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=600&fit=crop"
-                alt="Group Study"
-              />
-            </div>
-            <div class="grid-item">
-              <img
-                src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=600&fit=crop"
-                alt="Laptop"
-              />
-            </div>
+          <div class="grid-item">
+            <img
+              src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=600&fit=crop"
+              alt="Books"
+            />
           </div>
-          <!-- Column 3 -->
-          <div class="grid-column col-3" data-speed="0.3">
-            <div class="grid-item">
-              <img
-                src="https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=400&h=600&fit=crop"
-                alt="Coffee Study"
-              />
-            </div>
-            <div class="grid-item">
-              <img
-                src="https://images.unsplash.com/photo-1434626881859-194d67b2b86f?w=400&h=600&fit=crop"
-                alt="Notes"
-              />
-            </div>
-            <div class="grid-item">
-              <img
-                src="https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=400&h=600&fit=crop"
-                alt="Library"
-              />
-            </div>
-          </div>
-          <!-- Column 4 -->
-          <div class="grid-column col-4" data-speed="0.6">
-            <div class="grid-item">
-              <img
-                src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&h=600&fit=crop"
-                alt="Documents"
-              />
-            </div>
-            <div class="grid-item">
-              <img
-                src="https://images.unsplash.com/photo-1432888498267-38a318d88cef?w=400&h=600&fit=crop"
-                alt="Research"
-              />
-            </div>
-            <div class="grid-item">
-              <img
-                src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=600&fit=crop"
-                alt="Graduation"
-              />
-            </div>
-          </div>
-          <!-- Column 5 -->
-          <div class="grid-column col-5" data-speed="0.4">
-            <div class="grid-item">
-              <img
-                src="https://images.unsplash.com/photo-1471107340929-a87cd0f5b5f3?w=400&h=600&fit=crop"
-                alt="Innovation"
-              />
-            </div>
-            <div class="grid-item">
-              <img
-                src="https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=400&h=600&fit=crop"
-                alt="Books"
-              />
-            </div>
-            <div class="grid-item">
-              <img
-                src="https://images.unsplash.com/photo-1463320726281-696a41370405?w=400&h=600&fit=crop"
-                alt="Writing"
-              />
-            </div>
+          <div class="grid-item">
+            <img
+              src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400&h=600&fit=crop"
+              alt="Writing"
+            />
           </div>
         </div>
-        <div class="hero-overlay"></div>
+        <div class="grid-column col-2" data-speed="0.8">
+          <div class="grid-item">
+            <img
+              src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400&h=600&fit=crop"
+              alt="Reading"
+            />
+          </div>
+          <div class="grid-item">
+            <img
+              src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=600&fit=crop"
+              alt="Group Study"
+            />
+          </div>
+          <div class="grid-item">
+            <img
+              src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=600&fit=crop"
+              alt="Laptop"
+            />
+          </div>
+        </div>
+        <div class="grid-column col-3" data-speed="0.3">
+          <div class="grid-item">
+            <img
+              src="https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=400&h=600&fit=crop"
+              alt="Coffee Study"
+            />
+          </div>
+          <div class="grid-item">
+            <img
+              src="https://images.unsplash.com/photo-1434626881859-194d67b2b86f?w=400&h=600&fit=crop"
+              alt="Notes"
+            />
+          </div>
+          <div class="grid-item">
+            <img
+              src="https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=400&h=600&fit=crop"
+              alt="Library"
+            />
+          </div>
+        </div>
+        <div class="grid-column col-4" data-speed="0.6">
+          <div class="grid-item">
+            <img
+              src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&h=600&fit=crop"
+              alt="Documents"
+            />
+          </div>
+          <div class="grid-item">
+            <img
+              src="https://images.unsplash.com/photo-1432888498267-38a318d88cef?w=400&h=600&fit=crop"
+              alt="Research"
+            />
+          </div>
+          <div class="grid-item">
+            <img
+              src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=600&fit=crop"
+              alt="Graduation"
+            />
+          </div>
+        </div>
+        <div class="grid-column col-5" data-speed="0.4">
+          <div class="grid-item">
+            <img
+              src="https://images.unsplash.com/photo-1471107340929-a87cd0f5b5f3?w=400&h=600&fit=crop"
+              alt="Innovation"
+            />
+          </div>
+          <div class="grid-item">
+            <img
+              src="https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=400&h=600&fit=crop"
+              alt="Books"
+            />
+          </div>
+          <div class="grid-item">
+            <img
+              src="https://images.unsplash.com/photo-1463320726281-696a41370405?w=400&h=600&fit=crop"
+              alt="Writing"
+            />
+          </div>
+        </div>
       </div>
+      <div class="hero-overlay"></div>
 
       <div class="hero-content">
-        <div class="hero-logo-large">
-          <div class="hero-logo-icon-large"></div>
+        <div class="hero-logo-main">
+          <img src="logo.png" alt="STUVO" class="hero-logo-icon" />
           <h1 class="hero-title">STUVO5</h1>
         </div>
       </div>
+
+      <div class="scroll-indicator">
+        <i class="bx bx-chevron-down"></i>
+      </div>
     </section>
 
-    <!-- Features Container -->
-    <div class="features-container">
-      <!-- Feature 1: Discover -->
-      <section class="feature-section">
-        <div class="feature-content">
-          <div class="phone-mockup fade-in">
-            <div class="phone-notch"></div>
-            <div class="phone-screen">
-              <div class="screen-content">
-                <div class="app-header">
-                  <span>Explore</span>
-                  <i class="bx bx-search" style="font-size: 1.2rem"></i>
-                </div>
-                <div class="app-card">
-                  <div
-                    style="
-                      font-size: 0.8rem;
-                      color: var(--text-secondary);
-                      margin-bottom: 0.5rem;
-                    "
-                  >
-                    GENRE
-                  </div>
-                  <div style="font-size: 1.3rem; font-weight: 600">
-                    Computer Science
-                  </div>
-                </div>
-                <div class="card-grid">
-                  <div class="mini-card"></div>
-                  <div class="mini-card"></div>
-                  <div class="mini-card"></div>
-                  <div class="mini-card"></div>
-                </div>
-                <div class="app-card" style="margin-top: 1rem">
-                  <div
-                    style="
-                      height: 60px;
-                      background: linear-gradient(
-                        135deg,
-                        var(--accent-start),
-                        var(--accent-end)
-                      );
-                      border-radius: 8px;
-                    "
-                  ></div>
-                </div>
-              </div>
-            </div>
+    <!-- About Section -->
+    <section class="about-section" id="about">
+      <div class="about-container">
+        <div class="about-animation">
+          <div class="floating-element element-1">
+            <i class="bx bxs-book-bookmark"></i>
           </div>
-          <div class="feature-text fade-in">
-            <h2>Discover content across all study resources</h2>
-            <p>
-              One search to find any study material, notes, or resources across
-              all platforms and universities.
-            </p>
+          <div class="floating-element element-2">
+            <i class="bx bxs-graduation"></i>
           </div>
+          <div class="floating-element element-3">
+            <i class="bx bxs-file-doc"></i>
+          </div>
+          <div class="floating-element element-4">
+            <i class="bx bxs-group"></i>
+          </div>
+          <div class="floating-element element-5">
+            <i class="bx bxs-bulb"></i>
+          </div>
+          <div class="animated-orb orb-1"></div>
+          <div class="animated-orb orb-2"></div>
+          <div class="animated-orb orb-3"></div>
         </div>
-      </section>
-
-      <!-- Feature 2: Watchlists -->
-      <section class="feature-section">
-        <div class="feature-content">
-          <div class="phone-mockup fade-in">
-            <div class="phone-notch"></div>
-            <div class="phone-screen">
-              <div class="screen-content">
-                <div class="app-header">
-                  <span>My Library</span>
-                  <i class="bx bx-plus" style="font-size: 1.2rem"></i>
-                </div>
-                <div
-                  class="app-card"
-                  style="border-left: 4px solid var(--accent-start)"
-                >
-                  <div style="font-weight: 600; margin-bottom: 0.25rem">
-                    Most Interested
-                  </div>
-                  <div style="font-size: 0.8rem; color: var(--text-secondary)">
-                    This Month
-                  </div>
-                </div>
-                <div class="app-card">
-                  <div style="display: flex; gap: 1rem; align-items: center">
-                    <div
-                      style="
-                        width: 40px;
-                        height: 40px;
-                        background: rgba(102, 126, 234, 0.3);
-                        border-radius: 8px;
-                      "
-                    ></div>
-                    <div>
-                      <div style="font-weight: 600; font-size: 0.9rem">
-                        Data Structures
-                      </div>
-                      <div
-                        style="font-size: 0.75rem; color: var(--text-secondary)"
-                      >
-                        85% Complete
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="app-card">
-                  <div style="display: flex; gap: 1rem; align-items: center">
-                    <div
-                      style="
-                        width: 40px;
-                        height: 40px;
-                        background: rgba(118, 75, 162, 0.3);
-                        border-radius: 8px;
-                      "
-                    ></div>
-                    <div>
-                      <div style="font-weight: 600; font-size: 0.9rem">
-                        Web Development
-                      </div>
-                      <div
-                        style="font-size: 0.75rem; color: var(--text-secondary)"
-                      >
-                        60% Complete
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+        <div class="about-content">
+          <h2>Your Ultimate Study <br />Companion Platform</h2>
+          <p class="about-description">
+            STUVO 5 is a comprehensive platform designed exclusively for college
+            students to streamline their academic journey. Access study
+            materials, collaborate with peers, share notes, find valuable
+            resources, and achieve academic excellence - all in one integrated
+            platform.
+          </p>
+          <div class="about-features">
+            <div class="feature-item">
+              <i class="bx bx-check-circle"></i>
+              <span>Access quality study materials anytime, anywhere</span>
             </div>
-          </div>
-          <div class="feature-text fade-in">
-            <h2>Create your personal study lists</h2>
-            <p>
-              Build custom lists to track what you've studied and plan what to
-              learn next.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Feature 3: Clubs -->
-      <section class="feature-section">
-        <div class="feature-content">
-          <div class="phone-mockup fade-in">
-            <div class="phone-notch"></div>
-            <div class="phone-screen">
-              <div class="screen-content">
-                <div class="app-header">
-                  <div style="display: flex; gap: 1rem; overflow-x: auto">
-                    <i class="bx bx-home" style="opacity: 1"></i>
-                    <i class="bx bx-compass" style="opacity: 0.5"></i>
-                    <i class="bx bx-grid-alt" style="opacity: 0.5"></i>
-                    <i class="bx bx-user" style="opacity: 0.5"></i>
-                  </div>
-                </div>
-                <div class="app-card" style="padding: 1rem">
-                  <div
-                    style="
-                      display: flex;
-                      align-items: center;
-                      gap: 0.75rem;
-                      margin-bottom: 0.75rem;
-                    "
-                  >
-                    <div
-                      style="
-                        width: 32px;
-                        height: 32px;
-                        background: linear-gradient(
-                          135deg,
-                          var(--accent-start),
-                          var(--accent-end)
-                        );
-                        border-radius: 50%;
-                      "
-                    ></div>
-                    <div style="font-size: 0.9rem; font-weight: 500">
-                      Study Group Alpha
-                    </div>
-                  </div>
-                  <div
-                    style="
-                      height: 80px;
-                      background: rgba(255, 255, 255, 0.05);
-                      border-radius: 8px;
-                      margin-bottom: 0.5rem;
-                    "
-                  ></div>
-                  <div
-                    style="
-                      display: flex;
-                      gap: 1rem;
-                      font-size: 1.2rem;
-                      color: var(--text-secondary);
-                    "
-                  >
-                    <i class="bx bx-heart"></i>
-                    <i class="bx bx-comment"></i>
-                  </div>
-                </div>
-                <div class="app-card" style="padding: 1rem; opacity: 0.7">
-                  <div style="display: flex; align-items: center; gap: 0.75rem">
-                    <div
-                      style="
-                        width: 32px;
-                        height: 32px;
-                        background: rgba(255, 255, 255, 0.1);
-                        border-radius: 50%;
-                      "
-                    ></div>
-                    <div style="font-size: 0.9rem; font-weight: 500">
-                      CS Majors '25
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div class="feature-item">
+              <i class="bx bx-check-circle"></i>
+              <span>Collaborate seamlessly with fellow students</span>
             </div>
-          </div>
-          <div class="feature-text fade-in">
-            <h2>Discuss subjects in Clubs</h2>
-            <p>
-              Join dedicated communities to discuss and share your love for your
-              favorite subjects.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Feature 4: Upcoming -->
-      <section class="feature-section">
-        <div class="feature-content">
-          <div class="phone-mockup fade-in">
-            <div class="phone-notch"></div>
-            <div class="phone-screen">
-              <div class="screen-content">
-                <div class="app-header">
-                  <div style="display: flex; gap: 1.5rem; font-size: 0.85rem">
-                    <span style="opacity: 0.5">Today</span>
-                    <span
-                      style="
-                        border-bottom: 2px solid white;
-                        padding-bottom: 4px;
-                      "
-                      >Upcoming</span
-                    >
-                    <span style="opacity: 0.5">Announced</span>
-                  </div>
-                </div>
-                <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem">
-                  <span
-                    style="
-                      background: rgba(255, 255, 255, 0.1);
-                      padding: 0.25rem 0.75rem;
-                      border-radius: 1rem;
-                      font-size: 0.75rem;
-                    "
-                    >All</span
-                  >
-                  <span
-                    style="
-                      background: rgba(102, 126, 234, 0.3);
-                      padding: 0.25rem 0.75rem;
-                      border-radius: 1rem;
-                      font-size: 0.75rem;
-                    "
-                    >Exams</span
-                  >
-                  <span
-                    style="
-                      opacity: 0.5;
-                      padding: 0.25rem 0.75rem;
-                      font-size: 0.75rem;
-                    "
-                    >Assignments</span
-                  >
-                </div>
-                <div class="app-card" style="padding: 0.75rem">
-                  <div style="display: flex; gap: 1rem">
-                    <div
-                      style="
-                        width: 60px;
-                        height: 60px;
-                        background: linear-gradient(135deg, #667eea, #764ba2);
-                        border-radius: 12px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-weight: 700;
-                      "
-                    >
-                      JAN<br />31
-                    </div>
-                    <div>
-                      <div style="font-weight: 600; font-size: 0.95rem">
-                        Database Exam
-                      </div>
-                      <div
-                        style="
-                          font-size: 0.8rem;
-                          color: var(--text-secondary);
-                          margin-top: 0.25rem;
-                        "
-                      >
-                        Tomorrow • 10:00 AM
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="app-card" style="padding: 0.75rem">
-                  <div style="display: flex; gap: 1rem">
-                    <div
-                      style="
-                        width: 60px;
-                        height: 60px;
-                        background: rgba(255, 255, 255, 0.1);
-                        border-radius: 12px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-weight: 700;
-                      "
-                    >
-                      FEB<br />02
-                    </div>
-                    <div>
-                      <div style="font-weight: 600; font-size: 0.95rem">
-                        Project Deadline
-                      </div>
-                      <div
-                        style="
-                          font-size: 0.8rem;
-                          color: var(--text-secondary);
-                          margin-top: 0.25rem;
-                        "
-                      >
-                        In 3 days
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div class="feature-item">
+              <i class="bx bx-check-circle"></i>
+              <span>Share and discover comprehensive notes</span>
             </div>
-          </div>
-          <div class="feature-text fade-in">
-            <h2>Find upcoming exams and deadlines</h2>
-            <p>
-              Track upcoming exam dates, assignment deadlines, and never miss an
-              important date.
-            </p>
-          </div>
-        </div>
-      </section>
-    </div>
-
-    <!-- Founders Section -->
-    <section class="founders">
-      <h2 class="section-title">Meet the Founders</h2>
-      <div class="founders-grid">
-        <!-- Founder 1 -->
-        <div class="founder-card fade-in">
-          <div class="founder-image">
-            <img
-              src="creator1.jpg"
-              alt="Creator 1"
-              onerror="
-                this.style.display = 'none';
-                this.parentElement.style.background =
-                  'linear-gradient(135deg, rgba(102,126,234,0.3), rgba(118,75,162,0.3))';
-              "
-            />
-          </div>
-          <div class="founder-info">
-            <h3 class="founder-name">Your Name</h3>
-            <div class="founder-stats">192K Followers • 1.53M Subscribers</div>
-            <div class="founder-socials">
-              <a href="#" class="social-icon"
-                ><i class="bx bxl-instagram"></i
-              ></a>
-              <a href="#" class="social-icon"><i class="bx bxl-youtube"></i></a>
-              <a href="#" class="social-icon"
-                ><i class="bx bxl-linkedin"></i
-              ></a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Founder 2 -->
-        <div class="founder-card fade-in">
-          <div class="founder-image">
-            <img
-              src="creator2.jpg"
-              alt="Creator 2"
-              onerror="
-                this.style.display = 'none';
-                this.parentElement.style.background =
-                  'linear-gradient(135deg, rgba(102,126,234,0.3), rgba(118,75,162,0.3))';
-              "
-            />
-          </div>
-          <div class="founder-info">
-            <h3 class="founder-name">Team Member 2</h3>
-            <div class="founder-stats">297K Followers • 1.44M Subscribers</div>
-            <div class="founder-socials">
-              <a href="#" class="social-icon"
-                ><i class="bx bxl-instagram"></i
-              ></a>
-              <a href="#" class="social-icon"><i class="bx bxl-youtube"></i></a>
-              <a href="#" class="social-icon"
-                ><i class="bx bxl-linkedin"></i
-              ></a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Founder 3 -->
-        <div class="founder-card fade-in">
-          <div class="founder-image">
-            <img
-              src="creator3.jpg"
-              alt="Creator 3"
-              onerror="
-                this.style.display = 'none';
-                this.parentElement.style.background =
-                  'linear-gradient(135deg, rgba(102,126,234,0.3), rgba(118,75,162,0.3))';
-              "
-            />
-          </div>
-          <div class="founder-info">
-            <h3 class="founder-name">Team Member 3</h3>
-            <div class="founder-stats">84K Followers • 2.58M Subscribers</div>
-            <div class="founder-socials">
-              <a href="#" class="social-icon"
-                ><i class="bx bxl-instagram"></i
-              ></a>
-              <a href="#" class="social-icon"><i class="bx bxl-youtube"></i></a>
-              <a href="#" class="social-icon"
-                ><i class="bx bxl-linkedin"></i
-              ></a>
+            <div class="feature-item">
+              <i class="bx bx-check-circle"></i>
+              <span>Find resources tailored to your curriculum</span>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="cta-section">
-      <div class="cta-content">
-        <h3 class="cta-text">
+    <!-- Creators Section - Compact 3+2 -->
+    <section class="creators-section" id="creators">
+      <h2 class="creators-title">Meet the Creators</h2>
+
+      <div class="creators-wrapper">
+        <!-- First Row - 3 People -->
+        <div class="creators-row">
+          <div class="creator-card">
+            <div class="creator-image">
+              <img src="creator1.jpg" alt="Creator 1" />
+            </div>
+            <h3 class="creator-name">Your Name</h3>
+            <p class="creator-role">Full Stack Developer</p>
+            <div class="creator-socials">
+              <a href="#" class="social-link"
+                ><i class="bx bxl-instagram"></i
+              ></a>
+              <a href="#" class="social-link"><i class="bx bxl-github"></i></a>
+              <a href="#" class="social-link"
+                ><i class="bx bxl-linkedin"></i
+              ></a>
+              <a href="#" class="social-link stuvo-link" title="STUVO">
+                <img src="logo.png" alt="STUVO" />
+              </a>
+            </div>
+          </div>
+
+          <div class="creator-card">
+            <div class="creator-image">
+              <img src="creator2.jpg" alt="Creator 2" />
+            </div>
+            <h3 class="creator-name">Team Member 2</h3>
+            <p class="creator-role">UI/UX Designer</p>
+            <div class="creator-socials">
+              <a href="#" class="social-link"
+                ><i class="bx bxl-instagram"></i
+              ></a>
+              <a href="#" class="social-link"><i class="bx bxl-github"></i></a>
+              <a href="#" class="social-link"
+                ><i class="bx bxl-linkedin"></i
+              ></a>
+              <a href="#" class="social-link stuvo-link" title="STUVO">
+                <img src="logo.png" alt="STUVO" />
+              </a>
+            </div>
+          </div>
+
+          <div class="creator-card">
+            <div class="creator-image">
+              <img src="creator3.jpg" alt="Creator 3" />
+            </div>
+            <h3 class="creator-name">Team Member 3</h3>
+            <p class="creator-role">Backend Developer</p>
+            <div class="creator-socials">
+              <a href="#" class="social-link"
+                ><i class="bx bxl-instagram"></i
+              ></a>
+              <a href="#" class="social-link"><i class="bx bxl-github"></i></a>
+              <a href="#" class="social-link"
+                ><i class="bx bxl-linkedin"></i
+              ></a>
+              <a href="#" class="social-link stuvo-link" title="STUVO">
+                <img src="logo.png" alt="STUVO" />
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Second Row - 2 People Centered -->
+        <div class="creators-row second">
+          <div class="creator-card">
+            <div class="creator-image">
+              <img src="creator4.jpg" alt="Creator 4" />
+            </div>
+            <h3 class="creator-name">Team Member 4</h3>
+            <p class="creator-role">Content Strategist</p>
+            <div class="creator-socials">
+              <a href="#" class="social-link"
+                ><i class="bx bxl-instagram"></i
+              ></a>
+              <a href="#" class="social-link"><i class="bx bxl-github"></i></a>
+              <a href="#" class="social-link"
+                ><i class="bx bxl-linkedin"></i
+              ></a>
+              <a href="#" class="social-link stuvo-link" title="STUVO">
+                <img src="logo.png" alt="STUVO" />
+              </a>
+            </div>
+          </div>
+
+          <div class="creator-card">
+            <div class="creator-image">
+              <img src="creator5.jpg" alt="Creator 5" />
+            </div>
+            <h3 class="creator-name">Team Member 5</h3>
+            <p class="creator-role">Marketing Lead</p>
+            <div class="creator-socials">
+              <a href="#" class="social-link"
+                ><i class="bx bxl-instagram"></i
+              ></a>
+              <a href="#" class="social-link"><i class="bx bxl-github"></i></a>
+              <a href="#" class="social-link"
+                ><i class="bx bxl-linkedin"></i
+              ></a>
+              <a href="#" class="social-link stuvo-link" title="STUVO">
+                <img src="logo.png" alt="STUVO" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA Section -->
+      <div class="cta-section">
+        <h3 class="cta-title">
           Create your account and experience STUVO5 for yourself
         </h3>
-        <a href="#" class="cta-btn">Join STUVO5</a>
+        <a href="temp.html" class="cta-button">Join STUVO5</a>
       </div>
     </section>
 
+    <!-- Footer -->
+    <footer class="footer">
+      <p>&copy; 2026 STUVO 5. All rights reserved.</p>
+    </footer>
+
     <script>
-      // Parallax Effect for Hero Grid
+      // Parallax Effect
       window.addEventListener("scroll", () => {
         const scrolled = window.pageYOffset;
         const parallaxElements = document.querySelectorAll(".grid-column");
@@ -1241,61 +924,9 @@
           column.style.transform = `translateY(${yPos}px)`;
         });
 
-        // Fade hero content on scroll
         const heroContent = document.querySelector(".hero-content");
-        const heroOpacity = 1 - scrolled / window.innerHeight;
+        const heroOpacity = 1 - scrolled / (window.innerHeight * 0.8);
         heroContent.style.opacity = Math.max(0, heroOpacity);
-      });
-
-      // Intersection Observer for fade-in animations
-      const observerOptions = {
-        threshold: 0.1,
-        rootMargin: "0px 0px -100px 0px",
-      };
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-          }
-        });
-      }, observerOptions);
-
-      document
-        .querySelectorAll(".fade-in")
-        .forEach((el) => observer.observe(el));
-
-      // Smooth parallax for founder cards on mouse move
-      document.addEventListener("mousemove", (e) => {
-        const cards = document.querySelectorAll(".founder-card");
-        const x = (window.innerWidth - e.pageX) / 50;
-        const y = (window.innerHeight - e.pageY) / 50;
-
-        cards.forEach((card, index) => {
-          const speed = index % 2 === 0 ? 1 : -1;
-          card.style.transform = `translateX(${x * speed}px) translateY(${y * speed}px)`;
-        });
-      });
-
-      // Phone mockup tilt effect
-      document.querySelectorAll(".phone-mockup").forEach((phone) => {
-        phone.addEventListener("mousemove", (e) => {
-          const rect = phone.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-
-          const centerX = rect.width / 2;
-          const centerY = rect.height / 2;
-
-          const rotateX = (y - centerY) / 20;
-          const rotateY = (centerX - x) / 20;
-
-          phone.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
-        });
-
-        phone.addEventListener("mouseleave", () => {
-          phone.style.transform = "perspective(1000px) rotateY(-5deg)";
-        });
       });
     </script>
   </body>
