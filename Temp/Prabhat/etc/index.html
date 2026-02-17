@@ -3,931 +3,299 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>STUVO5 - Study Platform</title>
+    <title>STUVO5 - Login</title>
     <link
       href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
       rel="stylesheet"
     />
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      }
-
-      html {
-        scroll-behavior: smooth;
-        font-size: 16px;
-      }
-
-      body {
-        background: #0a0a0a;
-        color: #fff;
-        overflow-x: hidden;
-      }
-
-      /* Navigation - Compact */
-      .navbar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        padding: 0.75rem 2%;
-        z-index: 1000;
-        background: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(15px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .nav-logo {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-
-      .logo-icon {
-        height: 1.8rem;
-        width: auto;
-        object-fit: contain;
-      }
-
-      .logo-text {
-        font-size: 1.4rem;
-        font-weight: 700;
-        color: #fff;
-      }
-
-      .beta {
-        color: rgba(255, 255, 255, 0.6);
-        font-weight: 400;
-        font-size: 1rem;
-      }
-
-      .login-btn {
-        padding: 0.5rem 1.25rem;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border-radius: 1.5rem;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 0.85rem;
-        transition: all 0.3s ease;
-      }
-
-      .login-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-      }
-
-      /* Hero Section - Tight Grid Like MOCTALE */
-      .hero {
-        position: relative;
-        height: 100vh;
-        min-height: 600px;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .parallax-grid {
-        position: absolute;
-        width: 105%;
-        height: 130%;
-        left: -2.5%;
-        top: -15%;
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 0.5rem;
-        padding: 0 1%;
-      }
-
-      .grid-column {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        will-change: transform;
-      }
-
-      .grid-item {
-        width: 100%;
-        aspect-ratio: 2/3;
-        background: linear-gradient(
-          135deg,
-          rgba(102, 126, 234, 0.15),
-          rgba(118, 75, 162, 0.15)
-        );
-        border-radius: 8px;
-        overflow: hidden;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        position: relative;
-      }
-
-      .grid-item img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        opacity: 0.6;
-      }
-
-      .col-1 {
-        margin-top: -10%;
-      }
-      .col-2 {
-        margin-top: 5%;
-      }
-      .col-3 {
-        margin-top: -5%;
-      }
-      .col-4 {
-        margin-top: 8%;
-      }
-      .col-5 {
-        margin-top: -8%;
-      }
-
-      .hero-overlay {
-        position: absolute;
-        inset: 0;
-        background:
-          radial-gradient(
-            circle at 50% 0%,
-            rgba(102, 126, 234, 0.3) 0%,
-            transparent 50%
-          ),
-          radial-gradient(
-            circle at 30% 100%,
-            rgba(118, 75, 162, 0.2) 0%,
-            transparent 40%
-          ),
-          linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, #0a0a0a 100%);
-        z-index: 2;
-      }
-
-      .hero-content {
-        position: relative;
-        z-index: 10;
-        text-align: center;
-      }
-
-      .hero-logo-main {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 1rem;
-        margin-bottom: 1rem;
-      }
-
-      .hero-logo-icon {
-        height: 4rem;
-        width: auto;
-        filter: drop-shadow(0 0 30px rgba(102, 126, 234, 0.5));
-      }
-
-      .hero-title {
-        font-size: clamp(2.5rem, 8vw, 4.5rem);
-        font-weight: 800;
-        letter-spacing: 0.3rem;
-        background: linear-gradient(135deg, #fff 0%, #a78bfa 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-      }
-
-      .scroll-indicator {
-        position: absolute;
-        bottom: 1.5rem;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 1.5rem;
-        color: rgba(255, 255, 255, 0.5);
-        animation: bounce 2s infinite;
-        z-index: 20;
-      }
-
-      @keyframes bounce {
-        0%,
-        100% {
-          transform: translateX(-50%) translateY(0);
-        }
-        50% {
-          transform: translateX(-50%) translateY(-8px);
-        }
-      }
-
-      /* About Section - Compact */
-      .about-section {
-        padding: 4rem 4%;
-        position: relative;
-        background: #0a0a0a;
-      }
-
-      .about-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 3rem;
-        align-items: center;
-      }
-
-      .about-animation {
-        position: relative;
-        height: 400px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .floating-element {
-        position: absolute;
-        width: 70px;
-        height: 70px;
-        background: rgba(102, 126, 234, 0.1);
-        border: 1px solid rgba(102, 126, 234, 0.3);
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        backdrop-filter: blur(10px);
-        animation: float 3s ease-in-out infinite;
-      }
-
-      .floating-element i {
-        font-size: 1.75rem;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-
-      .element-1 {
-        top: 15%;
-        left: 15%;
-        animation-delay: 0s;
-      }
-      .element-2 {
-        top: 20%;
-        right: 20%;
-        animation-delay: 0.5s;
-      }
-      .element-3 {
-        bottom: 25%;
-        left: 10%;
-        animation-delay: 1s;
-      }
-      .element-4 {
-        bottom: 20%;
-        right: 15%;
-        animation-delay: 1.5s;
-      }
-      .element-5 {
-        top: 50%;
-        left: 40%;
-        animation-delay: 0.8s;
-      }
-
-      @keyframes float {
-        0%,
-        100% {
-          transform: translateY(0px);
-        }
-        50% {
-          transform: translateY(-15px);
-        }
-      }
-
-      .animated-orb {
-        position: absolute;
-        border-radius: 50%;
-        filter: blur(30px);
-        opacity: 0.25;
-        animation: pulseOrb 4s ease-in-out infinite;
-      }
-
-      .orb-1 {
-        width: 180px;
-        height: 180px;
-        background: #667eea;
-        top: 25%;
-        left: 25%;
-      }
-
-      .orb-2 {
-        width: 150px;
-        height: 150px;
-        background: #764ba2;
-        bottom: 35%;
-        right: 30%;
-        animation-delay: 1s;
-      }
-
-      .orb-3 {
-        width: 160px;
-        height: 160px;
-        background: #a78bfa;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        animation-delay: 2s;
-      }
-
-      @keyframes pulseOrb {
-        0%,
-        100% {
-          transform: scale(1);
-          opacity: 0.25;
-        }
-        50% {
-          transform: scale(1.1);
-          opacity: 0.35;
-        }
-      }
-
-      .about-content h2 {
-        font-size: 2.25rem;
-        font-weight: 700;
-        margin-bottom: 1rem;
-        line-height: 1.2;
-        background: linear-gradient(135deg, #fff 0%, #a78bfa 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-
-      .about-description {
-        font-size: 1rem;
-        line-height: 1.6;
-        color: rgba(255, 255, 255, 0.75);
-        margin-bottom: 1.5rem;
-      }
-
-      .about-features {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-      }
-
-      .feature-item {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 0.95rem;
-        color: rgba(255, 255, 255, 0.85);
-      }
-
-      .feature-item i {
-        font-size: 1.25rem;
-        color: #667eea;
-      }
-
-      /* Creators Section - Tight Compact Layout */
-      .creators-section {
-        padding: 3rem 4%;
-        background: linear-gradient(
-          180deg,
-          #0a0a0a 0%,
-          rgba(30, 20, 50, 0.9) 100%
-        );
-      }
-
-      .creators-title {
-        text-align: center;
-        font-size: 2rem;
-        margin-bottom: 2rem;
-        color: #fff;
-        font-weight: 700;
-      }
-
-      .creators-wrapper {
-        max-width: 1000px;
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-      }
-
-      .creators-row {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.25rem;
-        width: 100%;
-      }
-
-      .creators-row.second {
-        grid-template-columns: repeat(2, 1fr);
-        max-width: 66%;
-        margin: 0 auto;
-      }
-
-      .creator-card {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 1rem;
-        padding: 1.25rem;
-        text-align: center;
-        transition: all 0.3s ease;
-        backdrop-filter: blur(10px);
-      }
-
-      .creator-card:hover {
-        transform: translateY(-5px);
-        border-color: rgba(102, 126, 234, 0.4);
-        background: rgba(255, 255, 255, 0.08);
-      }
-
-      .creator-image {
-        width: 90px;
-        height: 90px;
-        border-radius: 50%;
-        overflow: hidden;
-        margin: 0 auto 0.75rem;
-        border: 2px solid rgba(102, 126, 234, 0.3);
-        transition: all 0.3s ease;
-      }
-
-      .creator-card:hover .creator-image {
-        border-color: rgba(102, 126, 234, 0.6);
-      }
-
-      .creator-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      .creator-name {
-        font-size: 1.1rem;
-        margin-bottom: 0.25rem;
-        color: #fff;
-        font-weight: 600;
-      }
-
-      .creator-role {
-        font-size: 0.8rem;
-        color: rgba(255, 255, 255, 0.6);
-        margin-bottom: 1rem;
-      }
-
-      .creator-socials {
-        display: flex;
-        justify-content: center;
-        gap: 0.5rem;
-      }
-
-      .social-link {
-        width: 2rem;
-        height: 2rem;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.05);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #fff;
-        text-decoration: none;
-        transition: all 0.2s ease;
-        font-size: 1rem;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-      }
-
-      .social-link:hover {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        transform: translateY(-2px);
-        border-color: transparent;
-      }
-
-      .social-link.stuvo-link:hover {
-        background: linear-gradient(135deg, #a78bfa 0%, #764ba2 100%);
-      }
-
-      .social-link img {
-        width: 50%;
-        height: 50%;
-        object-fit: contain;
-        filter: brightness(0) invert(1);
-      }
-
-      /* CTA Section - Compact */
-      .cta-section {
-        padding: 2.5rem 4%;
-        max-width: 800px;
-        margin: 2rem auto 3rem;
-        background: rgba(102, 126, 234, 0.1);
-        border-radius: 1.5rem;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        text-align: center;
-      }
-
-      .cta-title {
-        font-size: 1.5rem;
-        margin-bottom: 1.25rem;
-        color: #fff;
-        font-weight: 600;
-      }
-
-      .cta-button {
-        padding: 0.75rem 2rem;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border-radius: 2rem;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 1rem;
-        display: inline-block;
-        transition: all 0.3s ease;
-      }
-
-      .cta-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-      }
-
-      /* Footer */
-      .footer {
-        text-align: center;
-        padding: 1.5rem;
-        color: rgba(255, 255, 255, 0.4);
-        font-size: 0.85rem;
-        background: rgba(0, 0, 0, 0.5);
-      }
-
-      /* Responsive */
-      @media (max-width: 968px) {
-        .about-container {
-          grid-template-columns: 1fr;
-          gap: 2rem;
-        }
-
-        .about-animation {
-          height: 300px;
-          order: -1;
-        }
-
-        .creators-row {
-          grid-template-columns: repeat(2, 1fr);
-        }
-
-        .creators-row.second {
-          grid-template-columns: repeat(2, 1fr);
-          max-width: 100%;
-        }
-
-        .parallax-grid {
-          grid-template-columns: repeat(3, 1fr);
-        }
-
-        .col-4,
-        .col-5 {
-          display: none;
-        }
-      }
-
-      @media (max-width: 600px) {
-        .creators-row,
-        .creators-row.second {
-          grid-template-columns: 1fr;
-          max-width: 300px;
-          margin: 0 auto;
-        }
-
-        .hero-logo-icon {
-          height: 3rem;
-        }
-
-        .hero-title {
-          letter-spacing: 0.2rem;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="index.css" />
   </head>
   <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-      <div class="nav-logo">
-        <img src="logo.png" alt="STUVO" class="logo-icon" />
-        <span class="logo-text">STUVO5</span>
-        <span class="beta">β</span>
-      </div>
-      <a href="temp.html" class="login-btn">Login</a>
-    </nav>
+    <div class="auth-section" id="authSection">
+      <video autoplay muted loop id="bg-video">
+        <source src="website.mp4" type="video/mp4" />
+      </video>
+      <div class="video-overlay"></div>
 
-    <!-- Hero Section -->
-    <section class="hero">
-      <div class="parallax-grid" id="parallaxGrid">
-        <div class="grid-column col-1" data-speed="0.5">
-          <div class="grid-item">
-            <img
-              src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=400&h=600&fit=crop"
-              alt="Study"
-            />
-          </div>
-          <div class="grid-item">
-            <img
-              src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=600&fit=crop"
-              alt="Books"
-            />
-          </div>
-          <div class="grid-item">
-            <img
-              src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400&h=600&fit=crop"
-              alt="Writing"
-            />
-          </div>
-        </div>
-        <div class="grid-column col-2" data-speed="0.8">
-          <div class="grid-item">
-            <img
-              src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400&h=600&fit=crop"
-              alt="Reading"
-            />
-          </div>
-          <div class="grid-item">
-            <img
-              src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=600&fit=crop"
-              alt="Group Study"
-            />
-          </div>
-          <div class="grid-item">
-            <img
-              src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=600&fit=crop"
-              alt="Laptop"
-            />
-          </div>
-        </div>
-        <div class="grid-column col-3" data-speed="0.3">
-          <div class="grid-item">
-            <img
-              src="https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=400&h=600&fit=crop"
-              alt="Coffee Study"
-            />
-          </div>
-          <div class="grid-item">
-            <img
-              src="https://images.unsplash.com/photo-1434626881859-194d67b2b86f?w=400&h=600&fit=crop"
-              alt="Notes"
-            />
-          </div>
-          <div class="grid-item">
-            <img
-              src="https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=400&h=600&fit=crop"
-              alt="Library"
-            />
-          </div>
-        </div>
-        <div class="grid-column col-4" data-speed="0.6">
-          <div class="grid-item">
-            <img
-              src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&h=600&fit=crop"
-              alt="Documents"
-            />
-          </div>
-          <div class="grid-item">
-            <img
-              src="https://images.unsplash.com/photo-1432888498267-38a318d88cef?w=400&h=600&fit=crop"
-              alt="Research"
-            />
-          </div>
-          <div class="grid-item">
-            <img
-              src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=600&fit=crop"
-              alt="Graduation"
-            />
-          </div>
-        </div>
-        <div class="grid-column col-5" data-speed="0.4">
-          <div class="grid-item">
-            <img
-              src="https://images.unsplash.com/photo-1471107340929-a87cd0f5b5f3?w=400&h=600&fit=crop"
-              alt="Innovation"
-            />
-          </div>
-          <div class="grid-item">
-            <img
-              src="https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=400&h=600&fit=crop"
-              alt="Books"
-            />
-          </div>
-          <div class="grid-item">
-            <img
-              src="https://images.unsplash.com/photo-1463320726281-696a41370405?w=400&h=600&fit=crop"
-              alt="Writing"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="hero-overlay"></div>
-
-      <div class="hero-content">
-        <div class="hero-logo-main">
-          <img src="logo.png" alt="STUVO" class="hero-logo-icon" />
-          <h1 class="hero-title">STUVO5</h1>
-        </div>
+      <div class="logo">
+        <img src="logo.png" alt="STRUVO" class="logo-icon" />
+        <h1>STUVO5</h1>
       </div>
 
-      <div class="scroll-indicator">
-        <i class="bx bx-chevron-down"></i>
-      </div>
-    </section>
-
-    <!-- About Section -->
-    <section class="about-section" id="about">
-      <div class="about-container">
-        <div class="about-animation">
-          <div class="floating-element element-1">
-            <i class="bx bxs-book-bookmark"></i>
+      <div class="login-box">
+        <!-- LOGIN FORM -->
+        <div class="objects">
+          <div class="box-head">
+            <h1>Log in</h1>
           </div>
-          <div class="floating-element element-2">
-            <i class="bx bxs-graduation"></i>
-          </div>
-          <div class="floating-element element-3">
-            <i class="bx bxs-file-doc"></i>
-          </div>
-          <div class="floating-element element-4">
-            <i class="bx bxs-group"></i>
-          </div>
-          <div class="floating-element element-5">
-            <i class="bx bxs-bulb"></i>
-          </div>
-          <div class="animated-orb orb-1"></div>
-          <div class="animated-orb orb-2"></div>
-          <div class="animated-orb orb-3"></div>
+          <form id="loginForm">
+            <div class="input-box">
+              <div class="input-wrapper">
+                <i class="bx bx-envelope"></i>
+                <input
+                  type="email"
+                  id="loginEmail"
+                  placeholder="Enter your email"
+                />
+              </div>
+              <div class="error-message" id="emailError">
+                Please enter a valid email
+              </div>
+            </div>
+            <div class="input-box">
+              <div class="input-wrapper">
+                <i class="bx bx-lock"></i>
+                <input
+                  type="password"
+                  id="loginPassword"
+                  placeholder="Password"
+                />
+                <i
+                  class="bx bx-hide toggle-password"
+                  id="toggleLoginPassword"
+                ></i>
+              </div>
+              <div class="error-message" id="passwordError">
+                Please enter your password
+              </div>
+            </div>
+            <div class="remember-forgot">
+              <label><input type="checkbox" /> Remember me</label>
+              <a href="forgot-password.html">Forgot password?</a>
+            </div>
+            <div class="login-button">
+              <button type="submit" id="loginBtn">Log in</button>
+            </div>
+            <div class="divider"><span>OR</span></div>
+            <button type="button" class="google-login">
+              Continue with Google
+            </button>
+            <div class="account">
+              <p>
+                Don't have an account?
+                <a href="#" class="creat-acc">Create an account</a>
+              </p>
+            </div>
+          </form>
         </div>
-        <div class="about-content">
-          <h2>Your Ultimate Study <br />Companion Platform</h2>
-          <p class="about-description">
-            STUVO 5 is a comprehensive platform designed exclusively for college
-            students to streamline their academic journey. Access study
-            materials, collaborate with peers, share notes, find valuable
-            resources, and achieve academic excellence - all in one integrated
-            platform.
+
+        <!-- REGISTER FORM -->
+        <div class="objects-register">
+          <div class="box-head-2">
+            <h1>Register</h1>
+          </div>
+          <form id="registerForm">
+            <div class="input-box">
+              <div class="input-wrapper">
+                <i class="bx bx-user"></i>
+                <input
+                  type="text"
+                  id="registerUsername"
+                  placeholder="Username"
+                />
+              </div>
+              <div class="error-message" id="registerUsernameError">
+                Please enter a username
+              </div>
+            </div>
+
+            <div class="input-box verify-box">
+              <div class="input-wrapper-with-btn">
+                <div class="input-wrapper">
+                  <i class="bx bx-envelope"></i>
+                  <input
+                    type="email"
+                    id="registerEmail"
+                    placeholder="Enter your email"
+                  />
+                </div>
+                <button
+                  type="button"
+                  class="verify-small-btn"
+                  id="verifyEmailBtn"
+                >
+                  Verify
+                </button>
+              </div>
+              <div class="error-message" id="registerEmailError">
+                Please enter a valid email
+              </div>
+            </div>
+
+            <div class="input-box verify-box">
+              <div class="input-wrapper-with-btn">
+                <div class="input-wrapper phone-input-wrapper">
+                  <span class="country-code">+91</span>
+                  <input
+                    type="tel"
+                    id="registerPhone"
+                    placeholder="Phone number"
+                    maxlength="10"
+                  />
+                </div>
+                <button
+                  type="button"
+                  class="verify-small-btn"
+                  id="verifyPhoneBtn"
+                >
+                  Verify
+                </button>
+              </div>
+              <div class="error-message" id="registerPhoneError">
+                Please enter valid phone number
+              </div>
+            </div>
+
+            <div class="input-box">
+              <div class="input-wrapper">
+                <i class="bx bx-lock"></i>
+                <input
+                  type="password"
+                  id="registerPassword"
+                  placeholder="Password"
+                />
+                <i
+                  class="bx bx-hide toggle-password"
+                  id="toggleRegisterPassword"
+                ></i>
+              </div>
+              <div class="error-message" id="registerPasswordError">
+                Please enter your password
+              </div>
+            </div>
+
+            <div class="remember">
+              <label
+                ><input type="checkbox" id="termsCheckbox" /> I agree with
+                <a href="#" class="terms-link" id="termsLink"
+                  >terms and conditions</a
+                ></label
+              >
+            </div>
+
+            <div class="Register-button">
+              <button type="submit">Register</button>
+            </div>
+            <div class="divider"><span>OR</span></div>
+            <button type="button" class="google-login">
+              Continue with Google
+            </button>
+            <div class="have-account">
+              <p>
+                Already have an account? <a href="#" class="Login-acc">Login</a>
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- VERIFICATION POPUP MODAL -->
+    <div class="verify-modal" id="verifyModal">
+      <div class="verify-modal-content">
+        <div class="verify-modal-header">
+          <h3 id="verifyModalTitle">Verify Email</h3>
+          <span class="close-verify" id="closeVerify">&times;</span>
+        </div>
+        <div class="verify-modal-body">
+          <p class="verify-text">
+            Enter the 6-digit code sent to your
+            <span id="verifyTarget">email</span>
           </p>
-          <div class="about-features">
-            <div class="feature-item">
-              <i class="bx bx-check-circle"></i>
-              <span>Access quality study materials anytime, anywhere</span>
-            </div>
-            <div class="feature-item">
-              <i class="bx bx-check-circle"></i>
-              <span>Collaborate seamlessly with fellow students</span>
-            </div>
-            <div class="feature-item">
-              <i class="bx bx-check-circle"></i>
-              <span>Share and discover comprehensive notes</span>
-            </div>
-            <div class="feature-item">
-              <i class="bx bx-check-circle"></i>
-              <span>Find resources tailored to your curriculum</span>
-            </div>
+          <div class="code-input-wrapper">
+            <input
+              type="text"
+              id="verifyCodeInput"
+              placeholder="000000"
+              maxlength="6"
+            />
           </div>
+          <div class="error-message" id="verifyCodeError">
+            Incorrect verification code
+          </div>
+          <button type="button" class="verify-submit-btn" id="verifySubmitBtn">
+            Verify Code
+          </button>
         </div>
       </div>
-    </section>
+    </div>
 
-    <!-- Creators Section - Compact 3+2 -->
-    <section class="creators-section" id="creators">
-      <h2 class="creators-title">Meet the Creators</h2>
-
-      <div class="creators-wrapper">
-        <!-- First Row - 3 People -->
-        <div class="creators-row">
-          <div class="creator-card">
-            <div class="creator-image">
-              <img src="creator1.jpg" alt="Creator 1" />
-            </div>
-            <h3 class="creator-name">Your Name</h3>
-            <p class="creator-role">Full Stack Developer</p>
-            <div class="creator-socials">
-              <a href="#" class="social-link"
-                ><i class="bx bxl-instagram"></i
-              ></a>
-              <a href="#" class="social-link"><i class="bx bxl-github"></i></a>
-              <a href="#" class="social-link"
-                ><i class="bx bxl-linkedin"></i
-              ></a>
-              <a href="#" class="social-link stuvo-link" title="STUVO">
-                <img src="logo.png" alt="STUVO" />
-              </a>
-            </div>
-          </div>
-
-          <div class="creator-card">
-            <div class="creator-image">
-              <img src="creator2.jpg" alt="Creator 2" />
-            </div>
-            <h3 class="creator-name">Team Member 2</h3>
-            <p class="creator-role">UI/UX Designer</p>
-            <div class="creator-socials">
-              <a href="#" class="social-link"
-                ><i class="bx bxl-instagram"></i
-              ></a>
-              <a href="#" class="social-link"><i class="bx bxl-github"></i></a>
-              <a href="#" class="social-link"
-                ><i class="bx bxl-linkedin"></i
-              ></a>
-              <a href="#" class="social-link stuvo-link" title="STUVO">
-                <img src="logo.png" alt="STUVO" />
-              </a>
-            </div>
-          </div>
-
-          <div class="creator-card">
-            <div class="creator-image">
-              <img src="creator3.jpg" alt="Creator 3" />
-            </div>
-            <h3 class="creator-name">Team Member 3</h3>
-            <p class="creator-role">Backend Developer</p>
-            <div class="creator-socials">
-              <a href="#" class="social-link"
-                ><i class="bx bxl-instagram"></i
-              ></a>
-              <a href="#" class="social-link"><i class="bx bxl-github"></i></a>
-              <a href="#" class="social-link"
-                ><i class="bx bxl-linkedin"></i
-              ></a>
-              <a href="#" class="social-link stuvo-link" title="STUVO">
-                <img src="logo.png" alt="STUVO" />
-              </a>
-            </div>
-          </div>
+    <!-- TERMS AND CONDITIONS MODAL -->
+    <div class="terms-modal" id="termsModal">
+      <div class="terms-content">
+        <div class="terms-header">
+          <h2>Terms and Conditions – STUVO5</h2>
         </div>
+        <div class="terms-body">
+          <h3>1. Introduction</h3>
+          <p>
+            STUVO5 is a student-focused academic project developed to provide
+            access to college-related information such as marks, attendance,
+            events, announcements, and student services. By using this
+            application, you agree to the following terms.
+          </p>
 
-        <!-- Second Row - 2 People Centered -->
-        <div class="creators-row second">
-          <div class="creator-card">
-            <div class="creator-image">
-              <img src="creator4.jpg" alt="Creator 4" />
-            </div>
-            <h3 class="creator-name">Team Member 4</h3>
-            <p class="creator-role">Content Strategist</p>
-            <div class="creator-socials">
-              <a href="#" class="social-link"
-                ><i class="bx bxl-instagram"></i
-              ></a>
-              <a href="#" class="social-link"><i class="bx bxl-github"></i></a>
-              <a href="#" class="social-link"
-                ><i class="bx bxl-linkedin"></i
-              ></a>
-              <a href="#" class="social-link stuvo-link" title="STUVO">
-                <img src="logo.png" alt="STUVO" />
-              </a>
-            </div>
-          </div>
+          <h3>2. User Responsibility</h3>
+          <p>
+            Users are responsible for maintaining the confidentiality of their
+            login credentials. Account sharing is not permitted. Any activity
+            performed through an account is the responsibility of the account
+            holder.
+          </p>
 
-          <div class="creator-card">
-            <div class="creator-image">
-              <img src="creator5.jpg" alt="Creator 5" />
-            </div>
-            <h3 class="creator-name">Team Member 5</h3>
-            <p class="creator-role">Marketing Lead</p>
-            <div class="creator-socials">
-              <a href="#" class="social-link"
-                ><i class="bx bxl-instagram"></i
-              ></a>
-              <a href="#" class="social-link"><i class="bx bxl-github"></i></a>
-              <a href="#" class="social-link"
-                ><i class="bx bxl-linkedin"></i
-              ></a>
-              <a href="#" class="social-link stuvo-link" title="STUVO">
-                <img src="logo.png" alt="STUVO" />
-              </a>
-            </div>
-          </div>
+          <h3>3. Data Usage</h3>
+          <p>
+            The application may collect academic details (such as marks and
+            attendance), basic profile information, and usage data to provide
+            and improve student services. STUVO5 does not sell or use student
+            data for commercial purposes.
+          </p>
+
+          <h3>4. Privacy & Security</h3>
+          <p>
+            Reasonable measures are taken to protect user data. However, as this
+            is an academic project, complete data security cannot be guaranteed.
+          </p>
+
+          <h3>5. Acceptable Use</h3>
+          <p>
+            Users must use the platform responsibly. Posting abusive, illegal,
+            or misleading content, or attempting unauthorized access to data,
+            may result in account suspension.
+          </p>
+
+          <h3>6. Academic Disclaimer</h3>
+          <p>
+            STUVO5 is not an official college system. All academic information
+            is for reference purposes only. Students should verify official
+            records with the college administration.
+          </p>
+
+          <h3>7. Changes to the Application</h3>
+          <p>
+            Features and terms may be updated or modified as part of project
+            development. Continued use of the application indicates acceptance
+            of any updates.
+          </p>
+
+          <h3>8. Non-Commercial Project</h3>
+          <p>
+            STUVO5 is developed solely for academic purposes and is not intended
+            for commercial use.
+          </p>
+
+          <h3>9. Acceptance</h3>
+          <p>
+            By creating an account or using STUVO5, users confirm that they have
+            read and agreed to these Terms and Conditions.
+          </p>
+        </div>
+        <div class="terms-footer">
+          <button class="accept-terms" id="acceptTerms">Accept</button>
         </div>
       </div>
+    </div>
 
-      <!-- CTA Section -->
-      <div class="cta-section">
-        <h3 class="cta-title">
-          Create your account and experience STUVO5 for yourself
-        </h3>
-        <a href="temp.html" class="cta-button">Join STUVO5</a>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-      <p>&copy; 2026 STUVO 5. All rights reserved.</p>
-    </footer>
-
-    <script>
-      // Parallax Effect
-      window.addEventListener("scroll", () => {
-        const scrolled = window.pageYOffset;
-        const parallaxElements = document.querySelectorAll(".grid-column");
-
-        parallaxElements.forEach((column) => {
-          const speed = parseFloat(column.getAttribute("data-speed")) || 0.5;
-          const yPos = -(scrolled * speed);
-          column.style.transform = `translateY(${yPos}px)`;
-        });
-
-        const heroContent = document.querySelector(".hero-content");
-        const heroOpacity = 1 - scrolled / (window.innerHeight * 0.8);
-        heroContent.style.opacity = Math.max(0, heroOpacity);
-      });
-    </script>
+    <script src="index.js"></script>
   </body>
 </html>

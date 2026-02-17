@@ -1,15 +1,37 @@
 // Navigation Logic
-const navItems = document.querySelectorAll(".nav-item");
+const navItems = document.querySelectorAll(".nav-item:not(.explorer-nav)");
 const pages = document.querySelectorAll(".page-content");
+const explorerNavBtn = document.getElementById("explorerNavBtn");
+const explorerOverlay = document.getElementById("explorerOverlay");
+const explorerClose = document.getElementById("explorerClose");
 
 navItems.forEach((item) => {
   item.addEventListener("click", () => {
     const targetPage = item.getAttribute("data-page");
     navItems.forEach((nav) => nav.classList.remove("active"));
+    explorerNavBtn.classList.remove("active");
     item.classList.add("active");
     pages.forEach((page) => page.classList.remove("active"));
     document.getElementById(targetPage).classList.add("active");
   });
+});
+
+// Explorer opens as bottom sheet over current page
+explorerNavBtn.addEventListener("click", () => {
+  explorerNavBtn.classList.add("active");
+  explorerOverlay.classList.add("active");
+});
+
+explorerClose.addEventListener("click", () => {
+  explorerOverlay.classList.remove("active");
+  explorerNavBtn.classList.remove("active");
+});
+
+explorerOverlay.addEventListener("click", (e) => {
+  if (e.target === explorerOverlay) {
+    explorerOverlay.classList.remove("active");
+    explorerNavBtn.classList.remove("active");
+  }
 });
 
 // Profile Modal Logic
