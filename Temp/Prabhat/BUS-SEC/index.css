@@ -96,81 +96,49 @@ body {
   }
 }
 
-/* Search Bar */
-.search-bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+/* Bus Cards */
+.bus-card {
   background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 12px;
-  padding: 12px 15px;
-  margin-bottom: 20px;
-}
-
-.search-bar i {
-  color: #888;
-  font-size: 20px;
-}
-
-.search-bar input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: white;
-  font-size: 15px;
-}
-
-.search-bar input::placeholder {
-  color: #666;
-}
-
-/* Event Cards */
-.event-card {
-  background: #1a1a1a;
-  border: 1px solid #333;
   border-radius: 15px;
   padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #333;
+}
+
+.bus-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 15px;
-  transition:
-    transform 0.2s,
-    border-color 0.2s;
 }
 
-.event-card:hover {
-  transform: translateY(-2px);
-  border-color: #a78bfa;
-}
-
-.event-tag {
-  display: inline-block;
-  background: #a78bfa;
-  color: white;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-  margin-bottom: 10px;
-}
-
-.event-title {
+.bus-number {
   font-size: 20px;
   font-weight: bold;
-  color: white;
-  margin-bottom: 10px;
-}
-
-.event-date {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #888;
-  font-size: 14px;
-}
-
-.event-date i {
   color: #a78bfa;
+}
+
+.bus-status {
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-active {
+  background: #10b981;
+  color: white;
+}
+
+.map-placeholder {
+  background: #2a2a2a;
+  height: 200px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+  color: #666;
 }
 
 /* Notification Panel */

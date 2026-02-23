@@ -1,128 +1,188 @@
-// Smooth scroll for anchor links
-document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-  anchor.addEventListener("click", function (e) {
-    e.preventDefault();
-    const target = document.querySelector(this.getAttribute("href"));
-    if (target) {
-      target.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
+// Navigation Logic
+const navItems = document.querySelectorAll(".nav-item:not(.explorer-nav)");
+const pages = document.querySelectorAll(".page-content");
+const explorerNavBtn = document.getElementById("explorerNavBtn");
+
+navItems.forEach((item) => {
+  item.addEventListener("click", () => {
+    const targetPage = item.getAttribute("data-page");
+    navItems.forEach((nav) => nav.classList.remove("active"));
+    explorerNavBtn.classList.remove("active");
+    item.classList.add("active");
+    pages.forEach((page) => page.classList.remove("active"));
+    document.getElementById(targetPage).classList.add("active");
   });
 });
 
-// Intersection Observer for scroll animations
-const observerOptions = {
-  threshold: 0.1,
-  rootMargin: "0px 0px -100px 0px",
-};
+// Explorer opens as bottom sheet over current page
+explorerNavBtn.addEventListener("click", () => {
+  explorerNavBtn.classList.add("active");
+});
 
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add("animate");
-    }
-  });
-}, observerOptions);
+document.addEventListener("DOMContentLoaded", function () {
+  // ===== ELEMENTS =====
+  const menuToggle = document.getElementById("menuToggle");
+  const menuPanel = document.getElementById("menuPanel");
 
-// Observe elements for animation
-const animateElements = document.querySelectorAll(
-  ".about-content, .creator-card",
-);
-animateElements.forEach((el) => observer.observe(el));
+  const notificationToggle = document.getElementById("notificationToggle");
+  const notificationPanel = document.getElementById("notificationPanel");
 
-// Navbar background on scroll
-window.addEventListener("scroll", () => {
-  const navbar = document.querySelector(".navbar");
-  if (window.scrollY > 100) {
-    navbar.style.background = "rgba(0, 0, 0, 0.8)";
-  } else {
-    navbar.style.background = "rgba(0, 0, 0, 0.3)";
+  // ===== MENU TOGGLE =====
+  if (menuToggle && menuPanel) {
+    menuToggle.addEventListener("click", function (e) {
+      e.stopPropagation();
+
+      // close notification if open
+      if (notificationPanel) {
+        notificationPanel.classList.remove("active");
+      }
+
+      menuPanel.classList.toggle("active");
+    });
   }
-});
 
-// Parallax effect for floating elements
-window.addEventListener("scroll", () => {
-  const scrolled = window.pageYOffset;
-  const floatingElements = document.querySelectorAll(".floating-element");
+  // ===== NOTIFICATION TOGGLE =====
+  if (notificationToggle && notificationPanel) {
+    notificationToggle.addEventListener("click", function (e) {
+      e.stopPropagation();
 
-  floatingElements.forEach((element, index) => {
-    const speed = (index + 1) * 0.5;
-    element.style.transform = `translateY(${scrolled * speed * 0.05}px)`;
+      // close menu if open
+      if (menuPanel) {
+        menuPanel.classList.remove("active");
+      }
+
+      notificationPanel.classList.toggle("active");
+    });
+  }
+
+  // ===== CLICK OUTSIDE CLOSE =====
+  document.addEventListener("click", function (e) {
+    if (
+      menuPanel &&
+      !menuPanel.contains(e.target) &&
+      !menuToggle.contains(e.target)
+    ) {
+      menuPanel.classList.remove("active");
+    }
+
+    if (
+      notificationPanel &&
+      !notificationPanel.contains(e.target) &&
+      !notificationToggle.contains(e.target)
+    ) {
+      notificationPanel.classList.remove("active");
+    }
   });
 });
 
-// Add hover effect to creator cards
-const creatorCards = document.querySelectorAll(".creator-card");
-creatorCards.forEach((card) => {
-  card.addEventListener("mouseenter", function () {
-    this.style.transform = "translateY(-10px) scale(1.02)";
-  });
+// Function to open direct chat
+function openDirectChat(name, initials) {
+  // Switch to chat page
+  const chatNav = document.querySelector('[data-page="chatPage"]');
+  if (chatNav) {
+    chatNav.click();
+  }
 
-  card.addEventListener("mouseleave", function () {
-    this.style.transform = "translateY(0) scale(1)";
-  });
-});
-
-// Dynamic greeting based on time
-const heroSubtitle = document.querySelector(".hero-subtitle");
-const currentHour = new Date().getHours();
-let greeting;
-
-if (currentHour < 12) {
-  greeting = "Good Morning! Start Your Learning Journey";
-} else if (currentHour < 18) {
-  greeting = "Good Afternoon! Continue Your Studies";
-} else {
-  greeting = "Good Evening! Keep Learning & Growing";
+  // Small delay to let page switch, then open chat
+  setTimeout(() => {
+    openChatWindow(name, initials);
+  }, 100);
 }
 
-// Optional: uncomment to change subtitle based on time
-// heroSubtitle.textContent = greeting;
+// Function to open chat window
+function openChatWindow(name, initials) {
+  // Create chat window overlay
+  const chatWindow = document.createElement("div");
+  chatWindow.className = "chat-window-overlay";
+  chatWindow.innerHTML = `
+    <div class="chat-window">
+      <div class="chat-window-header">
+        <div class="chat-header-left">
+          <i class="bx bx-arrow-back back-to-chats"></i>
+          <div class="chat-avatar-header">${initials}</div>
+          <div class="chat-header-info">
+            <div class="chat-header-name">${name}</div>
+            <div class="chat-header-status">Online</div>
+          </div>
+        </div>
+        <div class="chat-header-actions">
+          <i class="bx bx-phone"></i>
+          <i class="bx bx-video"></i>
+          <i class="bx bx-dots-vertical-rounded"></i>
+        </div>
+      </div>
+      
+      <div class="chat-messages-container">
+        <div class="chat-date-divider">Today</div>
+        
+        <div class="chat-bubble received">
+          <div class="bubble-content">Hey! How's it going?</div>
+          <div class="bubble-time">10:30 AM</div>
+        </div>
+        
+        <div class="chat-bubble sent">
+          <div class="bubble-content">Hi! I'm doing great, thanks! How about you?</div>
+          <div class="bubble-time">10:32 AM</div>
+        </div>
+        
+        <div class="chat-bubble received">
+          <div class="bubble-content">Pretty good! Working on a project right now.</div>
+          <div class="bubble-time">10:33 AM</div>
+        </div>
+      </div>
+      
+      <div class="chat-input-container">
+        <i class="bx bx-plus-circle"></i>
+        <input type="text" class="chat-input" placeholder="Type a message..." />
+        <i class="bx bx-image-alt"></i>
+        <i class="bx bx-send send-message"></i>
+      </div>
+    </div>
+  `;
 
-// Add loading animation
-window.addEventListener("load", () => {
-  document.body.style.opacity = "0";
-  setTimeout(() => {
-    document.body.style.transition = "opacity 0.5s";
-    document.body.style.opacity = "1";
-  }, 100);
-});
+  document.body.appendChild(chatWindow);
 
-// Easter egg: Konami code
-let konamiCode = [];
-const konamiPattern = [
-  "ArrowUp",
-  "ArrowUp",
-  "ArrowDown",
-  "ArrowDown",
-  "ArrowLeft",
-  "ArrowRight",
-  "ArrowLeft",
-  "ArrowRight",
-  "b",
-  "a",
-];
+  // Animate in
+  setTimeout(() => chatWindow.classList.add("active"), 10);
 
-document.addEventListener("keydown", (e) => {
-  konamiCode.push(e.key);
-  konamiCode = konamiCode.slice(-10);
+  // Handle back button
+  const backBtn = chatWindow.querySelector(".back-to-chats");
+  backBtn.addEventListener("click", () => {
+    chatWindow.classList.remove("active");
+    setTimeout(() => chatWindow.remove(), 300);
+  });
 
-  if (konamiCode.join(",") === konamiPattern.join(",")) {
-    document.body.style.animation = "rainbow 2s infinite";
-    setTimeout(() => {
-      document.body.style.animation = "";
-    }, 5000);
+  // Handle send message
+  const sendBtn = chatWindow.querySelector(".send-message");
+  const chatInput = chatWindow.querySelector(".chat-input");
+  const messagesContainer = chatWindow.querySelector(
+    ".chat-messages-container",
+  );
+
+  function sendMessage() {
+    const message = chatInput.value.trim();
+    if (message) {
+      const now = new Date();
+      const time = now.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+      });
+
+      const bubble = document.createElement("div");
+      bubble.className = "chat-bubble sent";
+      bubble.innerHTML = `
+        <div class="bubble-content">${message}</div>
+        <div class="bubble-time">${time}</div>
+      `;
+
+      messagesContainer.appendChild(bubble);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      chatInput.value = "";
+    }
   }
-});
 
-// Add rainbow animation keyframes dynamically
-const style = document.createElement("style");
-style.textContent = `
-  @keyframes rainbow {
-    0% { filter: hue-rotate(0deg); }
-    100% { filter: hue-rotate(360deg); }
-  }
-`;
-document.head.appendChild(style);
+  sendBtn.addEventListener("click", sendMessage);
+  chatInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") sendMessage();
+  });
+}

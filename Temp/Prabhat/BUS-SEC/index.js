@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const explorerNavBtn = document.getElementById("explorerNavBtn");
   const explorerOverlay = document.getElementById("explorerOverlay");
   const explorerClose = document.getElementById("explorerClose");
-  const searchInput = document.getElementById("searchInput");
 
   // ===== MENU TOGGLE =====
   if (menuToggle && menuPanel) {
@@ -46,7 +45,13 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // ===== EXPLORER BOTTOM SHEET =====
-  // Explorer page shows the sheet by default
+  if (explorerNavBtn) {
+    explorerNavBtn.addEventListener("click", () => {
+      explorerNavBtn.classList.add("active");
+      explorerOverlay.classList.add("active");
+    });
+  }
+
   if (explorerClose) {
     explorerClose.addEventListener("click", () => {
       explorerOverlay.classList.remove("active");
@@ -60,43 +65,6 @@ document.addEventListener("DOMContentLoaded", function () {
         explorerOverlay.classList.remove("active");
         explorerNavBtn.classList.remove("active");
       }
-    });
-  }
-
-  // Browse card click handlers
-  const browseCards = document.querySelectorAll(".browse-card");
-  browseCards.forEach((card) => {
-    card.addEventListener("click", () => {
-      const category = card.getAttribute("data-category");
-      console.log("Selected category:", category);
-      filterEvents(category);
-      explorerOverlay.classList.remove("active");
-    });
-  });
-
-  function filterEvents(category) {
-    // Implement event filtering logic here
-    console.log("Filtering events by:", category);
-  }
-
-  // ===== SEARCH FUNCTIONALITY =====
-  if (searchInput) {
-    searchInput.addEventListener("input", (e) => {
-      const searchTerm = e.target.value.toLowerCase();
-      const eventCards = document.querySelectorAll(".event-card");
-
-      eventCards.forEach((card) => {
-        const title = card
-          .querySelector(".event-title")
-          .textContent.toLowerCase();
-        const desc = card.querySelector("p").textContent.toLowerCase();
-
-        if (title.includes(searchTerm) || desc.includes(searchTerm)) {
-          card.style.display = "block";
-        } else {
-          card.style.display = "none";
-        }
-      });
     });
   }
 
