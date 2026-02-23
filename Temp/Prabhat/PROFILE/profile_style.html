@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Stuvo - Academic Profile</title>
+    <title>STUVO5 - Student Dashboard</title>
     <link
       href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
       rel="stylesheet"
@@ -11,77 +11,243 @@
     <link rel="stylesheet" href="profile_style.css" />
   </head>
   <body>
-    <div class="page-content active" id="profilePage">
-      <div class="profile-header-section">
-        <div class="profile-top-row">
-          <div class="profile-avatar-small">PB</div>
-          <div class="profile-stats-inline">
-            <div class="stat-box">
-              <div class="stat-number">156</div>
-              <div class="stat-text">Followers</div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-number">89</div>
-              <div class="stat-text">Following</div>
+    <div class="main-app" id="mainApp" style="display: block">
+      <div class="app-header">
+        <div class="app-logo">
+          <img src="logo.png" alt="STRUVO" class="header-logo-icon" />
+          STUVO5
+        </div>
+        <div class="header-icons">
+          <i class="bx bx-bell" id="notificationToggle"></i>
+          <i class="bx bx-menu" id="menuToggle"></i>
+        </div>
+
+        <div class="notification-panel" id="notificationPanel">
+          <div class="notification-item">
+            <i class="bx bx-bus"></i>
+            <div class="notification-text">
+              <strong>Bus #101</strong>
+              <p>Arriving in 5 minutes</p>
             </div>
           </div>
+          <div class="notification-item">
+            <i class="bx bx-calendar"></i>
+            <div class="notification-text">
+              <strong>New Event</strong>
+              <p>Tech Fest starts tomorrow</p>
+            </div>
+          </div>
+          <div class="notification-item">
+            <i class="bx bx-book"></i>
+            <div class="notification-text">
+              <strong>Attendance Updated</strong>
+              <p>Your attendance has been updated</p>
+            </div>
+          </div>
+          <div class="notification-footer">View all notifications</div>
         </div>
-        <div class="profile-info">
-          <h2 class="profile-name-main">Prabhat Behera</h2>
-          <p class="profile-username">@Prabhat4a</p>
-          <p class="profile-bio">
-            Computer Science Student | Tech Enthusiast | Coffee Lover ☕
-          </p>
+
+        <div class="menu-panel" id="menuPanel">
+          <div class="menu-item" id="settingsBtn">
+            <i class="bx bx-cog"></i><span>Settings</span>
+          </div>
+          <div class="menu-item" id="feedbackBtn">
+            <i class="bx bx-message-dots"></i><span>Feedback</span>
+          </div>
+          <div class="menu-item" id="helpBtn">
+            <i class="bx bx-help-circle"></i><span>Help</span>
+          </div>
+          <div class="menu-item logout" id="logoutBtn">
+            <i class="bx bx-log-out"></i><span>Logout</span>
+          </div>
         </div>
       </div>
 
-      <div class="info-section">
-        <h3 class="section-title">Academic Information</h3>
-
-        <div class="info-card">
-          <div class="info-card-header">
-            <div class="info-card-title">
-              <i class="bx bx-file"></i><span>Marksheet</span>
+      <div class="page-content active" id="profilePage">
+        <div class="profile-header-section">
+          <div class="profile-top-row">
+            <div class="profile-avatar-small">PB</div>
+            <div class="profile-stats-inline">
+              <div class="stat-box">
+                <div class="stat-number">156</div>
+                <div class="stat-text">Followers</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-number">89</div>
+                <div class="stat-text">Following</div>
+              </div>
             </div>
-            <span class="cgpa-badge" id="gpa-badge">CGPA 8.5</span>
           </div>
-          <div class="subjects-list" id="subjects-container"></div>
+          <div class="profile-info">
+            <h2 class="profile-name-main">Prabhat Behera</h2>
+            <p class="profile-username">@Prabhat4a</p>
+            <p class="profile-bio">
+              Computer Science Student | Tech Enthusiast | Coffee Lover ☕
+            </p>
+          </div>
+          <div class="profile-buttons own-profile">
+            <button class="edit-profile-btn-main">
+              <i class="bx bx-edit"></i> Edit Profile
+            </button>
+            <button class="share-profile-btn">
+              <i class="bx bx-share-alt"></i>
+            </button>
+          </div>
+          <div class="profile-buttons other-profile" style="display: none">
+            <button class="follow-btn" id="followBtn">
+              <i class="bx bx-plus"></i> Follow
+            </button>
+            <button class="message-btn">
+              <i class="bx bx-message-rounded"></i> Message
+            </button>
+            <button class="more-btn">
+              <i class="bx bx-dots-horizontal-rounded"></i>
+            </button>
+          </div>
         </div>
 
-        <div class="info-card">
-          <div class="info-card-header">
-            <div class="info-card-title">
-              <i class="bx bx-book"></i><span>Semester Records</span>
+        <div class="info-section">
+          <h3 class="section-title">Academic Information</h3>
+          <div class="info-card">
+            <div class="info-card-header">
+              <div class="info-card-title">
+                <i class="bx bx-file"></i><span>Marksheet</span>
+              </div>
+              <span class="cgpa-badge" id="gpa-badge">CGPA 8.5</span>
             </div>
+            <div class="subjects-list" id="subjects-container"></div>
           </div>
-
-          <div class="combo-container">
-            <label for="semester-select" class="info-label">Select Term:</label>
-            <select id="semester-select" class="sem-combo-box">
-              <option value="1">Semester 1</option>
-              <option value="2">Semester 2</option>
-              <option value="3">Semester 3</option>
-              <option value="4">Semester 4</option>
-              <option value="5">Semester 5</option>
-              <option value="6" selected>Semester 6</option>
-              <option value="7">Semester 7</option>
-              <option value="8">Semester 8</option>
-            </select>
-          </div>
-
-          <div class="semester-info" style="margin-top: 15px">
-            <div class="info-row">
-              <span class="info-label">Roll Number</span>
-              <span class="info-value">CS2026-045</span>
+          <div class="info-card">
+            <div class="info-card-header">
+              <div class="info-card-title">
+                <i class="bx bx-book"></i><span>Semester Records</span>
+              </div>
             </div>
-            <div class="info-row">
-              <span class="info-label">Status</span>
-              <span class="info-value" id="current-sem-text"
-                >Active - Semester 6</span
+            <div class="combo-container">
+              <label for="semester-select" class="info-label"
+                >Select Term:</label
               >
+              <select id="semester-select" class="sem-combo-box">
+                <option value="1">Semester 1</option>
+                <option value="2">Semester 2</option>
+                <option value="3">Semester 3</option>
+                <option value="4">Semester 4</option>
+                <option value="5">Semester 5</option>
+                <option value="6" selected>Semester 6</option>
+                <option value="7">Semester 7</option>
+                <option value="8">Semester 8</option>
+              </select>
+            </div>
+            <div class="semester-info" style="margin-top: 15px">
+              <div class="info-row">
+                <span class="info-label">Roll Number</span>
+                <span class="info-value">CS2026-045</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Status</span>
+                <span class="info-value" id="current-sem-text"
+                  >Active - Semester 6</span
+                >
+              </div>
             </div>
           </div>
         </div>
+      </div>
+
+      <div class="bottom-nav">
+        <div class="nav-item" data-page="homePage">
+          <i class="bx bx-home"></i><span>Home</span>
+        </div>
+        <div class="nav-item" data-page="busPage">
+          <i class="bx bx-bus"></i><span>Bus</span>
+        </div>
+        <div class="nav-item explorer-nav" id="explorerNavBtn">
+          <i class="bx bx-compass"></i><span>Explorer</span>
+        </div>
+        <div class="nav-item" data-page="chatPage">
+          <i class="bx bx-message-rounded-dots"></i><span>Chat</span>
+        </div>
+        <div class="nav-item active" data-page="profilePage">
+          <i class="bx bx-user"></i><span>Profile</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="edit-modal" id="editModal">
+      <div class="edit-modal-content">
+        <div class="modal-header">
+          <h2>Edit Profile</h2>
+          <i
+            class="bx bx-x"
+            id="closeModal"
+            style="font-size: 28px; cursor: pointer"
+          ></i>
+        </div>
+        <form id="editProfileForm">
+          <div class="form-group">
+            <label>Profile Picture</label>
+            <div class="profile-pic-upload">
+              <div class="current-pic">PB</div>
+              <button type="button" class="upload-pic-btn">
+                <i class="bx bx-camera"></i> Change Photo
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="editName">Full Name</label>
+            <input
+              type="text"
+              id="editName"
+              value="Prabhat Behera"
+              placeholder="Enter your name"
+            />
+          </div>
+          <div class="form-group">
+            <label for="editUsername">Username</label>
+            <input
+              type="text"
+              id="editUsername"
+              value="@Prabhat4a"
+              placeholder="@username"
+            />
+          </div>
+          <div class="form-group">
+            <label for="editBio">Bio</label>
+            <textarea
+              id="editBio"
+              rows="3"
+              placeholder="Tell us about yourself..."
+            >
+Computer Science Student | Tech Enthusiast | Coffee Lover ☕</textarea
+            >
+          </div>
+          <div class="form-group">
+            <label for="editEmail">Email</label>
+            <input
+              type="email"
+              id="editEmail"
+              value="prabhat@example.com"
+              placeholder="your@email.com"
+            />
+          </div>
+          <div class="form-group">
+            <label for="editPhone">Phone Number</label>
+            <input
+              type="tel"
+              id="editPhone"
+              value="+91 98765 43210"
+              placeholder="+91 XXXXX XXXXX"
+            />
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="cancel-btn" id="cancelBtn">
+              Cancel
+            </button>
+            <button type="button" class="save-btn" id="saveBtn">
+              Save Changes
+            </button>
+          </div>
+        </form>
       </div>
     </div>
 

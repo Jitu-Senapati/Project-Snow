@@ -3,15 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>STUVO5 - Chat</title>
+    <title>STUVO5 - Bus Tracking</title>
     <link
       href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="chat_style.css" />
+    <link rel="stylesheet" href="index.css" />
   </head>
   <body>
-    <div class="main-app">
+    <div class="main-app" id="mainApp">
       <!-- Header -->
       <div class="app-header">
         <div class="app-logo">
@@ -49,7 +49,7 @@
           <div class="notification-footer">View all notifications</div>
         </div>
 
-        <!-- Menu Dropdown -->
+        <!-- Header Dropdown Menu -->
         <div class="menu-panel" id="menuPanel">
           <div class="menu-item" id="settingsBtn">
             <i class="bx bx-cog"></i><span>Settings</span>
@@ -66,25 +66,33 @@
         </div>
       </div>
 
-      <!-- Chat Page Content -->
-      <div class="page-content active" id="chatPage">
-        <h2 style="margin-bottom: 20px">Messages</h2>
-        <div class="chat-list">
-          <div class="chat-item" data-name="Amit Kumar" data-initials="AK">
-            <div class="chat-avatar">AK</div>
-            <div class="chat-info">
-              <div class="chat-name">Amit Kumar</div>
-              <div class="chat-message">Hey, are you coming to the lab?</div>
-            </div>
-            <div style="color: #888; font-size: 12px">2m</div>
+      <!-- Bus Page Content -->
+      <div class="page-content active" id="busPage">
+        <h2 style="margin-bottom: 20px">Bus Tracking</h2>
+        <div class="bus-card">
+          <div class="bus-header">
+            <div class="bus-number">Bus #101</div>
+            <div class="bus-status status-active">Active</div>
           </div>
-          <div class="chat-item" data-name="Priya Sharma" data-initials="PS">
-            <div class="chat-avatar">PS</div>
-            <div class="chat-info">
-              <div class="chat-name">Priya Sharma</div>
-              <div class="chat-message">Can you share the notes?</div>
-            </div>
-            <div style="color: #888; font-size: 12px">15m</div>
+          <p style="color: #888; margin-bottom: 10px">
+            Route: Main Campus → City Center
+          </p>
+          <p style="color: #888">ETA: 5 minutes</p>
+          <div class="map-placeholder">
+            <i class="bx bx-map" style="font-size: 48px"></i>
+          </div>
+        </div>
+        <div class="bus-card">
+          <div class="bus-header">
+            <div class="bus-number">Bus #202</div>
+            <div class="bus-status status-active">Active</div>
+          </div>
+          <p style="color: #888; margin-bottom: 10px">
+            Route: Hostel → Main Campus
+          </p>
+          <p style="color: #888">ETA: 12 minutes</p>
+          <div class="map-placeholder">
+            <i class="bx bx-map" style="font-size: 48px"></i>
           </div>
         </div>
       </div>
@@ -94,13 +102,13 @@
         <div class="nav-item" data-page="home">
           <i class="bx bx-home"></i><span>Home</span>
         </div>
-        <div class="nav-item" data-page="bus">
+        <div class="nav-item active" data-page="bus">
           <i class="bx bx-bus"></i><span>Bus</span>
         </div>
         <div class="nav-item explorer-nav" id="explorerNavBtn">
           <i class="bx bx-compass"></i><span>Explorer</span>
         </div>
-        <div class="nav-item active" data-page="chat">
+        <div class="nav-item" data-page="chat">
           <i class="bx bx-message-rounded-dots"></i><span>Chat</span>
         </div>
         <div class="nav-item" data-page="profile">
@@ -109,8 +117,45 @@
       </div>
     </div>
 
-    <!-- Chat Window Overlay (Dynamically Created via JS) -->
+    <!-- Explorer Bottom Sheet -->
+    <div class="explorer-overlay" id="explorerOverlay">
+      <div class="explorer-sheet" id="explorerSheet">
+        <div class="explorer-sheet-header">
+          <h2 class="browse-title">BROWSE BY</h2>
+          <i class="bx bx-x explorer-close" id="explorerClose"></i>
+        </div>
+        <div class="browse-grid">
+          <div class="browse-card">
+            <i class="bx bx-category"></i><span>Category</span>
+          </div>
+          <div class="browse-card">
+            <i class="bx bx-film"></i><span>Genre</span>
+          </div>
+          <div class="browse-card">
+            <i class="bx bx-globe"></i><span>Country</span>
+          </div>
+          <div class="browse-card">
+            <i class="bx bx-text"></i><span>Language</span>
+          </div>
+          <div class="browse-card">
+            <i class="bx bx-group"></i><span>Family Friendly</span>
+          </div>
+          <div class="browse-card">
+            <i class="bx bx-trophy"></i><span>Award Winners</span>
+          </div>
+          <div class="browse-card">
+            <i class="bx bx-star"></i><span>Moctale Select</span>
+          </div>
+          <div class="browse-card">
+            <i class="bx bx-ghost"></i><span>Anime</span>
+          </div>
+          <div class="browse-card">
+            <i class="bx bx-collection"></i><span>Franchise</span>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <script src="chat_style.js"></script>
+    <script src="index.js"></script>
   </body>
 </html>

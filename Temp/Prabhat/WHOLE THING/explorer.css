@@ -1509,3 +1509,35 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+/* src/styles/global.css or index.css */
+
+/* YouTube-style small scrollbar thumb */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 4px;
+  min-height: 72px; /* YouTube uses ~72px minimum */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
+::-webkit-scrollbar-button {
+  display: none; /* Remove up/down arrows */
+  height: 0;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #555 transparent;
+}
