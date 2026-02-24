@@ -1,9 +1,23 @@
+const About = () => {
+  const features = [
+    {
+      icon: "bx-check-circle",
+      text: "Access quality study materials anytime, anywhere",
+    },
+    {
+      icon: "bx-check-circle",
+      text: "Collaborate seamlessly with fellow students",
+    },
+    { icon: "bx-check-circle", text: "Share and discover comprehensive notes" },
+    {
+      icon: "bx-check-circle",
+      text: "Find resources tailored to your curriculum",
+    },
+  ];
 
-function About() {
   return (
     <section className="about-section" id="about">
       <div className="about-container">
-        {/* Animated Background Elements */}
         <div className="about-animation">
           <div className="floating-element element-1">
             <i className="bx bxs-book-bookmark"></i>
@@ -20,19 +34,16 @@ function About() {
           <div className="floating-element element-5">
             <i className="bx bxs-bulb"></i>
           </div>
-
           <div className="animated-orb orb-1"></div>
           <div className="animated-orb orb-2"></div>
           <div className="animated-orb orb-3"></div>
         </div>
 
-        {/* About Content */}
         <div className="about-content">
           <h2 className="about-title">
             Your Ultimate Study <br />
             <span>Companion Platform</span>
           </h2>
-
           <p className="about-description">
             STUVO 5 is a comprehensive platform designed exclusively for college
             students to streamline their academic journey. Access study
@@ -40,32 +51,18 @@ function About() {
             resources, and achieve academic excellence - all in one integrated
             platform.
           </p>
-
           <div className="about-features">
-            <div className="feature-item">
-              <i className="bx bx-check-circle"></i>
-              <span>Access quality study materials anytime, anywhere</span>
-            </div>
-
-            <div className="feature-item">
-              <i className="bx bx-check-circle"></i>
-              <span>Collaborate seamlessly with fellow students</span>
-            </div>
-
-            <div className="feature-item">
-              <i className="bx bx-check-circle"></i>
-              <span>Share and discover comprehensive notes</span>
-            </div>
-
-            <div className="feature-item">
-              <i className="bx bx-check-circle"></i>
-              <span>Find resources tailored to your curriculum</span>
-            </div>
+            {features.map((feature, index) => (
+              <div className="feature-item" key={index}>
+                <i className={`bx ${feature.icon}`}></i>
+                <span>{feature.text}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
     </section>
   );
-}
+};
 
 export default About;

@@ -7,7 +7,7 @@ import Footer from "../componenets/Footer";
 function LandingPage() {
   return (
     <>
-      <div className="background-container">
+      {/* <div className="background-container">
 
         <video
           className="background-video"
@@ -18,20 +18,14 @@ function LandingPage() {
         >
           <source src="/blackLiquid.mp4" type="video/mp4" />
         </video>
-      </div>
-      {/* Navigation Bar */}
+      </div> */}
+
       <Navbar />
-
-      {/* Hero Section */}
-      <Hero />
-
-      {/* About Section */}
-      <About />
-
-      {/* Creators Section */}
-      <Creators />
-
-      {/* Footer Section */}
+      <main style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+        <Hero />
+        <About />
+        <Creators />
+      </main>
       <Footer />
     </>
   );
