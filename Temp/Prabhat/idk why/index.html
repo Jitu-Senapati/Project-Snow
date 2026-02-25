@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>STUVO5 - Study Platform</title>
+    <title>STUVO5 - Home</title>
     <link
       href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
       rel="stylesheet"
@@ -11,526 +11,298 @@
     <link rel="stylesheet" href="index.css" />
   </head>
   <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-      <div class="nav-logo">
-        <img src="logo.png" alt="STUVO" class="logo-icon" />
-        <span class="logo-text">STUVO5</span>
-      </div>
-      <a href="temp.html" class="login-btn">Login</a>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero">
-      <div class="hero-content">
-        <div class="hero-logo-main">
-          <img src="logo.png" alt="STUVO" class="hero-logo-icon" />
-          <h1 class="hero-title">STUVO5</h1>
+    <div class="main-app" id="mainApp">
+      <!-- Header -->
+      <div class="app-header">
+        <div class="app-logo">
+          <img src="logo.png" alt="STUVO" class="header-logo-icon" />
+          STUVO5
         </div>
-      </div>
-
-      <div class="hero-images-container">
-        <div class="parallax-grid" id="parallaxGrid">
-          <div class="grid-column col-1" data-speed="0.3">
-            <div class="grid-item"><img src="books.jpg" alt="Books" /></div>
-            <div class="grid-item"><img src="focous.jpeg" alt="Focus" /></div>
-            <div class="grid-item">
-              <img src="students.jpg" alt="Students" />
-            </div>
-          </div>
-          <div class="grid-column col-2" data-speed="0.5">
-            <div class="grid-item">
-              <img src="study core.jpg" alt="Study Core" />
-            </div>
-            <div class="grid-item"><img src="book-2.jpg" alt="Book" /></div>
-            <div class="grid-item"><img src="coding.jpeg" alt="Coding" /></div>
-          </div>
-          <div class="grid-column col-3" data-speed="0.2">
-            <div class="grid-item">
-              <img src="cotation.jpeg" alt="Now or Never" />
-            </div>
-            <div class="grid-item"><img src="laptops.jpg" alt="laptops" /></div>
-            <div class="grid-item">
-              <img src="levelup.jpeg" alt="Level Up" />
-            </div>
-          </div>
-          <div class="grid-column col-4" data-speed="0.4">
-            <div class="grid-item"><img src="mark.jpeg" alt="Grades" /></div>
-            <div class="grid-item"><img src="desk.jpeg" alt="desk" /></div>
-            <div class="grid-item"><img src="chemistry.png" alt="Study" /></div>
-          </div>
-          <div class="grid-column col-5" data-speed="0.35">
-            <div class="grid-item"><img src="physics.png" alt="Library" /></div>
-            <div class="grid-item"><img src="flexing.jpg" alt="Coding" /></div>
-            <div class="grid-item"><img src="rocket.png" alt="Focus" /></div>
-          </div>
+        <div class="header-icons">
+          <i class="bx bx-bell" id="notificationToggle"></i>
+          <i class="bx bx-menu" id="menuToggle"></i>
         </div>
-        <div class="hero-fade"></div>
-      </div>
 
-      <div class="scroll-indicator">
-        <i class="bx bx-chevron-down"></i>
-      </div>
-    </section>
+        <!-- Notification Dropdown -->
+        <div class="notification-panel" id="notificationPanel">
+          <div class="notification-item">
+            <i class="bx bx-bus"></i>
+            <div class="notification-text">
+              <strong>Bus #101</strong>
+              <p>Arriving in 5 minutes</p>
+            </div>
+          </div>
+          <div class="notification-item">
+            <i class="bx bx-calendar"></i>
+            <div class="notification-text">
+              <strong>New Event</strong>
+              <p>Tech Fest starts tomorrow</p>
+            </div>
+          </div>
+          <div class="notification-item">
+            <i class="bx bx-book"></i>
+            <div class="notification-text">
+              <strong>Attendance Updated</strong>
+              <p>Your attendance has been updated</p>
+            </div>
+          </div>
+          <div class="notification-footer">View all notifications</div>
+        </div>
 
-    <!-- About Section -->
-    <section class="about-section" id="about">
-      <div class="about-container">
-        <div class="about-animation">
-          <div class="floating-element element-1">
-            <i class="bx bxs-book-bookmark"></i>
+        <!-- Header Dropdown Menu -->
+        <div class="menu-panel" id="menuPanel">
+          <div class="menu-item" id="settingsBtn">
+            <i class="bx bx-cog"></i><span>Settings</span>
           </div>
-          <div class="floating-element element-2">
-            <i class="bx bxs-graduation"></i>
+          <div class="menu-item" id="feedbackBtn">
+            <i class="bx bx-message-dots"></i><span>Feedback</span>
           </div>
-          <div class="floating-element element-3">
-            <i class="bx bxs-file-doc"></i>
+          <div class="menu-item" id="helpBtn">
+            <i class="bx bx-help-circle"></i><span>Help</span>
           </div>
-          <div class="floating-element element-4">
-            <i class="bx bxs-group"></i>
-          </div>
-          <div class="floating-element element-5">
-            <i class="bx bxs-bulb"></i>
-          </div>
-          <div class="animated-orb orb-1"></div>
-          <div class="animated-orb orb-2"></div>
-          <div class="animated-orb orb-3"></div>
-        </div>
-        <div class="about-content">
-          <h2 class="about-title">
-            Your Ultimate Study <br /><span>Companion Platform</span>
-          </h2>
-          <p class="about-description">
-            STUVO 5 is a comprehensive platform designed exclusively for college
-            students to streamline their academic journey. Access study
-            materials, collaborate with peers, share notes, find valuable
-            resources, and achieve academic excellence - all in one integrated
-            platform.
-          </p>
-          <div class="about-features">
-            <div class="feature-item">
-              <i class="bx bx-check-circle"></i
-              ><span>Access quality study materials anytime, anywhere</span>
-            </div>
-            <div class="feature-item">
-              <i class="bx bx-check-circle"></i
-              ><span>Collaborate seamlessly with fellow students</span>
-            </div>
-            <div class="feature-item">
-              <i class="bx bx-check-circle"></i
-              ><span>Share and discover comprehensive notes</span>
-            </div>
-            <div class="feature-item">
-              <i class="bx bx-check-circle"></i
-              ><span>Find resources tailored to your curriculum</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Creators Section -->
-    <section class="creators-section" id="creators">
-      <h2 class="creators-title">Meet the Creators</h2>
-      <div class="creators-wrapper">
-        <div class="creators-row">
-          <!-- Prabhat -->
-          <div class="creator-card">
-            <div class="creator-image">
-              <img src="prabhat.jpg" alt="Creator 1" />
-            </div>
-            <h3 class="creator-name">Prabhat Kumar Behera</h3>
-            <p class="creator-role">Frontend Developer</p>
-            <div class="creator-socials">
-              <a
-                href="https://www.instagram.com/prabhat4a/"
-                class="social-link"
-                target="_blank"
-                ><i class="bx bxl-instagram"></i
-              ></a>
-              <a
-                href="https://github.com/Prabhat4a"
-                class="social-link"
-                target="_blank"
-                ><i class="bx bxl-github"></i
-              ></a>
-              <a
-                href="https://www.linkedin.com/in/prabhat-kumar-behera-a806a3363/"
-                class="social-link"
-                target="_blank"
-                ><i class="bx bxl-linkedin"></i
-              ></a>
-              <a href="#" class="social-link"
-                ><img src="logo.png" alt="STUVO"
-              /></a>
-            </div>
-          </div>
-          <!-- Jitu -->
-          <div class="creator-card">
-            <div class="creator-image">
-              <img src="jitu.jpeg" alt="Creator 2" />
-            </div>
-            <h3 class="creator-name">Jitu Senapati</h3>
-            <p class="creator-role">UI/UX Designer</p>
-            <div class="creator-socials">
-              <a href="#" class="social-link" target="_blank"
-                ><i class="bx bxl-instagram"></i
-              ></a>
-              <a
-                href="https://github.com/JituSenapati"
-                class="social-link"
-                target="_blank"
-                ><i class="bx bxl-github"></i
-              ></a>
-              <a
-                href="https://www.linkedin.com/in/jitu-senapati-702854363/"
-                class="social-link"
-                target="_blank"
-                ><i class="bx bxl-linkedin"></i
-              ></a>
-              <a href="#" class="social-link"
-                ><img src="logo.png" alt="STUVO"
-              /></a>
-            </div>
-          </div>
-          <!-- Sunny -->
-          <div class="creator-card">
-            <div class="creator-image">
-              <img src="Sunny.jpg" alt="Creator 3" />
-            </div>
-            <h3 class="creator-name">N.Eswar Sunny</h3>
-            <p class="creator-role">Backend Developer</p>
-            <div class="creator-socials">
-              <a
-                href="https://www.instagram.com/the_e_square_/"
-                class="social-link"
-                target="_blank"
-                ><i class="bx bxl-instagram"></i
-              ></a>
-              <a
-                href="https://github.com/NESWAR-SUNNY"
-                class="social-link"
-                target="_blank"
-                ><i class="bx bxl-github"></i
-              ></a>
-              <a
-                href="https://www.linkedin.com/in/n-eswar-sunny-483a1937b/"
-                class="social-link"
-                target="_blank"
-                ><i class="bx bxl-linkedin"></i
-              ></a>
-              <a href="#" class="social-link"
-                ><img src="logo.png" alt="STUVO"
-              /></a>
-            </div>
-          </div>
-        </div>
-        <div class="creators-row second">
-          <!-- Aryan -->
-          <div class="creator-card">
-            <div class="creator-image">
-              <img src="Aryan.jpg" alt="Creator 4" />
-            </div>
-            <h3 class="creator-name">Aryan Kumar Rajak</h3>
-            <p class="creator-role">Content Strategist</p>
-            <div class="creator-socials">
-              <a
-                href="https://www.instagram.com/aryan_kumar_rajak/"
-                class="social-link"
-                target="_blank"
-                ><i class="bx bxl-instagram"></i
-              ></a>
-              <a
-                href="https://github.com/AryanKumarRajak"
-                class="social-link"
-                target="_blank"
-                ><i class="bx bxl-github"></i
-              ></a>
-              <a
-                href="https://www.linkedin.com/in/aryan-kumar-rajak-702854363/"
-                class="social-link"
-                target="_blank"
-                ><i class="bx bxl-linkedin"></i
-              ></a>
-              <a href="#" class="social-link"
-                ><img src="logo.png" alt="STUVO"
-              /></a>
-            </div>
-          </div>
-          <!-- Sudhansu -->
-          <div class="creator-card">
-            <div class="creator-image">
-              <img src="sudhansu.jpeg" alt="Creator 5" />
-            </div>
-            <h3 class="creator-name">Sudhansu Sekhara Sunani</h3>
-            <p class="creator-role">Marketing Lead</p>
-            <div class="creator-socials">
-              <a
-                href="https://www.instagram.com/sudhansu_sudhansu_sekhara_sunani/"
-                class="social-link"
-                target="_blank"
-                ><i class="bx bxl-instagram"></i
-              ></a>
-              <a
-                href="https://github.com/Sudhansu-Sekhara-Sunani"
-                class="social-link"
-                target="_blank"
-                ><i class="bx bxl-github"></i
-              ></a>
-              <a
-                href="https://www.linkedin.com/in/sudhansu-sudhansu-sekhara-sunani-702854363/"
-                class="social-link"
-                target="_blank"
-                ><i class="bx bxl-linkedin"></i
-              ></a>
-              <a href="#" class="social-link"
-                ><img src="logo.png" alt="STUVO"
-              /></a>
-            </div>
+          <div class="menu-item logout" id="logoutBtn">
+            <i class="bx bx-log-out"></i><span>Logout</span>
           </div>
         </div>
       </div>
 
-      <div class="cta-section">
-        <h3 class="cta-title">
-          Create your account and experience STUVO5 for yourself
-        </h3>
-        <a href="temp.html" class="cta-button">Join STUVO5</a>
-      </div>
-    </section>
+      <!-- Home Page Content -->
+      <div class="page-content active" id="homePage">
+        <!-- IN THE SPOTLIGHT Section -->
+        <div class="spotlight-section">
+          <div class="section-header">
+            <div class="header-line"></div>
+            <h2 class="section-title">IN THE SPOTLIGHT</h2>
+            <div class="header-line"></div>
+          </div>
 
-    <!-- FOOTER -->
-    <footer class="site-footer">
-      <div class="footer-links">
-        <a href="#" id="privacyLink">Privacy</a>
-        <a href="#" id="contactLink">Contact with STUVO5</a>
-      </div>
-      <span class="footer-copy">© 2026 STUVO5. All rights reserved.</span>
-    </footer>
+          <div class="events-carousel" id="eventsCarousel">
+            <div class="events-track" id="eventsTrack">
+              <!-- Event Card 1: Tech Fest -->
+              <div class="event-card" data-index="0">
+                <div class="event-image">
+                  <img
+                    src="https://images.unsplash.com/photo-1544531586-fde5298cdd40?w=400&h=600&fit=crop"
+                    alt="Tech Fest"
+                  />
+                  <div class="event-overlay"></div>
+                  <div class="event-badge">Featured</div>
+                </div>
+                <div class="event-info">
+                  <div class="event-date">Fri, 15 Mar, 10:00 AM</div>
+                  <h3 class="event-title">
+                    Annual Tech Fest 2024 - Innovation Unleashed
+                  </h3>
+                  <div class="event-location">
+                    <i class="bx bx-map"></i><span>Main Auditorium</span>
+                  </div>
+                  <button class="bookmark-btn">
+                    <i class="bx bx-bookmark"></i>
+                  </button>
+                </div>
+              </div>
 
-    <!-- PRIVACY MODAL -->
-    <div class="privacy-modal" id="privacyModal">
-      <div class="terms-content">
-        <div class="terms-header">
-          <h2>Privacy Policy – STUVO5</h2>
-          <span class="close-terms" id="closePrivacy">&times;</span>
+              <!-- Event Card 2: Placement Drive -->
+              <div class="event-card" data-index="1">
+                <div class="event-image">
+                  <img
+                    src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=400&h=600&fit=crop"
+                    alt="Placement"
+                  />
+                  <div class="event-overlay"></div>
+                  <div class="promo-badge">
+                    <i class="bx bx-briefcase"></i>Register before 10 Mar
+                  </div>
+                </div>
+                <div class="event-info">
+                  <div class="event-date">Mon, 18 Mar, 9:00 AM</div>
+                  <h3 class="event-title">Google Campus Placement Drive</h3>
+                  <div class="event-location">
+                    <i class="bx bx-map"></i><span>Seminar Hall B</span>
+                  </div>
+                  <button class="bookmark-btn">
+                    <i class="bx bx-bookmark"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Event Card 3: Cultural Fest -->
+              <div class="event-card" data-index="2">
+                <div class="event-image">
+                  <img
+                    src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400&h=600&fit=crop"
+                    alt="Cultural Fest"
+                  />
+                  <div class="event-overlay"></div>
+                </div>
+                <div class="event-info">
+                  <div class="event-date">Sat, 23 Mar, 6:00 PM</div>
+                  <h3 class="event-title">
+                    Spring Cultural Fest - Rhythm 2024
+                  </h3>
+                  <div class="event-location">
+                    <i class="bx bx-map"></i><span>Open Air Theatre</span>
+                  </div>
+                  <button class="bookmark-btn">
+                    <i class="bx bx-bookmark"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Event Card 4: Workshop -->
+              <div class="event-card" data-index="3">
+                <div class="event-image">
+                  <img
+                    src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&h=600&fit=crop"
+                    alt="Workshop"
+                  />
+                  <div class="event-overlay"></div>
+                  <div class="promo-badge">
+                    <i class="bx bx-certification"></i>Certificate Included
+                  </div>
+                </div>
+                <div class="event-info">
+                  <div class="event-date">Wed, 27 Mar, 2:00 PM</div>
+                  <h3 class="event-title">AI & Machine Learning Workshop</h3>
+                  <div class="event-location">
+                    <i class="bx bx-map"></i><span>Computer Lab 3</span>
+                  </div>
+                  <button class="bookmark-btn">
+                    <i class="bx bx-bookmark"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Event Card 5: Sports Tournament (FIXED broken URL) -->
+              <div class="event-card" data-index="4">
+                <div class="event-image">
+                  <img
+                    src="https://images.unsplash.com/photo-1461896836934-a9dc2e4bcd64?w=400&h=600&fit=crop"
+                    alt="Sports"
+                  />
+                  <div class="event-overlay"></div>
+                </div>
+                <div class="event-info">
+                  <div class="event-date">Fri, 29 Mar, 8:00 AM</div>
+                  <h3 class="event-title">Inter-College Cricket Tournament</h3>
+                  <div class="event-location">
+                    <i class="bx bx-map"></i><span>Sports Ground</span>
+                  </div>
+                  <button class="bookmark-btn">
+                    <i class="bx bx-bookmark"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Event Card 6: Hackathon -->
+              <div class="event-card" data-index="5">
+                <div class="event-image">
+                  <img
+                    src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=400&h=600&fit=crop"
+                    alt="Hackathon"
+                  />
+                  <div class="event-overlay"></div>
+                  <div class="event-badge">24 Hrs</div>
+                </div>
+                <div class="event-info">
+                  <div class="event-date">Sat, 6 Apr, 10:00 AM</div>
+                  <h3 class="event-title">CodeFest Hackathon 2024</h3>
+                  <div class="event-location">
+                    <i class="bx bx-map"></i><span>Innovation Lab</span>
+                  </div>
+                  <button class="bookmark-btn">
+                    <i class="bx bx-bookmark"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Carousel Dots -->
+          <div class="carousel-dots" id="carouselDots"></div>
         </div>
-        <div class="terms-body">
-          <h3>1. Introduction</h3>
-          <p>
-            Your privacy is important to us. This Privacy Policy explains how
-            STUVO5 collects, uses, and protects your personal information when
-            you use our platform.
-          </p>
 
-          <h3>2. Data We Collect</h3>
-          <p>
-            We collect your name, email address, username, roll number, branch,
-            year, profile photo (optional), and general usage activity within
-            the platform.
-          </p>
+        <!-- OFFERS FOR YOU Section -->
+        <div class="offers-section">
+          <div class="section-header">
+            <div class="header-line"></div>
+            <h2 class="section-title">OFFERS FOR YOU</h2>
+            <div class="header-line"></div>
+          </div>
+          <div class="offers-card">
+            <div class="offer-logo"><i class="bx bxs-graduation"></i></div>
+            <div class="offer-content">
+              <h4>Free Course Materials</h4>
+              <p>Get all study materials for this semester</p>
+            </div>
+          </div>
+        </div>
 
-          <h3>3. How We Use Your Data</h3>
-          <p>
-            Your data is used solely to provide and improve our student
-            services. We do not use your data for advertising or any commercial
-            purpose.
-          </p>
-
-          <h3>4. Data Storage & Security</h3>
-          <p>
-            We take reasonable measures to protect your information. However, as
-            STUVO5 is an academic project, we cannot guarantee absolute
-            security.
-          </p>
-
-          <h3>5. Cookies & Sessions</h3>
-          <p>
-            STUVO5 may use session data to keep you logged in and remember your
-            preferences. No third-party tracking cookies are used.
-          </p>
-
-          <h3>6. Third-Party Services</h3>
-          <p>
-            If you choose to sign in with Google, your basic Google profile
-            information may be shared with us as permitted by Google's OAuth
-            policy. We do not store your Google password.
-          </p>
-
-          <h3>7. Data Sharing</h3>
-          <p>
-            We do not sell, trade, or share your personal data with any external
-            parties.
-          </p>
-
-          <h3>8. Your Rights</h3>
-          <p>
-            You have the right to request access to, correction of, or deletion
-            of your personal data at any time.
-          </p>
-
-          <h3>9. Minors</h3>
-          <p>
-            STUVO5 is intended for college students aged 17 or older. We do not
-            knowingly collect data from minors under this age.
-          </p>
-
-          <h3>10. Policy Updates</h3>
-          <p>
-            This policy may be updated as the platform evolves. Continued use
-            after updates implies acceptance of the revised policy.
-          </p>
-
-          <h3>11. Contact Regarding Privacy</h3>
-          <p>
-            For any privacy-related concerns, please reach us through the
-            Contact page. We aim to respond within 48 hours.
+        <h2 style="margin: 20px 0; font-size: 20px">Quick Access</h2>
+        <div class="bus-card">
+          <h3 style="color: #a78bfa; margin-bottom: 10px">
+            Welcome to STUVO5 👋
+          </h3>
+          <p style="color: #aaa">
+            Track buses, explore events, chat, and manage your profile.
           </p>
         </div>
-        <div class="terms-footer">
-          <button class="accept-terms" id="closePrivacyBtn">Got it</button>
+      </div>
+
+      <!-- Bottom Navigation -->
+      <div class="bottom-nav">
+        <div class="nav-item active" data-page="home">
+          <i class="bx bx-home"></i><span>Home</span>
+        </div>
+        <div class="nav-item" data-page="bus">
+          <i class="bx bx-bus"></i><span>Bus</span>
+        </div>
+        <div class="nav-item explorer-nav" id="explorerNavBtn">
+          <i class="bx bx-compass"></i><span>Explorer</span>
+        </div>
+        <div class="nav-item" data-page="chat">
+          <i class="bx bx-message-rounded-dots"></i><span>Chat</span>
+        </div>
+        <div class="nav-item" data-page="profile">
+          <i class="bx bx-user"></i><span>Profile</span>
         </div>
       </div>
     </div>
 
-    <!-- CONTACT MODAL -->
-    <div class="contact-modal" id="contactModal">
-      <div class="contact-content">
-        <div class="terms-header">
-          <h2>Contact STUVO5 Support</h2>
-          <span class="close-terms" id="closeContact">&times;</span>
+    <!-- Explorer Bottom Sheet -->
+    <div class="explorer-overlay" id="explorerOverlay">
+      <div class="explorer-sheet" id="explorerSheet">
+        <div class="explorer-sheet-header">
+          <h2 class="browse-title">BROWSE BY</h2>
+          <i class="bx bx-x explorer-close" id="explorerClose"></i>
         </div>
-
-        <div class="contact-step" id="contactStep1">
-          <div class="contact-body">
-            <p class="contact-subtitle">What do you need help with?</p>
-            <div class="topic-grid">
-              <button class="topic-btn" data-topic="Unable to Login">
-                🔐 Unable to Login
-              </button>
-              <button
-                class="topic-btn"
-                data-topic="Account Creation / Registration Issue"
-              >
-                📝 Account Creation Issue
-              </button>
-              <button class="topic-btn" data-topic="Unable to Change Password">
-                🔑 Forgot / Change Password
-              </button>
-              <button class="topic-btn" data-topic="Email Verification Issue">
-                📧 Email Verification Issue
-              </button>
-              <button class="topic-btn" data-topic="Profile Update Problem">
-                👤 Profile Update Problem
-              </button>
-              <button
-                class="topic-btn"
-                data-topic="Marks / Attendance Not Showing"
-              >
-                📊 Marks / Attendance Issue
-              </button>
-              <button
-                class="topic-btn"
-                data-topic="Not Receiving Notifications"
-              >
-                🔔 Notifications Not Working
-              </button>
-              <button class="topic-btn" data-topic="Unable to Access Features">
-                🚫 Can't Access Features
-              </button>
-              <button class="topic-btn" data-topic="Bug / Technical Error">
-                🐛 Bug / Technical Error
-              </button>
-              <button class="topic-btn" data-topic="Suggestion or Feedback">
-                💡 Suggestion / Feedback
-              </button>
-              <button
-                class="topic-btn"
-                data-topic="Account Suspended or Blocked"
-              >
-                ⛔ Account Suspended
-              </button>
-              <button class="topic-btn" data-topic="Other / General Query">
-                ❓ Other / General Query
-              </button>
-            </div>
+        <div class="browse-grid">
+          <div class="browse-card">
+            <i class="bx bx-calendar-event"></i><span>Events</span>
           </div>
-        </div>
-
-        <div class="contact-step" id="contactStep2" style="display: none">
-          <div class="contact-body">
-            <button class="contact-back-btn" id="contactBackBtn">← Back</button>
-            <div class="selected-topic-badge" id="selectedTopicBadge"></div>
-
-            <div class="contact-form-group">
-              <label>Your Name</label>
-              <div class="contact-input-wrapper">
-                <i class="bx bx-user"></i>
-                <input
-                  type="text"
-                  id="contactName"
-                  placeholder="Enter your full name"
-                />
-              </div>
-              <div class="contact-error" id="contactNameError">
-                Please enter your name
-              </div>
-            </div>
-
-            <div class="contact-form-group">
-              <label>Email Address</label>
-              <div class="contact-input-wrapper">
-                <i class="bx bx-envelope"></i>
-                <input
-                  type="email"
-                  id="contactEmail"
-                  placeholder="Enter your email"
-                />
-              </div>
-              <div class="contact-error" id="contactEmailError">
-                Please enter a valid email
-              </div>
-            </div>
-
-            <div class="contact-form-group">
-              <label>Describe Your Issue</label>
-              <div class="contact-input-wrapper">
-                <i class="bx bx-message-detail textarea-icon"></i>
-                <textarea
-                  id="contactMessage"
-                  placeholder="Tell us more about your issue..."
-                  rows="4"
-                ></textarea>
-              </div>
-              <div class="contact-error" id="contactMessageError">
-                Please describe your issue
-              </div>
-            </div>
-
-            <button class="send-message-btn" id="sendMessageBtn">
-              <i class="bx bx-send"></i> Send Message
-            </button>
+          <div class="browse-card">
+            <i class="bx bx-book-open"></i><span>Courses</span>
           </div>
-        </div>
-
-        <div class="contact-step" id="contactStep3" style="display: none">
-          <div class="contact-body contact-success-body">
-            <div class="success-icon-wrap">
-              <i class="bx bx-check-circle"></i>
-            </div>
-            <h3 class="success-title">Message Sent!</h3>
-            <p class="success-msg">
-              Thank you for reaching out. Our team will get back to you within
-              <strong>24 hours</strong> on your registered email.
-            </p>
-            <p class="success-ref">Reference ID: <span id="refId"></span></p>
-            <button
-              class="accept-terms"
-              id="contactDoneBtn"
-              style="margin-top: 24px; width: 100%"
-            >
-              Done
-            </button>
+          <div class="browse-card">
+            <i class="bx bx-trophy"></i><span>Sports</span>
+          </div>
+          <div class="browse-card">
+            <i class="bx bx-group"></i><span>Clubs</span>
+          </div>
+          <div class="browse-card">
+            <i class="bx bx-briefcase"></i><span>Placements</span>
+          </div>
+          <div class="browse-card">
+            <i class="bx bx-building"></i><span>Facilities</span>
+          </div>
+          <div class="browse-card">
+            <i class="bx bx-bus"></i><span>Transport</span>
+          </div>
+          <div class="browse-card">
+            <i class="bx bx-food-menu"></i><span>Cafeteria</span>
+          </div>
+          <div class="browse-card">
+            <i class="bx bx-library"></i><span>Library</span>
           </div>
         </div>
       </div>
