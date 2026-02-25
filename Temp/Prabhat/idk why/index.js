@@ -21,29 +21,10 @@ window.addEventListener("scroll", () => {
 });
 
 // ============================================
-// SCROLL DOWN BUTTON - SCROLL TO ABOUT SECTION
+// FOOTER MODALS - PRIVACY & CONTACT
 // ============================================
 
 document.addEventListener("DOMContentLoaded", function () {
-  // Scroll down button functionality
-  const scrollDownBtn = document.getElementById("scrollDownBtn");
-  const aboutSection = document.getElementById("about");
-
-  scrollDownBtn?.addEventListener("click", () => {
-    aboutSection?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  });
-
-  // ---- FIX: Remove focus from social links after click ----
-  document.querySelectorAll(".social-link").forEach((link) => {
-    link.addEventListener("click", function () {
-      // Immediately blur the link to remove focus state
-      this.blur();
-    });
-  });
-
   // ---- PRIVACY MODAL ----
   const privacyModal = document.getElementById("privacyModal");
   const privacyLink = document.getElementById("privacyLink");
@@ -105,6 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
     [contactNameError, contactEmailError, contactMessageError].forEach((e) =>
       e?.classList.remove("show"),
     );
+    // Clear input borders
     [contactNameInput, contactEmailInput, contactMessageInput].forEach(
       (input) => {
         if (input) input.style.borderColor = "";
@@ -155,6 +137,7 @@ document.addEventListener("DOMContentLoaded", function () {
       e?.classList.remove("show"),
     );
 
+    // Validate name
     if (
       !contactNameInput.value.trim() ||
       contactNameInput.value.trim().length < 2
@@ -166,6 +149,7 @@ document.addEventListener("DOMContentLoaded", function () {
       contactNameInput.style.borderColor = "";
     }
 
+    // Validate email
     if (
       !contactEmailInput.value.trim() ||
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmailInput.value)
@@ -177,6 +161,7 @@ document.addEventListener("DOMContentLoaded", function () {
       contactEmailInput.style.borderColor = "";
     }
 
+    // Validate message
     if (
       !contactMessageInput.value.trim() ||
       contactMessageInput.value.trim().length < 10
@@ -206,6 +191,7 @@ document.addEventListener("DOMContentLoaded", function () {
     resetContact();
   });
 
+  // Clear errors on input
   [contactNameInput, contactEmailInput, contactMessageInput].forEach((el) => {
     el?.addEventListener("input", function () {
       this.style.borderColor = "";

@@ -263,13 +263,16 @@
               </div>
             </div>
             <div class="input-box">
-              <label>Roll Number</label>
+              <label
+                >Roll Number
+                <span class="optional-label">· Optional</span></label
+              >
               <div class="input-wrapper">
                 <i class="bx bx-id-card"></i>
                 <input
                   type="text"
                   id="verifyRoll"
-                  placeholder="Enter roll number"
+                  placeholder="Enter roll number (optional)"
                 />
               </div>
               <div class="error-message" id="verifyRollError">
@@ -287,12 +290,12 @@
                 <select id="verifyBranch">
                   <option value="">Select Branch</option>
                   <option value="CSE">Computer Science Engineering</option>
-                  <option value="ECE">Electronics & Communication</option>
-                  <option value="EEE">Electrical & Electronics</option>
+                  <option value="ECE">Electronics &amp; Communication</option>
+                  <option value="EEE">Electrical &amp; Electronics</option>
                   <option value="MECH">Mechanical Engineering</option>
                   <option value="CIVIL">Civil Engineering</option>
                   <option value="IT">Information Technology</option>
-                  <option value="AI-ML">AI & Machine Learning</option>
+                  <option value="AI-ML">AI &amp; Machine Learning</option>
                   <option value="DS">Data Science</option>
                 </select>
               </div>
@@ -324,30 +327,12 @@
             <button type="submit">Complete Registration</button>
           </div>
 
-          <div class="divider"><span>OR</span></div>
-
-          <button type="button" class="google-register-btn">
-            <img
-              src="https://www.svgrepo.com/show/475656/google-color.svg"
-              alt="Google"
-              class="google-icon"
-            />
-            Register with Google
-          </button>
-
           <div class="back-to-login">
-            <a href="#" id="backToLogin">← Back to Login</a>
+            <a href="#" id="backToLogin">← Back to Registration</a>
           </div>
         </form>
       </div>
     </div>
-
-    <!-- FOOTER -->
-    <footer class="site-footer">
-      <a href="#" id="privacyLink">Privacy</a>
-      <a href="#" id="contactLink">Contact with STUVO5</a>
-      <span>© 2026 STUVO5. All rights reserved.</span>
-    </footer>
 
     <!-- OTP VERIFICATION POPUP MODAL -->
     <div class="verify-modal" id="verifyModal">
@@ -382,10 +367,6 @@
     <!-- TERMS MODAL -->
     <div class="terms-modal" id="termsModal">
       <div class="terms-content">
-        <div class="terms-header">
-          <h2>Terms and Conditions – STUVO5</h2>
-          <span class="close-terms" id="closeTerms">&times;</span>
-        </div>
         <div class="terms-body">
           <h3>1. Introduction</h3>
           <p>
@@ -418,7 +399,7 @@
             data for commercial purposes.
           </p>
 
-          <h3>5. Privacy & Security</h3>
+          <h3>5. Privacy &amp; Security</h3>
           <p>
             Reasonable measures are taken to protect user data. However, as this
             is an academic project, complete data security cannot be guaranteed.
@@ -459,234 +440,6 @@
         </div>
         <div class="terms-footer">
           <button class="accept-terms" id="acceptTerms">Accept</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- PRIVACY MODAL -->
-    <div class="privacy-modal" id="privacyModal">
-      <div class="terms-content">
-        <div class="terms-header">
-          <h2>Privacy Policy – STUVO5</h2>
-          <span class="close-terms" id="closePrivacy">&times;</span>
-        </div>
-        <div class="terms-body">
-          <h3>1. Introduction</h3>
-          <p>
-            Your privacy is important to us. This Privacy Policy explains how
-            STUVO5 collects, uses, and protects your personal information when
-            you use our platform.
-          </p>
-
-          <h3>2. Data We Collect</h3>
-          <p>
-            We collect your name, email address, username, roll number, branch,
-            year, profile photo (optional), and general usage activity within
-            the platform.
-          </p>
-
-          <h3>3. How We Use Your Data</h3>
-          <p>
-            Your data is used solely to provide and improve our student
-            services. We do not use your data for advertising or any commercial
-            purpose.
-          </p>
-
-          <h3>4. Data Storage & Security</h3>
-          <p>
-            We take reasonable measures to protect your information. However, as
-            STUVO5 is an academic project, we cannot guarantee absolute
-            security.
-          </p>
-
-          <h3>5. Cookies & Sessions</h3>
-          <p>
-            STUVO5 may use session data to keep you logged in and remember your
-            preferences. No third-party tracking cookies are used.
-          </p>
-
-          <h3>6. Third-Party Services</h3>
-          <p>
-            If you choose to sign in with Google, your basic Google profile
-            information may be shared with us as permitted by Google's OAuth
-            policy. We do not store your Google password.
-          </p>
-
-          <h3>7. Data Sharing</h3>
-          <p>
-            We do not sell, trade, or share your personal data with any external
-            parties.
-          </p>
-
-          <h3>8. Your Rights</h3>
-          <p>
-            You have the right to request access to, correction of, or deletion
-            of your personal data at any time.
-          </p>
-
-          <h3>9. Minors</h3>
-          <p>
-            STUVO5 is intended for college students aged 17 or older. We do not
-            knowingly collect data from minors under this age.
-          </p>
-
-          <h3>10. Policy Updates</h3>
-          <p>
-            This policy may be updated as the platform evolves. Continued use
-            after updates implies acceptance of the revised policy.
-          </p>
-
-          <h3>11. Contact Regarding Privacy</h3>
-          <p>
-            For any privacy-related concerns, please reach us through the
-            Contact page. We aim to respond within 48 hours.
-          </p>
-        </div>
-        <div class="terms-footer">
-          <button class="accept-terms" id="closePrivacyBtn">Got it</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- CONTACT MODAL -->
-    <div class="contact-modal" id="contactModal">
-      <div class="contact-content">
-        <div class="terms-header">
-          <h2>Contact STUVO5 Support</h2>
-          <span class="close-terms" id="closeContact">&times;</span>
-        </div>
-
-        <div class="contact-step" id="contactStep1">
-          <div class="contact-body">
-            <p class="contact-subtitle">What do you need help with?</p>
-            <div class="topic-grid">
-              <button class="topic-btn" data-topic="Unable to Login">
-                🔐 Unable to Login
-              </button>
-              <button
-                class="topic-btn"
-                data-topic="Account Creation / Registration Issue"
-              >
-                📝 Account Creation Issue
-              </button>
-              <button class="topic-btn" data-topic="Unable to Change Password">
-                🔑 Forgot / Change Password
-              </button>
-              <button class="topic-btn" data-topic="Email Verification Issue">
-                📧 Email Verification Issue
-              </button>
-              <button class="topic-btn" data-topic="Profile Update Problem">
-                👤 Profile Update Problem
-              </button>
-              <button
-                class="topic-btn"
-                data-topic="Marks / Attendance Not Showing"
-              >
-                📊 Marks / Attendance Issue
-              </button>
-              <button
-                class="topic-btn"
-                data-topic="Not Receiving Notifications"
-              >
-                🔔 Notifications Not Working
-              </button>
-              <button class="topic-btn" data-topic="Unable to Access Features">
-                🚫 Can't Access Features
-              </button>
-              <button class="topic-btn" data-topic="Bug / Technical Error">
-                🐛 Bug / Technical Error
-              </button>
-              <button class="topic-btn" data-topic="Suggestion or Feedback">
-                💡 Suggestion / Feedback
-              </button>
-              <button
-                class="topic-btn"
-                data-topic="Account Suspended or Blocked"
-              >
-                ⛔ Account Suspended
-              </button>
-              <button class="topic-btn" data-topic="Other / General Query">
-                ❓ Other / General Query
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="contact-step" id="contactStep2" style="display: none">
-          <div class="contact-body">
-            <button class="contact-back-btn" id="contactBackBtn">← Back</button>
-            <div class="selected-topic-badge" id="selectedTopicBadge"></div>
-
-            <div class="contact-form-group">
-              <label>Your Name</label>
-              <div class="contact-input-wrapper">
-                <i class="bx bx-user"></i>
-                <input
-                  type="text"
-                  id="contactName"
-                  placeholder="Enter your full name"
-                />
-              </div>
-              <div class="contact-error" id="contactNameError">
-                Please enter your name
-              </div>
-            </div>
-
-            <div class="contact-form-group">
-              <label>Email Address</label>
-              <div class="contact-input-wrapper">
-                <i class="bx bx-envelope"></i>
-                <input
-                  type="email"
-                  id="contactEmail"
-                  placeholder="Enter your email"
-                />
-              </div>
-              <div class="contact-error" id="contactEmailError">
-                Please enter a valid email
-              </div>
-            </div>
-
-            <div class="contact-form-group">
-              <label>Describe Your Issue</label>
-              <div class="contact-input-wrapper">
-                <i class="bx bx-message-detail textarea-icon"></i>
-                <textarea
-                  id="contactMessage"
-                  placeholder="Tell us more about your issue..."
-                  rows="4"
-                ></textarea>
-              </div>
-              <div class="contact-error" id="contactMessageError">
-                Please describe your issue
-              </div>
-            </div>
-
-            <button class="send-message-btn" id="sendMessageBtn">
-              <i class="bx bx-send"></i> Send Message
-            </button>
-          </div>
-        </div>
-
-        <div class="contact-step" id="contactStep3" style="display: none">
-          <div class="contact-body contact-success-body">
-            <div class="success-icon-wrap">
-              <i class="bx bx-check-circle"></i>
-            </div>
-            <h3 class="success-title">Message Sent!</h3>
-            <p class="success-msg">
-              Thank you for reaching out. Our team will get back to you within
-              <strong>24 hours</strong> on your registered email.
-            </p>
-            <p class="success-ref">Reference ID: <span id="refId"></span></p>
-            <button
-              class="accept-terms"
-              id="contactDoneBtn"
-              style="margin-top: 24px; width: 100%"
-            >
-              Done
-            </button>
-          </div>
         </div>
       </div>
     </div>
