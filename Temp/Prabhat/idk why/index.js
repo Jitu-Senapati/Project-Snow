@@ -78,56 +78,68 @@ document.addEventListener("DOMContentLoaded", function () {
   const totalOriginalCards = originalCards.length;
   if (totalOriginalCards === 0) return;
 
-  // ── Clone cards for infinite loop ──────────────────────────────
-  const CLONE_COUNT = 3; // clones on each side
+  // ── Image fade-in on load ──────────────────────────────────────
+  function setupImageFadeIn(card) {
+    card.querySelectorAll("img").forEach((img) => {
+      if (img.complete) {
+        img.classList.add("loaded");
+      } else {
+        img.addEventListener("load", () => img.classList.add("loaded"), {
+          once: true,
+        });
+        img.addEventListener("error", () => img.classList.add("loaded"), {
+          once: true,
+        }); // show broken gracefully
+      }
+    });
+  }
+  originalCards.forEach(setupImageFadeIn);
 
-  // Prepend clones of LAST N originals
+  // ── Clone cards for infinite loop ──────────────────────────────
+  const CLONE_COUNT = 3;
+
   for (let i = totalOriginalCards - CLONE_COUNT; i < totalOriginalCards; i++) {
     const clone = originalCards[i].cloneNode(true);
     clone.classList.add("clone");
+    setupImageFadeIn(clone);
     eventsTrack.insertBefore(clone, eventsTrack.firstChild);
   }
 
-  // Append clones of FIRST N originals
   for (let i = 0; i < CLONE_COUNT; i++) {
     const clone = originalCards[i].cloneNode(true);
     clone.classList.add("clone");
+    setupImageFadeIn(clone);
     eventsTrack.appendChild(clone);
   }
 
-  // All cards (originals + clones)
   const allCards = Array.from(eventsTrack.querySelectorAll(".event-card"));
   const totalCards = allCards.length;
 
-  // Current real index (starts on first original = index CLONE_COUNT)
+  // currentIndex always points to the card that should be centered
   let currentIndex = CLONE_COUNT;
 
-  // Drag state
   let isDragging = false;
   let dragStartX = 0;
   let dragCurrentX = 0;
-  let baseTranslate = 0; // translate at drag start
+  let baseTranslate = 0;
 
-  // Auto-scroll
   let autoScrollInterval = null;
   let isHovering = false;
+  let isTransitioning = false;
 
   // ── Helpers ────────────────────────────────────────────────────
 
   function getCardWidth() {
-    // card width + gap (20px defined in CSS)
-    const card = allCards[0];
-    return card.offsetWidth + 20;
+    return allCards[0].offsetWidth + 12; // 12 = gap
   }
 
-  function getCenterOffset() {
-    return eventsTrack.parentElement.offsetWidth / 2;
-  }
-
+  // The track is centered: active card sits in the middle of the carousel container
   function translateForIndex(idx) {
+    const carousel = eventsTrack.parentElement;
+    const containerW = carousel.offsetWidth;
     const cw = getCardWidth();
-    const co = getCenterOffset();
-    return -(idx * cw) + (co - cw / 2);
+    // Center the active card
+    return containerW / 2 - cw / 2 - idx * cw;
   }
 
   function applyTranslate(px, animate) {
@@ -137,63 +149,57 @@ document.addEventListener("DOMContentLoaded", function () {
     eventsTrack.style.transform = `translateX(${px}px)`;
   }
 
+  function getOrigIdx(idx) {
+    return (
+      (((idx - CLONE_COUNT) % totalOriginalCards) + totalOriginalCards) %
+      totalOriginalCards
+    );
+  }
+
   function updateActiveCards() {
     allCards.forEach((card, idx) => {
       card.classList.toggle("active", idx === currentIndex);
     });
-
-    // Sync dots with original index
-    const origIdx =
-      (((currentIndex - CLONE_COUNT) % totalOriginalCards) +
-        totalOriginalCards) %
-      totalOriginalCards;
+    const origIdx = getOrigIdx(currentIndex);
     document.querySelectorAll(".carousel-dots .dot").forEach((dot, i) => {
       dot.classList.toggle("active", i === origIdx);
     });
   }
 
-  // ── Go to slide (no animation option) ─────────────────────────
   function goTo(idx, animate) {
     currentIndex = idx;
     applyTranslate(translateForIndex(currentIndex), animate);
     updateActiveCards();
   }
 
-  // ── Next / Prev with seamless loop ────────────────────────────
   function next() {
+    if (isTransitioning) return;
+    isTransitioning = true;
     currentIndex++;
     applyTranslate(translateForIndex(currentIndex), true);
     updateActiveCards();
-
-    // If we stepped into end-clones, silently jump back to real cards
-    if (currentIndex >= totalCards - CLONE_COUNT) {
-      eventsTrack.addEventListener("transitionend", resetToStart, {
-        once: true,
-      });
-    }
   }
 
   function prev() {
+    if (isTransitioning) return;
+    isTransitioning = true;
     currentIndex--;
     applyTranslate(translateForIndex(currentIndex), true);
     updateActiveCards();
+  }
 
-    // If we stepped into start-clones, silently jump to real cards
-    if (currentIndex < CLONE_COUNT) {
-      eventsTrack.addEventListener("transitionend", resetToEnd, { once: true });
+  // After transition ends, silently jump to the real card if we're in clone territory
+  eventsTrack.addEventListener("transitionend", () => {
+    isTransitioning = false;
+    if (currentIndex >= totalCards - CLONE_COUNT) {
+      currentIndex = CLONE_COUNT + (currentIndex - (totalCards - CLONE_COUNT));
+      goTo(currentIndex, false);
+    } else if (currentIndex < CLONE_COUNT) {
+      currentIndex =
+        totalCards - CLONE_COUNT - 1 - (CLONE_COUNT - 1 - currentIndex);
+      goTo(currentIndex, false);
     }
-  }
-
-  function resetToStart() {
-    currentIndex = CLONE_COUNT + (currentIndex - (totalCards - CLONE_COUNT));
-    goTo(currentIndex, false);
-  }
-
-  function resetToEnd() {
-    currentIndex =
-      totalCards - CLONE_COUNT - 1 - (CLONE_COUNT - 1 - currentIndex);
-    goTo(currentIndex, false);
-  }
+  });
 
   // ── Dots ───────────────────────────────────────────────────────
   function generateDots() {
@@ -228,7 +234,7 @@ document.addEventListener("DOMContentLoaded", function () {
     startAutoScroll();
   }
 
-  // ── Drag helpers ───────────────────────────────────────────────
+  // ── Drag ───────────────────────────────────────────────────────
   function getEventX(e) {
     return e.touches ? e.touches[0].clientX : e.clientX;
   }
@@ -236,6 +242,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function onDragStart(e) {
     isDragging = true;
     dragStartX = getEventX(e);
+    dragCurrentX = dragStartX;
     baseTranslate = translateForIndex(currentIndex);
     eventsTrack.style.transition = "none";
     eventsTrack.style.cursor = "grabbing";
@@ -253,37 +260,28 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!isDragging) return;
     isDragging = false;
     eventsTrack.style.cursor = "grab";
-
     const diff = dragCurrentX - dragStartX;
-
     if (diff < -60) {
       next();
     } else if (diff > 60) {
       prev();
     } else {
-      // Snap back to current
       goTo(currentIndex, true);
     }
-
     resetAutoScroll();
   }
 
-  // Touch events
   eventsTrack.addEventListener("touchstart", onDragStart, { passive: true });
   eventsTrack.addEventListener("touchmove", onDragMove, { passive: true });
   eventsTrack.addEventListener("touchend", onDragEnd);
-
-  // Mouse events
   eventsTrack.addEventListener("mousedown", onDragStart);
-  window.addEventListener("mousemove", onDragMove); // use window so fast drags don't escape
+  window.addEventListener("mousemove", onDragMove);
   window.addEventListener("mouseup", onDragEnd);
 
-  // Prevent click firing after drag
   eventsTrack.addEventListener("click", (e) => {
     if (Math.abs(dragCurrentX - dragStartX) > 10) e.stopPropagation();
   });
 
-  // Hover pause
   eventsTrack.addEventListener("mouseenter", () => {
     isHovering = true;
     stopAutoScroll();
@@ -312,7 +310,6 @@ document.addEventListener("DOMContentLoaded", function () {
   goTo(currentIndex, false);
   startAutoScroll();
 
-  // Reposition on resize
   let resizeTimer;
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);

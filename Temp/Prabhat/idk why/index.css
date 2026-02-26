@@ -8,7 +8,7 @@
 html,
 body {
   height: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -74,7 +74,7 @@ body {
   display: none;
   flex: 1;
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: clip; /* clip without creating scroll - allows child overflow: visible to peek */
   padding: 20px 0; /* horizontal padding handled per-section */
 }
 
@@ -128,21 +128,20 @@ body {
 }
 
 /*
- * KEY FIX: The carousel wrapper must NOT clip side cards.
- * We use overflow: visible here and let the page-content
- * handle horizontal clipping via its own overflow-x: hidden.
+ * overflow: visible lets side cards peek symmetrically.
+ * page-content has overflow-x: hidden which clips the bleed.
  */
 .events-carousel {
   position: relative;
   width: 100%;
-  overflow: visible; /* let cards peek out left & right */
+  overflow: visible;
   padding: 20px 0;
 }
 
 .events-track {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 12px;
   will-change: transform;
   cursor: grab;
   user-select: none;
@@ -165,20 +164,23 @@ body {
     opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
     filter 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
     box-shadow 0.5s ease;
-  transform: scale(0.85);
-  opacity: 0.6;
-  filter: brightness(0.7);
+  transform: scale(0.88);
+  opacity: 0.55;
+  filter: brightness(0.6);
 
-  /* Mobile: card takes most of viewport width */
-  width: 78vw;
-  max-width: 320px;
+  /* 68vw center card leaves ~16vw each side for prev/next peek */
+  width: 68vw;
+  max-width: 300px;
 }
 
 .event-card.active {
   transform: scale(1);
   opacity: 1;
   filter: brightness(1);
-  box-shadow: 0 20px 40px rgba(103, 126, 234, 0.3);
+  border-color: rgba(167, 139, 250, 0.45);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(167, 139, 250, 0.2);
 }
 
 .event-image {
@@ -192,9 +194,16 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition:
+    transform 0.5s ease,
+    opacity 0.4s ease;
   pointer-events: none;
   -webkit-user-drag: none;
+  opacity: 0;
+}
+
+.event-image img.loaded {
+  opacity: 1;
 }
 
 .event-card.active .event-image img {
@@ -667,7 +676,7 @@ h2[style] {
   }
 
   .event-card {
-    width: 78vw;
+    width: 68vw;
     max-width: 300px;
   }
 
