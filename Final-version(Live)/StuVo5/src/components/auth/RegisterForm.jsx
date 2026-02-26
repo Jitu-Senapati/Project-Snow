@@ -23,7 +23,10 @@ const RegisterForm = ({
 
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  const validatePhone = (phone) => /^\d{10}$/.test(phone);
+  const validatePhone = (phone) => {
+    const cleanPhone = phone.replace(/\D/g, "");
+    return cleanPhone.length === 10;
+  };
 
   const validateUsername = (username) => {
     if (!username) return { valid: false, message: "Please enter a username" };
@@ -56,7 +59,7 @@ const RegisterForm = ({
       valid = false;
     }
 
-    if (!validatePhone(phone.trim())) {
+    if (!validatePhone(phone)) {
       setPhoneError("Invalid phone number");
       valid = false;
     }
@@ -81,10 +84,25 @@ const RegisterForm = ({
     }
   };
 
+  const handleEmailVerify = () => {
+    if (!validateEmail(email.trim())) {
+      setEmailError("Please enter a valid email first");
+      return;
+    }
+    onOpenVerifyModal("email", email);
+  };
+
+  const handlePhoneVerify = () => {
+    const cleanPhone = phone.replace(/\D/g, "");
+    if (cleanPhone.length !== 10) {
+      setPhoneError("Please enter a valid 10-digit phone number first");
+      return;
+    }
+    onOpenVerifyModal("phone", "+91 " + phone);
+  };
+
   return (
     <div>
-      {" "}
-      {/* IMPORTANT: removed objects-register class here */}
       <div className="box-head-2">
         <h1>Register</h1>
       </div>
@@ -130,7 +148,7 @@ const RegisterForm = ({
             <button
               type="button"
               className={`verify-small-btn ${emailVerified ? "verified" : ""}`}
-              onClick={() => onOpenVerifyModal("email", email)}
+              onClick={handleEmailVerify}
             >
               {emailVerified ? "Verified ✓" : "Verify"}
             </button>
@@ -162,7 +180,7 @@ const RegisterForm = ({
             <button
               type="button"
               className={`verify-small-btn ${phoneVerified ? "verified" : ""}`}
-              onClick={() => onOpenVerifyModal("phone", "+91 " + phone)}
+              onClick={handlePhoneVerify}
             >
               {phoneVerified ? "Verified ✓" : "Verify"}
             </button>

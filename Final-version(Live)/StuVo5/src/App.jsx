@@ -1,13 +1,14 @@
 import { Routes, Route } from "react-router-dom";
-import './App.css'
 import { lazy, Suspense } from "react";
+import './App.css'
 
-const Landing = lazy(() => import("./pages/Landing"));
+import Landing from "./pages/Landing"; // NOT lazy loading for better performance on initial load
+import FullScreenLoader from "./components/FullScreenLoader";
+
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const Explore = lazy(() => import("./pages/Explore"));
-import FullScreenLoader from "./components/FullScreenLoader";
 
 function App() {
   return (
