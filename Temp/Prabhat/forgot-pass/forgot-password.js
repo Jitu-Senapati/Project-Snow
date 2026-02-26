@@ -238,6 +238,18 @@ newPasswordForm.addEventListener("submit", function (e) {
   }
 });
 
+// Back button: Step 2 → Step 1
+document.getElementById("backToStep1").addEventListener("click", function (e) {
+  e.preventDefault();
+  // Clear OTP field and errors
+  otpCode.value = "";
+  otpCode.classList.remove("error");
+  otpError.classList.remove("show");
+
+  step2.classList.add("hidden");
+  step1.classList.remove("hidden");
+});
+
 // Clear errors on input
 emailOrPhone.addEventListener("input", function () {
   this.classList.remove("error");

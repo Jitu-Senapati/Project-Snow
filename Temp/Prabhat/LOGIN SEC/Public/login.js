@@ -568,12 +568,14 @@ document.addEventListener("DOMContentLoaded", function () {
     return /^[6-9]\d{9}$/.test(phone);
   }
 
+  // Roll number is now optional — only check duplicates if a value was entered
   function checkDuplicates(name, roll, email, phone) {
     const duplicates = [];
     for (let user of existingUsers) {
       if (user.name.toLowerCase() === name.toLowerCase())
         duplicates.push("Name");
-      if (user.roll.toLowerCase() === roll.toLowerCase())
+      // Only check roll number duplicate if a roll number was provided
+      if (roll && user.roll.toLowerCase() === roll.toLowerCase())
         duplicates.push("Roll Number");
       if (user.email.toLowerCase() === email.toLowerCase())
         duplicates.push("Email");
@@ -691,7 +693,7 @@ document.addEventListener("DOMContentLoaded", function () {
         inp?.classList.remove("error"),
       );
 
-      // Validate name
+      // Validate name (required)
       if (!verifyName.value.trim()) {
         verifyNameError.textContent = "Please enter your full name";
         verifyNameError.classList.add("show");
@@ -704,13 +706,8 @@ document.addEventListener("DOMContentLoaded", function () {
         isValid = false;
       }
 
-      // Validate roll
-      if (!verifyRoll.value.trim()) {
-        verifyRollError.textContent = "Please enter roll number";
-        verifyRollError.classList.add("show");
-        verifyRoll.classList.add("error");
-        isValid = false;
-      } else if (verifyRoll.value.trim().length < 5) {
+      // Validate roll (OPTIONAL — only validate format if something is entered)
+      if (verifyRoll.value.trim() && verifyRoll.value.trim().length < 5) {
         verifyRollError.textContent =
           "Roll number must be at least 5 characters";
         verifyRollError.classList.add("show");
@@ -718,7 +715,7 @@ document.addEventListener("DOMContentLoaded", function () {
         isValid = false;
       }
 
-      // Validate branch
+      // Validate branch (required)
       if (!verifyBranch.value) {
         verifyBranchError.textContent = "Please select your branch";
         verifyBranchError.classList.add("show");
@@ -726,7 +723,7 @@ document.addEventListener("DOMContentLoaded", function () {
         isValid = false;
       }
 
-      // Validate year
+      // Validate year (required)
       if (!verifyYear.value) {
         verifyYearError.textContent = "Please select your year";
         verifyYearError.classList.add("show");
@@ -739,7 +736,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const userData = window.registeredUserData || {};
         const duplicates = checkDuplicates(
           verifyName.value.trim(),
-          verifyRoll.value.trim(),
+          verifyRoll.value.trim(), // empty string = skip roll check
           userData.email || "",
           userData.phone || "",
         );
