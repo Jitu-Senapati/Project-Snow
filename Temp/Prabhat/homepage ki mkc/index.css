@@ -1,0 +1,869 @@
+/* ═══════════════════════════════════════════════════════════
+   RESET
+═══════════════════════════════════════════════════════════ */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #0a0a0a;
+  color: #fff;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   APP SHELL  — vertical flex column filling the full screen
+   Order (top → bottom):
+     1. .app-header       (fixed height, shrink: 0)
+     2. .page-content     (flex: 1, scrollable)
+     3. .install-banner   (0px tall when hidden, auto when visible)
+     4. .bottom-nav       (fixed height, shrink: 0)
+═══════════════════════════════════════════════════════════ */
+.main-app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HEADER
+═══════════════════════════════════════════════════════════ */
+.app-header {
+  flex-shrink: 0;
+  background: #000;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #1a1a1a;
+  position: relative;
+  z-index: 200;
+}
+
+.app-logo {
+  font-size: 22px;
+  font-weight: 700;
+  color: #a78bfa;
+  letter-spacing: 3px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.header-logo-icon {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.header-icons {
+  display: flex;
+  gap: 20px;
+  font-size: 24px;
+}
+.header-icons i {
+  cursor: pointer;
+  color: #aaa;
+  transition: color 0.2s;
+}
+.header-icons i:hover {
+  color: #a78bfa;
+}
+
+/* Dropdown panels */
+.notification-panel,
+.menu-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  background: #161616;
+  border: 1px solid #2a2a2a;
+  border-radius: 14px;
+  z-index: 300;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    visibility 0.2s;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+}
+.notification-panel {
+  right: 48px;
+  width: 300px;
+}
+.menu-panel {
+  right: 0;
+  width: 200px;
+}
+.notification-panel.active,
+.menu-panel.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.notification-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid #1e1e1e;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.notification-item:last-of-type {
+  border-bottom: none;
+}
+.notification-item:hover {
+  background: #1e1e1e;
+}
+.notification-item > i {
+  font-size: 20px;
+  color: #a78bfa;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.notif-text strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 2px;
+}
+.notif-text p {
+  font-size: 12px;
+  color: #777;
+  line-height: 1.4;
+}
+
+.notification-footer {
+  padding: 12px 16px;
+  text-align: center;
+  font-size: 13px;
+  color: #a78bfa;
+  cursor: pointer;
+  border-top: 1px solid #1e1e1e;
+}
+.notification-footer:hover {
+  background: #1e1e1e;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  border-bottom: 1px solid #1e1e1e;
+  cursor: pointer;
+  color: #ccc;
+  font-size: 14px;
+  transition: background 0.15s;
+}
+.menu-item:last-child {
+  border-bottom: none;
+}
+.menu-item:hover {
+  background: #1e1e1e;
+}
+.menu-item i {
+  font-size: 18px;
+  color: #a78bfa;
+}
+.menu-item.logout {
+  color: #ef4444;
+}
+.menu-item.logout i {
+  color: #ef4444;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PAGE CONTENT  (scrollable)
+═══════════════════════════════════════════════════════════ */
+.page-content {
+  display: none;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 20px;
+  /* Smooth deceleration on iOS */
+  -webkit-overflow-scrolling: touch;
+}
+.page-content.active {
+  display: block;
+  animation: fadeUp 0.3s ease;
+}
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SECTION HEADERS  — "IN THE SPOTLIGHT" / "NOTICES"
+   Fix: header-line has NO max-width so the lines always grow
+   equally outward and the title stays perfectly centered.
+═══════════════════════════════════════════════════════════ */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 22px 20px 0;
+  margin-bottom: 20px;
+}
+
+/* Lines grow to fill all remaining space equally → title centred */
+.header-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #2a2a2a, transparent);
+  /* NO max-width — that was breaking centering */
+}
+
+.section-title {
+  flex-shrink: 0; /* never shrink the title itself */
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #555;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.section-heading {
+  padding: 0 20px;
+  margin: 4px 0 14px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SPOTLIGHT / CAROUSEL
+═══════════════════════════════════════════════════════════ */
+.spotlight-section {
+  margin-bottom: 32px;
+}
+
+.events-carousel {
+  width: 100%;
+  overflow: hidden;
+  padding: 14px 0 10px;
+}
+
+.events-track {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  will-change: transform;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+}
+.events-track.is-dragging {
+  cursor: grabbing;
+}
+
+.event-card {
+  flex: 0 0 auto;
+  width: 260px;
+  background: #141414;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid #2a2a2a;
+  transform-origin: top center;
+  transform: scale(0.87);
+  opacity: 0.5;
+  filter: brightness(0.6);
+  transition:
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    filter 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.4s ease,
+    box-shadow 0.4s ease;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.event-card.active {
+  transform: scale(1);
+  opacity: 1;
+  filter: brightness(1);
+  border-color: #a78bfa;
+  box-shadow: 0 12px 48px rgba(167, 139, 250, 0.2);
+}
+
+.event-image {
+  position: relative;
+  width: 100%;
+  height: 340px;
+  overflow: hidden;
+  background: #0d0d0d;
+}
+.event-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  opacity: 0;
+  transform: scale(1);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
+}
+.event-image img.loaded {
+  opacity: 1;
+}
+.event-card.active .event-image img {
+  transform: scale(1.04);
+}
+
+.event-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.92) 0%,
+    rgba(0, 0, 0, 0.3) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.event-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: #a78bfa;
+  color: #000;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+.event-badge.promo {
+  background: rgba(255, 255, 255, 0.9);
+  top: auto;
+  bottom: 90px;
+  left: 14px;
+  right: 14px;
+  text-align: center;
+  border-radius: 8px;
+}
+
+.event-info {
+  padding: 14px;
+  position: relative;
+  min-height: 96px;
+}
+.event-date {
+  font-size: 11px;
+  color: #555;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+.event-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 8px;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.event-location {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: #555;
+}
+.event-location i {
+  color: #a78bfa;
+  font-size: 14px;
+}
+
+.bookmark-btn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #1e1e1e;
+  border: 1px solid #2a2a2a;
+  color: #888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 15px;
+  transition: all 0.2s ease;
+}
+.bookmark-btn:hover {
+  background: #2a2a2a;
+  color: #fff;
+}
+.bookmark-btn.saved {
+  background: #a78bfa;
+  border-color: #a78bfa;
+  color: #000;
+}
+
+/* Carousel controls — arrows beside dots */
+.carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 14px 20px 0;
+}
+.carousel-arrow {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1.5px solid #333;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 19px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+.carousel-arrow:hover:not(:disabled) {
+  border-color: #a78bfa;
+  color: #a78bfa;
+  background: rgba(167, 139, 250, 0.08);
+}
+.carousel-arrow:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.carousel-dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.carousel-dots .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2a2a2a;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+.carousel-dots .dot.active {
+  background: #a78bfa;
+  width: 22px;
+  border-radius: 4px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   NOTICES
+═══════════════════════════════════════════════════════════ */
+.notices-section {
+  padding: 0 20px;
+  margin-bottom: 32px;
+}
+.notices-list {
+  background: #111;
+  border: 1px solid #1e1e1e;
+  border-radius: 14px;
+  overflow: hidden;
+}
+.notice-item {
+  display: flex;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid #1a1a1a;
+  transition: background 0.15s;
+}
+.notice-item:last-child {
+  border-bottom: none;
+}
+.notice-item:hover {
+  background: #141414;
+}
+.notice-icon {
+  width: 38px;
+  height: 38px;
+  background: #1a1a1a;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.notice-icon i {
+  font-size: 18px;
+  color: #a78bfa;
+}
+.notice-content {
+  flex: 1;
+  min-width: 0;
+}
+.notice-content h4 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 3px;
+}
+.notice-content p {
+  font-size: 12px;
+  color: #666;
+  line-height: 1.4;
+  margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.notice-time {
+  font-size: 10px;
+  color: #444;
+  font-weight: 500;
+}
+
+.bus-card {
+  background: #111;
+  border-radius: 14px;
+  padding: 20px;
+  margin: 0 20px 20px;
+  border: 1px solid #1e1e1e;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   INSTALL BANNER
+   — NOT position:fixed. It's a flex child inside .main-app,
+     sandwiched between .page-content and .bottom-nav.
+   — Hidden by default (height 0, overflow hidden, opacity 0).
+   — .main-app.banner-visible → the banner slides in with
+     max-height transition, naturally pushing the nav downward.
+     Since the shell is height:100vh this keeps everything on screen.
+═══════════════════════════════════════════════════════════ */
+.install-banner {
+  flex-shrink: 0;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    max-height 0.4s cubic-bezier(0.32, 0.72, 0, 1),
+    opacity 0.35s ease;
+
+  background: #111;
+  border-top: 1px solid #2a2a2a;
+  border-bottom: 1px solid #2a2a2a;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 20px; /* vertical padding handled by max-height anim */
+}
+
+/* When visible: expand to full height */
+.main-app.banner-visible .install-banner {
+  max-height: 60px;
+  opacity: 1;
+  pointer-events: auto;
+  padding: 13px 20px;
+}
+
+.install-text {
+  flex: 1;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #a78bfa;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+.install-btn {
+  background: #a78bfa;
+  color: #000;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+}
+.install-btn:hover {
+  opacity: 0.85;
+}
+
+.install-close {
+  background: none;
+  border: none;
+  color: #555;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: color 0.2s;
+  padding: 2px;
+}
+.install-close:hover {
+  color: #fff;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BOTTOM NAVIGATION  — matches the screenshot
+   Dark bar, rounded pill bg on active icon
+═══════════════════════════════════════════════════════════ */
+.bottom-nav {
+  flex-shrink: 0;
+  background: #0e0e0e;
+  border-top: 1px solid #1a1a1a;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 8px 12px max(10px, env(safe-area-inset-bottom));
+  z-index: 100;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  flex: 1;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.12s ease;
+  padding: 2px 0;
+}
+.nav-item:active {
+  transform: scale(0.88);
+}
+
+.nav-icon-wrap {
+  width: 48px;
+  height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  transition: background 0.25s ease;
+}
+
+.nav-item i {
+  font-size: 22px;
+  color: #444;
+  transition: color 0.25s ease;
+  line-height: 1;
+}
+
+.nav-item span {
+  font-size: 10px;
+  font-weight: 600;
+  color: #444;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  transition: color 0.25s ease;
+}
+
+.nav-item.active .nav-icon-wrap {
+  background: rgba(167, 139, 250, 0.14);
+}
+.nav-item.active i {
+  color: #a78bfa;
+}
+.nav-item.active span {
+  color: #a78bfa;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   EXPLORER SHEET
+═══════════════════════════════════════════════════════════ */
+.explorer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 400;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s;
+  backdrop-filter: blur(3px);
+}
+.explorer-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.explorer-sheet {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #111;
+  border-radius: 22px 22px 0 0;
+  padding: 20px 20px 40px;
+  border-top: 1px solid #2a2a2a;
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.explorer-overlay.active .explorer-sheet {
+  transform: translateY(0);
+}
+
+.explorer-sheet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.browse-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 1px;
+}
+.explorer-close {
+  font-size: 26px;
+  color: #555;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.explorer-close:hover {
+  color: #fff;
+}
+
+.browse-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.browse-card {
+  background: #181818;
+  border: 1px solid #242424;
+  border-radius: 12px;
+  padding: 18px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.browse-card:hover,
+.browse-card:active {
+  background: #222;
+  border-color: #a78bfa;
+}
+.browse-card i {
+  font-size: 22px;
+  color: #a78bfa;
+}
+.browse-card span {
+  font-size: 11px;
+  color: #777;
+  font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SCROLLBAR
+═══════════════════════════════════════════════════════════ */
+::-webkit-scrollbar {
+  width: 3px;
+}
+::-webkit-scrollbar-thumb {
+  background: #222;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+  .event-card {
+    width: 230px;
+  }
+  .event-image {
+    height: 300px;
+  }
+  .events-track {
+    gap: 12px;
+  }
+  .notification-panel {
+    right: 0;
+    left: 0;
+    width: auto;
+    margin: 0 12px;
+  }
+  .nav-icon-wrap {
+    width: 40px;
+  }
+  .install-text {
+    font-size: 12px;
+  }
+}
+@media (min-width: 481px) and (max-width: 767px) {
+  .event-card {
+    width: 260px;
+  }
+  .event-image {
+    height: 330px;
+  }
+}
+@media (min-width: 768px) {
+  .event-card {
+    width: 320px;
+  }
+  .event-image {
+    height: 390px;
+  }
+  .events-track {
+    gap: 20px;
+  }
+}
+@media (min-width: 1024px) {
+  .event-card {
+    width: 370px;
+  }
+  .event-image {
+    height: 420px;
+  }
+  .events-track {
+    gap: 28px;
+  }
+}

@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>STUVO5</title>
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <div class="main-app" id="mainApp">
+      <!-- ═══ HEADER ═══ -->
+      <div class="app-header">
+        <div class="app-logo">
+          <img src="logo.png" alt="STUVO" class="header-logo-icon" />
+          STUVO5
+        </div>
+        <div class="header-icons">
+          <i class="bx bx-bell" id="notificationToggle"></i>
+          <i class="bx bx-menu" id="menuToggle"></i>
+        </div>
+
+        <!-- Notification panel -->
+        <div class="notification-panel" id="notificationPanel">
+          <div class="notification-item">
+            <i class="bx bx-bus"></i>
+            <div class="notif-text">
+              <strong>Bus #101</strong>
+              <p>Arriving in 5 minutes</p>
+            </div>
+          </div>
+          <div class="notification-item">
+            <i class="bx bx-calendar"></i>
+            <div class="notif-text">
+              <strong>New Event</strong>
+              <p>Tech Fest starts tomorrow</p>
+            </div>
+          </div>
+          <div class="notification-item">
+            <i class="bx bx-book"></i>
+            <div class="notif-text">
+              <strong>Attendance Updated</strong>
+              <p>Your attendance has been updated</p>
+            </div>
+          </div>
+          <div class="notification-footer">View all notifications</div>
+        </div>
+
+        <!-- Menu panel -->
+        <div class="menu-panel" id="menuPanel">
+          <div class="menu-item">
+            <i class="bx bx-cog"></i><span>Settings</span>
+          </div>
+          <div class="menu-item">
+            <i class="bx bx-message-dots"></i><span>Feedback</span>
+          </div>
+          <div class="menu-item">
+            <i class="bx bx-help-circle"></i><span>Help</span>
+          </div>
+          <div class="menu-item logout">
+            <i class="bx bx-log-out"></i><span>Logout</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ HOME PAGE (scrollable middle) ═══ -->
+      <div class="page-content active" id="homePage">
+        <!-- IN THE SPOTLIGHT -->
+        <div class="spotlight-section">
+          <div class="section-header">
+            <div class="header-line"></div>
+            <h2 class="section-title">IN THE SPOTLIGHT</h2>
+            <div class="header-line"></div>
+          </div>
+
+          <div class="events-carousel" id="eventsCarousel">
+            <div class="events-track" id="eventsTrack">
+              <div class="event-card">
+                <div class="event-image">
+                  <img
+                    src="https://images.unsplash.com/photo-1544531586-fde5298cdd40?w=400&h=600&fit=crop"
+                    alt="Tech Fest"
+                  />
+                  <div class="event-overlay"></div>
+                  <div class="event-badge">Featured</div>
+                </div>
+                <div class="event-info">
+                  <div class="event-date">Fri, 15 Mar, 10:00 AM</div>
+                  <h3 class="event-title">
+                    Annual Tech Fest 2024 - Innovation Unleashed
+                  </h3>
+                  <div class="event-location">
+                    <i class="bx bx-map"></i><span>Main Auditorium</span>
+                  </div>
+                  <button class="bookmark-btn">
+                    <i class="bx bx-bookmark"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="event-card">
+                <div class="event-image">
+                  <img
+                    src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=400&h=600&fit=crop"
+                    alt="Placement"
+                  />
+                  <div class="event-overlay"></div>
+                  <div class="event-badge promo">Register before 10 Mar</div>
+                </div>
+                <div class="event-info">
+                  <div class="event-date">Mon, 18 Mar, 9:00 AM</div>
+                  <h3 class="event-title">Google Campus Placement Drive</h3>
+                  <div class="event-location">
+                    <i class="bx bx-map"></i><span>Seminar Hall B</span>
+                  </div>
+                  <button class="bookmark-btn">
+                    <i class="bx bx-bookmark"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="event-card">
+                <div class="event-image">
+                  <img
+                    src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400&h=600&fit=crop"
+                    alt="Cultural Fest"
+                  />
+                  <div class="event-overlay"></div>
+                </div>
+                <div class="event-info">
+                  <div class="event-date">Sat, 23 Mar, 6:00 PM</div>
+                  <h3 class="event-title">
+                    Spring Cultural Fest - Rhythm 2024
+                  </h3>
+                  <div class="event-location">
+                    <i class="bx bx-map"></i><span>Open Air Theatre</span>
+                  </div>
+                  <button class="bookmark-btn">
+                    <i class="bx bx-bookmark"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- ★ MIDDLE CARD (index 3 of 7) -->
+              <div class="event-card">
+                <div class="event-image">
+                  <img
+                    src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&h=600&fit=crop"
+                    alt="Workshop"
+                  />
+                  <div class="event-overlay"></div>
+                  <div class="event-badge promo">Certificate Included</div>
+                </div>
+                <div class="event-info">
+                  <div class="event-date">Wed, 27 Mar, 2:00 PM</div>
+                  <h3 class="event-title">AI & Machine Learning Workshop</h3>
+                  <div class="event-location">
+                    <i class="bx bx-map"></i><span>Computer Lab 3</span>
+                  </div>
+                  <button class="bookmark-btn">
+                    <i class="bx bx-bookmark"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="event-card">
+                <div class="event-image">
+                  <img
+                    src="https://images.unsplash.com/photo-1540747913346-19378d7f5d39?w=400&h=600&fit=crop"
+                    alt="Sports"
+                  />
+                  <div class="event-overlay"></div>
+                </div>
+                <div class="event-info">
+                  <div class="event-date">Fri, 29 Mar, 8:00 AM</div>
+                  <h3 class="event-title">Inter-College Cricket Tournament</h3>
+                  <div class="event-location">
+                    <i class="bx bx-map"></i><span>Sports Ground</span>
+                  </div>
+                  <button class="bookmark-btn">
+                    <i class="bx bx-bookmark"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="event-card">
+                <div class="event-image">
+                  <img
+                    src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=400&h=600&fit=crop"
+                    alt="Hackathon"
+                  />
+                  <div class="event-overlay"></div>
+                  <div class="event-badge">24 Hrs</div>
+                </div>
+                <div class="event-info">
+                  <div class="event-date">Sat, 6 Apr, 10:00 AM</div>
+                  <h3 class="event-title">CodeFest Hackathon 2024</h3>
+                  <div class="event-location">
+                    <i class="bx bx-map"></i><span>Innovation Lab</span>
+                  </div>
+                  <button class="bookmark-btn">
+                    <i class="bx bx-bookmark"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="event-card">
+                <div class="event-image">
+                  <img
+                    src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=600&fit=crop"
+                    alt="Convocation"
+                  />
+                  <div class="event-overlay"></div>
+                  <div class="event-badge">Annual</div>
+                </div>
+                <div class="event-info">
+                  <div class="event-date">Sun, 14 Apr, 11:00 AM</div>
+                  <h3 class="event-title">Convocation Ceremony 2024</h3>
+                  <div class="event-location">
+                    <i class="bx bx-map"></i><span>Convention Centre</span>
+                  </div>
+                  <button class="bookmark-btn">
+                    <i class="bx bx-bookmark"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="carousel-controls">
+            <button class="carousel-arrow" id="prevArrow" aria-label="Previous">
+              <i class="bx bx-chevron-left"></i>
+            </button>
+            <div class="carousel-dots" id="carouselDots"></div>
+            <button class="carousel-arrow" id="nextArrow" aria-label="Next">
+              <i class="bx bx-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- NOTICES -->
+        <div class="notices-section">
+          <div class="section-header">
+            <div class="header-line"></div>
+            <h2 class="section-title">NOTICES</h2>
+            <div class="header-line"></div>
+          </div>
+          <div class="notices-list">
+            <div class="notice-item">
+              <div class="notice-icon"><i class="bx bx-megaphone"></i></div>
+              <div class="notice-content">
+                <h4>Exam Schedule Released</h4>
+                <p>
+                  End semester exams start from April 15th. Check your hall
+                  tickets.
+                </p>
+                <span class="notice-time">2 hours ago</span>
+              </div>
+            </div>
+            <div class="notice-item">
+              <div class="notice-icon"><i class="bx bx-wifi"></i></div>
+              <div class="notice-content">
+                <h4>Campus WiFi Maintenance</h4>
+                <p>
+                  WiFi will be unavailable in Block A on March 10th, 10 AM – 2
+                  PM.
+                </p>
+                <span class="notice-time">5 hours ago</span>
+              </div>
+            </div>
+            <div class="notice-item">
+              <div class="notice-icon"><i class="bx bx-calendar-x"></i></div>
+              <div class="notice-content">
+                <h4>Holiday Announcement</h4>
+                <p>
+                  College will remain closed on March 25th for Holi festival.
+                </p>
+                <span class="notice-time">1 day ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h2 class="section-heading">Quick Access</h2>
+        <div class="bus-card">
+          <h3 style="color: #a78bfa; margin-bottom: 10px">
+            Welcome to STUVO5 👋
+          </h3>
+          <p style="color: #aaa">
+            Track buses, explore events, chat, and manage your profile.
+          </p>
+        </div>
+      </div>
+      <!-- end homePage -->
+
+      <!--
+        ═══ INSTALL BANNER ═══
+        Lives INSIDE .main-app, ABOVE .bottom-nav.
+        It's a flex child — so it naturally sits between the
+        scrollable content and the nav bar. No position:fixed needed.
+        JS adds/removes .banner-visible on .main-app to show/hide it.
+      -->
+      <div class="install-banner" id="installBanner">
+        <span class="install-text">Install this site as an app</span>
+        <button class="install-btn" id="installBtn">Install</button>
+        <button class="install-close" id="installClose" aria-label="Dismiss">
+          <i class="bx bx-x"></i>
+        </button>
+      </div>
+
+      <!-- ═══ BOTTOM NAV ═══ -->
+      <div class="bottom-nav">
+        <div class="nav-item active" data-page="home">
+          <div class="nav-icon-wrap"><i class="bx bx-home-alt"></i></div>
+          <span>Home</span>
+        </div>
+        <div class="nav-item" data-page="bus">
+          <div class="nav-icon-wrap"><i class="bx bx-bus"></i></div>
+          <span>Bus</span>
+        </div>
+        <div class="nav-item explorer-nav" id="explorerNavBtn">
+          <div class="nav-icon-wrap"><i class="bx bx-compass"></i></div>
+          <span>Explorer</span>
+        </div>
+        <div class="nav-item" data-page="chat">
+          <div class="nav-icon-wrap">
+            <i class="bx bx-message-rounded-dots"></i>
+          </div>
+          <span>Chat</span>
+        </div>
+        <div class="nav-item" data-page="profile">
+          <div class="nav-icon-wrap"><i class="bx bx-user-circle"></i></div>
+          <span>Profile</span>
+        </div>
+      </div>
+    </div>
+    <!-- end main-app -->
+
+    <!-- ═══ EXPLORER SHEET ═══ -->
+    <div class="explorer-overlay" id="explorerOverlay">
+      <div class="explorer-sheet" id="explorerSheet">
+        <div class="explorer-sheet-header">
+          <h2 class="browse-title">BROWSE BY</h2>
+          <i class="bx bx-x explorer-close" id="explorerClose"></i>
+        </div>
+        <div class="browse-grid">
+          <div class="browse-card">
+            <i class="bx bx-calendar-event"></i><span>Events</span>
+          </div>
+          <div class="browse-card">
+            <i class="bx bx-book-open"></i><span>Courses</span>
+          </div>
+          <div class="browse-card">
+            <i class="bx bx-trophy"></i><span>Sports</span>
+          </div>
+          <div class="browse-card">
+            <i class="bx bx-group"></i><span>Clubs</span>
+          </div>
+          <div class="browse-card">
+            <i class="bx bx-briefcase"></i><span>Placements</span>
+          </div>
+          <div class="browse-card">
+            <i class="bx bx-building"></i><span>Facilities</span>
+          </div>
+          <div class="browse-card">
+            <i class="bx bx-bus"></i><span>Transport</span>
+          </div>
+          <div class="browse-card">
+            <i class="bx bx-food-menu"></i><span>Cafeteria</span>
+          </div>
+          <div class="browse-card">
+            <i class="bx bx-library"></i><span>Library</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="index.js"></script>
+  </body>
+</html>

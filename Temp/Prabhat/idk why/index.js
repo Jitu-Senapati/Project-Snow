@@ -1,298 +1,293 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // ===== ELEMENTS =====
+  /* ============================================================
+     HEADER PANELS
+  ============================================================ */
   const menuToggle = document.getElementById("menuToggle");
   const menuPanel = document.getElementById("menuPanel");
-  const notificationToggle = document.getElementById("notificationToggle");
-  const notificationPanel = document.getElementById("notificationPanel");
-  const explorerNavBtn = document.getElementById("explorerNavBtn");
+  const notifToggle = document.getElementById("notificationToggle");
+  const notifPanel = document.getElementById("notificationPanel");
+
+  function closeAll() {
+    menuPanel.classList.remove("active");
+    notifPanel.classList.remove("active");
+  }
+
+  menuToggle.addEventListener("click", function (e) {
+    e.stopPropagation();
+    const open = menuPanel.classList.contains("active");
+    closeAll();
+    if (!open) menuPanel.classList.add("active");
+  });
+
+  notifToggle.addEventListener("click", function (e) {
+    e.stopPropagation();
+    const open = notifPanel.classList.contains("active");
+    closeAll();
+    if (!open) notifPanel.classList.add("active");
+  });
+
+  document.addEventListener("click", closeAll);
+  menuPanel.addEventListener("click", function (e) {
+    e.stopPropagation();
+  });
+  notifPanel.addEventListener("click", function (e) {
+    e.stopPropagation();
+  });
+
+  /* ============================================================
+     EXPLORER BOTTOM SHEET
+  ============================================================ */
+  const explorerBtn = document.getElementById("explorerNavBtn");
   const explorerOverlay = document.getElementById("explorerOverlay");
   const explorerClose = document.getElementById("explorerClose");
 
-  // ===== MENU TOGGLE =====
-  if (menuToggle && menuPanel) {
-    menuToggle.addEventListener("click", function (e) {
-      e.stopPropagation();
-      if (notificationPanel) notificationPanel.classList.remove("active");
-      menuPanel.classList.toggle("active");
-    });
+  function openExplorer() {
+    explorerOverlay.classList.add("active");
+    explorerBtn.classList.add("active");
+  }
+  function closeExplorer() {
+    explorerOverlay.classList.remove("active");
+    explorerBtn.classList.remove("active");
   }
 
-  // ===== NOTIFICATION TOGGLE =====
-  if (notificationToggle && notificationPanel) {
-    notificationToggle.addEventListener("click", function (e) {
-      e.stopPropagation();
-      if (menuPanel) menuPanel.classList.remove("active");
-      notificationPanel.classList.toggle("active");
-    });
-  }
-
-  // ===== CLICK OUTSIDE CLOSE =====
-  document.addEventListener("click", function (e) {
-    if (
-      menuPanel &&
-      !menuPanel.contains(e.target) &&
-      !menuToggle.contains(e.target)
-    ) {
-      menuPanel.classList.remove("active");
-    }
-    if (
-      notificationPanel &&
-      !notificationPanel.contains(e.target) &&
-      !notificationToggle.contains(e.target)
-    ) {
-      notificationPanel.classList.remove("active");
-    }
+  explorerBtn.addEventListener("click", openExplorer);
+  explorerClose.addEventListener("click", closeExplorer);
+  explorerOverlay.addEventListener("click", function (e) {
+    if (e.target === explorerOverlay) closeExplorer();
   });
 
-  // ===== EXPLORER BOTTOM SHEET =====
-  if (explorerNavBtn) {
-    explorerNavBtn.addEventListener("click", () => {
-      explorerNavBtn.classList.add("active");
-      explorerOverlay.classList.add("active");
-    });
-  }
-
-  if (explorerClose) {
-    explorerClose.addEventListener("click", () => {
-      explorerOverlay.classList.remove("active");
-      explorerNavBtn.classList.remove("active");
-    });
-  }
-
-  if (explorerOverlay) {
-    explorerOverlay.addEventListener("click", (e) => {
-      if (e.target === explorerOverlay) {
-        explorerOverlay.classList.remove("active");
-        explorerNavBtn.classList.remove("active");
-      }
-    });
-  }
-
-  // ===== EVENTS CAROUSEL =====
-  const eventsTrack = document.getElementById("eventsTrack");
-  const carouselDotsContainer = document.getElementById("carouselDots");
-
-  if (!eventsTrack) return;
-
-  const originalCards = Array.from(eventsTrack.querySelectorAll(".event-card"));
-  const totalOriginalCards = originalCards.length;
-  if (totalOriginalCards === 0) return;
-
-  // ── Image fade-in on load ──────────────────────────────────────
-  function setupImageFadeIn(card) {
-    card.querySelectorAll("img").forEach((img) => {
-      if (img.complete) {
-        img.classList.add("loaded");
-      } else {
-        img.addEventListener("load", () => img.classList.add("loaded"), {
-          once: true,
+  /* ============================================================
+     BOTTOM NAV
+  ============================================================ */
+  document
+    .querySelectorAll(".nav-item:not(.explorer-nav)")
+    .forEach(function (item) {
+      item.addEventListener("click", function () {
+        document.querySelectorAll(".nav-item").forEach(function (n) {
+          n.classList.remove("active");
         });
-        img.addEventListener("error", () => img.classList.add("loaded"), {
-          once: true,
-        }); // show broken gracefully
+        item.classList.add("active");
+      });
+    });
+
+  /* ============================================================
+     CAROUSEL
+     ─────────────────────────────────────────────────────────────
+     We clone ALL N cards on both sides so the nearest clone is
+     always exactly 1 card away — the silent jump after loop is
+     imperceptible because it's zero visual distance.
+
+     Layout: [N clones of tail | originals | N clones of head]
+     Real cards live at indices N … 2N-1.
+     Current starts at N (first real card).
+  ============================================================ */
+  const track = document.getElementById("eventsTrack");
+  const dotsWrap = document.getElementById("carouselDots");
+  if (!track) return;
+
+  const originals = Array.from(track.querySelectorAll(".event-card"));
+  const N = originals.length;
+  if (N === 0) return;
+
+  // Image fade-in
+  function fadeIn(card) {
+    card.querySelectorAll("img").forEach(function (img) {
+      function show() {
+        img.classList.add("loaded");
+      }
+      if (img.complete && img.naturalWidth) {
+        show();
+      } else {
+        img.addEventListener("load", show, { once: true });
+        img.addEventListener("error", show, { once: true });
       }
     });
   }
-  originalCards.forEach(setupImageFadeIn);
+  originals.forEach(fadeIn);
 
-  // ── Clone cards for infinite loop ──────────────────────────────
-  const CLONE_COUNT = 3;
-
-  for (let i = totalOriginalCards - CLONE_COUNT; i < totalOriginalCards; i++) {
-    const clone = originalCards[i].cloneNode(true);
-    clone.classList.add("clone");
-    setupImageFadeIn(clone);
-    eventsTrack.insertBefore(clone, eventsTrack.firstChild);
+  // Clone N cards before (tail copies) and N cards after (head copies)
+  for (let i = N - 1; i >= 0; i--) {
+    const c = originals[i].cloneNode(true);
+    c.classList.add("clone");
+    fadeIn(c);
+    track.insertBefore(c, track.firstChild);
+  }
+  for (let i = 0; i < N; i++) {
+    const c = originals[i].cloneNode(true);
+    c.classList.add("clone");
+    fadeIn(c);
+    track.appendChild(c);
   }
 
-  for (let i = 0; i < CLONE_COUNT; i++) {
-    const clone = originalCards[i].cloneNode(true);
-    clone.classList.add("clone");
-    setupImageFadeIn(clone);
-    eventsTrack.appendChild(clone);
-  }
+  const allCards = Array.from(track.querySelectorAll(".event-card"));
+  const TOTAL = allCards.length; // 3N total
 
-  const allCards = Array.from(eventsTrack.querySelectorAll(".event-card"));
-  const totalCards = allCards.length;
-
-  // currentIndex always points to the card that should be centered
-  let currentIndex = CLONE_COUNT;
-
+  // current = index into allCards. Starts at N (first real card).
+  let current = N;
+  let animating = false;
   let isDragging = false;
-  let dragStartX = 0;
-  let dragCurrentX = 0;
-  let baseTranslate = 0;
+  let dragDelta = 0;
+  let isHover = false;
 
-  let autoScrollInterval = null;
-  let isHovering = false;
-  let isTransitioning = false;
-
-  // ── Helpers ────────────────────────────────────────────────────
-
-  function getCardWidth() {
-    return allCards[0].offsetWidth + 12; // 12 = gap
+  function cardW() {
+    return allCards[0].offsetWidth + 12;
+  }
+  function containerW() {
+    return track.parentElement.offsetWidth;
+  }
+  function xFor(i) {
+    return containerW() / 2 - cardW() / 2 - i * cardW();
   }
 
-  // The track is centered: active card sits in the middle of the carousel container
-  function translateForIndex(idx) {
-    const carousel = eventsTrack.parentElement;
-    const containerW = carousel.offsetWidth;
-    const cw = getCardWidth();
-    // Center the active card
-    return containerW / 2 - cw / 2 - idx * cw;
-  }
-
-  function applyTranslate(px, animate) {
-    eventsTrack.style.transition = animate
-      ? "transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)"
+  function setPos(x, anim) {
+    track.style.transition = anim
+      ? "transform 0.42s cubic-bezier(0.35, 0, 0.25, 1)"
       : "none";
-    eventsTrack.style.transform = `translateX(${px}px)`;
+    track.style.transform = "translateX(" + x + "px)";
   }
 
-  function getOrigIdx(idx) {
-    return (
-      (((idx - CLONE_COUNT) % totalOriginalCards) + totalOriginalCards) %
-      totalOriginalCards
-    );
-  }
-
-  function updateActiveCards() {
-    allCards.forEach((card, idx) => {
-      card.classList.toggle("active", idx === currentIndex);
+  function updateUI() {
+    allCards.forEach(function (c, i) {
+      c.classList.toggle("active", i === current);
     });
-    const origIdx = getOrigIdx(currentIndex);
-    document.querySelectorAll(".carousel-dots .dot").forEach((dot, i) => {
-      dot.classList.toggle("active", i === origIdx);
+    // dot index = position within the real cards block
+    const dotIdx = (((current - N) % N) + N) % N;
+    document.querySelectorAll(".carousel-dots .dot").forEach(function (d, i) {
+      d.classList.toggle("active", i === dotIdx);
     });
   }
 
-  function goTo(idx, animate) {
-    currentIndex = idx;
-    applyTranslate(translateForIndex(currentIndex), animate);
-    updateActiveCards();
+  // Instant jump — no animation, no visible movement
+  function jumpTo(i) {
+    current = i;
+    setPos(xFor(current), false);
+    updateUI();
   }
 
-  function next() {
-    if (isTransitioning) return;
-    isTransitioning = true;
-    currentIndex++;
-    applyTranslate(translateForIndex(currentIndex), true);
-    updateActiveCards();
-  }
+  // Animated slide
+  function slideTo(i) {
+    if (animating) return;
+    animating = true;
+    current = i;
+    setPos(xFor(current), true);
+    updateUI();
 
-  function prev() {
-    if (isTransitioning) return;
-    isTransitioning = true;
-    currentIndex--;
-    applyTranslate(translateForIndex(currentIndex), true);
-    updateActiveCards();
-  }
+    const safety = setTimeout(onDone, 460);
 
-  // After transition ends, silently jump to the real card if we're in clone territory
-  eventsTrack.addEventListener("transitionend", () => {
-    isTransitioning = false;
-    if (currentIndex >= totalCards - CLONE_COUNT) {
-      currentIndex = CLONE_COUNT + (currentIndex - (totalCards - CLONE_COUNT));
-      goTo(currentIndex, false);
-    } else if (currentIndex < CLONE_COUNT) {
-      currentIndex =
-        totalCards - CLONE_COUNT - 1 - (CLONE_COUNT - 1 - currentIndex);
-      goTo(currentIndex, false);
+    function onDone() {
+      clearTimeout(safety);
+      track.removeEventListener("transitionend", onTransEnd);
+      animating = false;
+
+      // If we drifted into the clone zone, jump to the real equivalent
+      // The jump is zero visual distance because clones are identical
+      if (current < N) {
+        // In pre-clones → jump to matching real card in tail
+        jumpTo(current + N);
+      } else if (current >= 2 * N) {
+        // In post-clones → jump to matching real card in head
+        jumpTo(current - N);
+      }
     }
+
+    function onTransEnd(e) {
+      if (e.target !== track || e.propertyName !== "transform") return;
+      onDone();
+    }
+    track.addEventListener("transitionend", onTransEnd);
+  }
+
+  function goNext() {
+    slideTo(current + 1);
+  }
+  function goPrev() {
+    slideTo(current - 1);
+  }
+
+  // Dots
+  dotsWrap.innerHTML = "";
+  for (let i = 0; i < N; i++) {
+    (function (idx) {
+      const dot = document.createElement("span");
+      dot.className = "dot" + (idx === 0 ? " active" : "");
+      dot.addEventListener("click", function () {
+        slideTo(N + idx);
+      });
+      dotsWrap.appendChild(dot);
+    })(i);
+  }
+
+  // Hover pause (no auto-scroll, but keep pause logic for drag)
+  track.addEventListener("mouseenter", function () {
+    isHover = true;
+  });
+  track.addEventListener("mouseleave", function () {
+    isHover = false;
   });
 
-  // ── Dots ───────────────────────────────────────────────────────
-  function generateDots() {
-    carouselDotsContainer.innerHTML = "";
-    for (let i = 0; i < totalOriginalCards; i++) {
-      const dot = document.createElement("span");
-      dot.classList.add("dot");
-      if (i === 0) dot.classList.add("active");
-      dot.addEventListener("click", () => {
-        goTo(i + CLONE_COUNT, true);
-        resetAutoScroll();
-      });
-      carouselDotsContainer.appendChild(dot);
-    }
-  }
+  // Drag / swipe
+  let dragStartX = 0;
+  let dragStartT = 0;
+  let baseX = 0;
 
-  // ── Auto-scroll ────────────────────────────────────────────────
-  function startAutoScroll() {
-    stopAutoScroll();
-    autoScrollInterval = setInterval(() => {
-      if (!isDragging && !isHovering) next();
-    }, 4000);
-  }
-
-  function stopAutoScroll() {
-    clearInterval(autoScrollInterval);
-    autoScrollInterval = null;
-  }
-
-  function resetAutoScroll() {
-    stopAutoScroll();
-    startAutoScroll();
-  }
-
-  // ── Drag ───────────────────────────────────────────────────────
-  function getEventX(e) {
-    return e.touches ? e.touches[0].clientX : e.clientX;
-  }
-
-  function onDragStart(e) {
+  function onDragStart(x) {
     isDragging = true;
-    dragStartX = getEventX(e);
-    dragCurrentX = dragStartX;
-    baseTranslate = translateForIndex(currentIndex);
-    eventsTrack.style.transition = "none";
-    eventsTrack.style.cursor = "grabbing";
-    stopAutoScroll();
+    animating = false; // always unlock on touch
+    dragStartX = x;
+    dragDelta = 0;
+    dragStartT = Date.now();
+    baseX = xFor(current);
+    track.style.transition = "none";
+    track.style.cursor = "grabbing";
   }
 
-  function onDragMove(e) {
+  function onDragMove(x) {
     if (!isDragging) return;
-    dragCurrentX = getEventX(e);
-    const diff = dragCurrentX - dragStartX;
-    eventsTrack.style.transform = `translateX(${baseTranslate + diff}px)`;
+    dragDelta = x - dragStartX;
+    track.style.transform = "translateX(" + (baseX + dragDelta) + "px)";
   }
 
   function onDragEnd() {
     if (!isDragging) return;
     isDragging = false;
-    eventsTrack.style.cursor = "grab";
-    const diff = dragCurrentX - dragStartX;
-    if (diff < -60) {
-      next();
-    } else if (diff > 60) {
-      prev();
-    } else {
-      goTo(currentIndex, true);
-    }
-    resetAutoScroll();
+    track.style.cursor = "grab";
+
+    const velocity = dragDelta / Math.max(1, Date.now() - dragStartT);
+
+    if (dragDelta < -40 || velocity < -0.3) goNext();
+    else if (dragDelta > 40 || velocity > 0.3) goPrev();
+    else setPos(xFor(current), true);
   }
 
-  eventsTrack.addEventListener("touchstart", onDragStart, { passive: true });
-  eventsTrack.addEventListener("touchmove", onDragMove, { passive: true });
-  eventsTrack.addEventListener("touchend", onDragEnd);
-  eventsTrack.addEventListener("mousedown", onDragStart);
-  window.addEventListener("mousemove", onDragMove);
+  track.addEventListener(
+    "touchstart",
+    function (e) {
+      onDragStart(e.touches[0].clientX);
+    },
+    { passive: true },
+  );
+  track.addEventListener(
+    "touchmove",
+    function (e) {
+      onDragMove(e.touches[0].clientX);
+    },
+    { passive: true },
+  );
+  track.addEventListener("touchend", onDragEnd);
+  track.addEventListener("mousedown", function (e) {
+    onDragStart(e.clientX);
+  });
+  window.addEventListener("mousemove", function (e) {
+    onDragMove(e.clientX);
+  });
   window.addEventListener("mouseup", onDragEnd);
 
-  eventsTrack.addEventListener("click", (e) => {
-    if (Math.abs(dragCurrentX - dragStartX) > 10) e.stopPropagation();
+  track.addEventListener("click", function (e) {
+    if (Math.abs(dragDelta) > 8) e.stopPropagation();
   });
 
-  eventsTrack.addEventListener("mouseenter", () => {
-    isHovering = true;
-    stopAutoScroll();
-  });
-  eventsTrack.addEventListener("mouseleave", () => {
-    isHovering = false;
-    if (!isDragging) resetAutoScroll();
-  });
-
-  // ── Bookmark ──────────────────────────────────────────────────
-  eventsTrack.addEventListener("click", (e) => {
+  // Bookmark
+  track.addEventListener("click", function (e) {
     const btn = e.target.closest(".bookmark-btn");
     if (!btn) return;
     e.stopPropagation();
@@ -303,28 +298,18 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
       icon.classList.replace("bx-bookmark-alt", "bx-bookmark");
     }
+    btn.blur();
   });
 
-  // ── Init ───────────────────────────────────────────────────────
-  generateDots();
-  goTo(currentIndex, false);
-  startAutoScroll();
-
+  // Resize
   let resizeTimer;
-  window.addEventListener("resize", () => {
+  window.addEventListener("resize", function () {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => goTo(currentIndex, false), 150);
+    resizeTimer = setTimeout(function () {
+      jumpTo(current);
+    }, 120);
   });
 
-  // ===== NAVIGATION =====
-  document.querySelectorAll(".nav-item:not(.explorer-nav)").forEach((item) => {
-    item.addEventListener("click", () => {
-      document
-        .querySelectorAll(".nav-item")
-        .forEach((n) => n.classList.remove("active"));
-      item.classList.add("active");
-      const targetPage = item.getAttribute("data-page");
-      console.log("Navigate to:", targetPage);
-    });
-  });
+  // Init
+  jumpTo(N);
 });
