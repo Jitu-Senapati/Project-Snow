@@ -14,6 +14,7 @@ body {
   background: #050505;
   color: #fff;
   overflow-x: hidden;
+  overflow-y: auto; /* FIX: explicitly allow vertical scroll */
 }
 
 /* Page Structure */
@@ -21,6 +22,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  -webkit-overflow-scrolling: touch; /* FIX: smooth scroll on iOS */
 }
 
 .main-content {
@@ -108,7 +110,7 @@ body {
   flex-direction: column;
   padding: 6rem 0 0;
   margin-bottom: 0;
-  overflow: hidden;
+  overflow: clip; /* FIX: use clip instead of hidden — won't trap scroll events */
 }
 
 .hero-content {
@@ -198,7 +200,7 @@ body {
   flex: 1;
   min-height: 60vh;
   z-index: 1;
-  overflow: hidden;
+  overflow: clip; /* FIX: use clip instead of hidden */
 }
 
 .parallax-grid {
@@ -279,10 +281,19 @@ body {
   pointer-events: none;
 }
 
-/* ==================== ABOUT SECTION ====================
-   KEY FIX: NO height: 100vh — only min-height so it can grow
-   KEY FIX: NO margin-bottom — was creating the black gap
-*/
+/* FIX: Top fade to hide the hard straight edge of the image grid */
+.hero-fade-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 25%;
+  background: linear-gradient(to bottom, #050505 0%, transparent 100%);
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* About Section */
 .about-section {
   min-height: 100vh;
   padding: 6rem 4%;
@@ -512,9 +523,7 @@ body {
   margin-top: 0.1rem;
 }
 
-/* ==================== CREATORS SECTION ====================
-   KEY FIX: padding-top reduced, no margin gaps
-*/
+/* Creators Section */
 .creators-section {
   padding: 5rem 4% 3rem;
   background: linear-gradient(180deg, #050505 0%, #0a0712 50%, #0d0818 100%);
@@ -642,7 +651,6 @@ body {
   gap: 0.75rem;
 }
 
-/* Social link - clean, no sticky hover glitch */
 .social-link {
   width: 2.5rem;
   height: 2.5rem;
@@ -667,7 +675,6 @@ body {
   box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
 }
 
-/* On touch devices: disable hover, only show gradient on actual tap */
 @media (hover: none) {
   .social-link:hover {
     transform: none;
@@ -779,7 +786,7 @@ body {
   }
 }
 
-/* ==================== FOOTER ==================== */
+/* Footer */
 .site-footer {
   background: rgba(5, 5, 10, 0.88) !important;
   backdrop-filter: blur(12px) !important;
@@ -835,7 +842,7 @@ body {
   white-space: nowrap !important;
 }
 
-/* ==================== MODALS ==================== */
+/* Modals */
 .privacy-modal,
 .contact-modal {
   display: none;
@@ -1248,7 +1255,7 @@ body {
   font-family: monospace;
 }
 
-/* ==================== RESPONSIVE ==================== */
+/* Responsive */
 @media (max-width: 1024px) {
   .about-container {
     grid-template-columns: 1fr;
@@ -1335,7 +1342,6 @@ body {
     padding: 4rem 4% 2rem;
   }
 
-  /* Full width creator cards on mobile */
   .creators-wrapper {
     max-width: 100%;
     width: 100%;
@@ -1365,7 +1371,6 @@ body {
     margin: 0 0 2rem 0;
   }
 
-  /* Footer stacked on mobile */
   .site-footer {
     flex-direction: column !important;
     gap: 8px !important;
@@ -1454,4 +1459,9 @@ body {
   .about-animation {
     height: 200px;
   }
+}
+html,
+body {
+  overflow: visible !important;
+  height: auto !important;
 }

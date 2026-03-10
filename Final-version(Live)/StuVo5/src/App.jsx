@@ -9,6 +9,7 @@ const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const Explore = lazy(() => import("./pages/Explore"));
+const CompleteRegister = lazy(() => import("./pages/CompleteRegister"));
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/complete-register" element={<CompleteRegister />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/explore" element={<Explore />} />
         <Route path="/FullScreenLoader" element={<FullScreenLoader />} />      

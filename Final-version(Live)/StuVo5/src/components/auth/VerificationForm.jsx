@@ -1,39 +1,28 @@
-import { useState } from "react";
+import { registerUserWithEmailAndPassword } from "../../firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import logo from "../../assets/logo192px.png";
 
-const VerificationForm = ({ registeredData, onBackToLogin }) => {
-  const [name, setName] = useState("");
-  const [roll, setRoll] = useState("");
-  const [branch, setBranch] = useState("");
-  const [year, setYear] = useState("");
+const VerificationForm = ({ registeredData, onBackToLogin, initialProfileData, onProfileChange }) => {
+  
+  const navigate = useNavigate();
+  
+  const [fullName, setFullName] = useState(initialProfileData?.fullName || ""); const [roll, setRoll] = useState(initialProfileData?.roll || "");
+  const [branch, setBranch] = useState(initialProfileData?.branch || "");
+  const [year, setYear] = useState(initialProfileData?.year || "");
+  const [photoPreview, setPhotoPreview] = useState(initialProfileData?.photoPreview || "");
   const [photo, setPhoto] = useState(null);
-  const [photoPreview, setPhotoPreview] = useState("");
   const [nameError, setNameError] = useState("");
   const [rollError, setRollError] = useState("");
   const [branchError, setBranchError] = useState("");
   const [yearError, setYearError] = useState("");
 
-  const existingUsers = [
-    {
-      name: "John Doe",
-      roll: "CS2024001",
-      email: "john@gmail.com",
-      phone: "9876543210",
-    },
-    {
-      name: "Jane Smith",
-      roll: "EC2024002",
-      email: "jane@gmail.com",
-      phone: "8765432109",
-    },
-    {
-      name: "Mike Johnson",
-      roll: "EE2024003",
-      email: "mike@yahoo.com",
-      phone: "7654321098",
-    },
-  ];
-
+  useEffect(() => {
+    if (onProfileChange) {
+      onProfileChange({ fullName, roll, branch, year, photoPreview });
+    }
+  }, [fullName, roll, branch, year, photoPreview]);
+  
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -48,10 +37,10 @@ const VerificationForm = ({ registeredData, onBackToLogin }) => {
     }
   };
 
-  const checkDuplicates = (name, roll, email, phone) => {
+  const checkDuplicates = (fullName, roll, email, phone) => {
     const duplicates = [];
     for (let user of existingUsers) {
-      if (user.name.toLowerCase() === name.toLowerCase())
+      if (user.name.toLowerCase() === fullName.toLowerCase())
         duplicates.push("Name");
       if (roll && user.roll.toLowerCase() === roll.toLowerCase())
         duplicates.push("Roll Number");
@@ -62,7 +51,7 @@ const VerificationForm = ({ registeredData, onBackToLogin }) => {
     return duplicates;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setNameError("");
     setRollError("");
@@ -71,10 +60,10 @@ const VerificationForm = ({ registeredData, onBackToLogin }) => {
 
     let isValid = true;
 
-    if (!name.trim()) {
+    if (!fullName.trim()) {
       setNameError("Please enter your full name");
       isValid = false;
-    } else if (name.trim().length < 3) {
+    } else if (fullName.trim().length < 3) {
       setNameError("Name must be at least 3 characters");
       isValid = false;
     }
@@ -95,34 +84,22 @@ const VerificationForm = ({ registeredData, onBackToLogin }) => {
     }
 
     if (isValid) {
-      const duplicates = checkDuplicates(
-        name.trim(),
-        roll.trim(),
-        registeredData.email || "",
-        registeredData.phone || "",
-      );
-
-      if (duplicates.length > 0) {
-        alert(
-          "⚠️ Registration Failed!\n\nThe following data already exists:\n" +
-            duplicates.join(", ") +
-            "\n\nPlease use different information.",
+      try {
+        await registerUserWithEmailAndPassword(
+          registeredData.email,
+          registeredData.password,
+          registeredData.username,
+          registeredData.phone,
+          fullName,
+          roll,
+          branch,
+          year
         );
-        if (duplicates.includes("Name")) {
-          setNameError("This name is already registered");
-        }
-        if (duplicates.includes("Roll Number")) {
-          setRollError("This roll number is already registered");
-        }
-        isValid = false;
+        alert("✅ Registration Successful! Please login.");
+        navigate("/login");
+      } catch (err) {
+        alert(err.message);
       }
-    }
-
-    if (isValid) {
-      alert(
-        "✅ Registration Successful!\n\nYour account has been created. Please login with your credentials.",
-      );
-      onBackToLogin();
     }
   };
 
@@ -162,13 +139,14 @@ const VerificationForm = ({ registeredData, onBackToLogin }) => {
               >
                 <i className="bx bx-user-circle"></i>
               </div>
-              <img
-                src={photoPreview}
-                alt="Profile"
-                className="avatar-preview-img"
-                id="avatarPreviewImg"
-                style={{ display: photoPreview ? "block" : "none" }}
-              />
+              {photoPreview && (
+                <img
+                  src={photoPreview}
+                  alt="Profile"
+                  className="avatar-preview-img"
+                  id="avatarPreviewImg"
+                />
+              )}
               <div className="avatar-overlay" id="avatarOverlay">
                 <i className="bx bx-camera"></i>
                 <span>Change</span>
@@ -195,9 +173,9 @@ const VerificationForm = ({ registeredData, onBackToLogin }) => {
                   type="text"
                   id="verifyName"
                   placeholder="Enter your full name"
-                  value={name}
+                  value={fullName}
                   onChange={(e) => {
-                    setName(e.target.value);
+                    setFullName(e.target.value);
                     setNameError("");
                   }}
                   className={nameError ? "error" : ""}

@@ -11,15 +11,15 @@ const VerificationModal = ({ show, onClose, onVerify, type, target }) => {
     }
   }, [show]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!code.trim()) {
       setError("Please enter the code");
       return;
     }
 
-    const success = onVerify(code.trim());
+    const success = await onVerify(code.trim());
     if (!success) {
-      setError("Incorrect code. Try: 123456");
+      setError("Invalid OTP. Please try again.");
     }
   };
 

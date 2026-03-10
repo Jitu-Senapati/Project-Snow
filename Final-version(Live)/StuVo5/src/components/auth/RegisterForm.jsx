@@ -1,6 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const RegisterForm = ({
+  initialData,
+  otpSent,
+  sendingOtp,
+  onPhoneChange,
   onSwitchToLogin,
   onShowTerms,
   onOpenVerifyModal,
@@ -9,12 +13,13 @@ const RegisterForm = ({
   resetVerification,
   onRegisterSuccess,
 }) => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState(initialData?.username || "");
+  const [email, setEmail] = useState(initialData?.email || "");
+  const [phone, setPhone] = useState(initialData?.phone || "");
+  const [password, setPassword] = useState(initialData?.password || "");
+
   const [showPassword, setShowPassword] = useState(false);
-  const [termsChecked, setTermsChecked] = useState(false);
+  const [termsChecked, setTermsChecked] = useState(initialData?.termsChecked || false);
   const [usernameError, setUsernameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [phoneError, setPhoneError] = useState("");
@@ -34,8 +39,8 @@ const RegisterForm = ({
       return { valid: false, message: "Username must start with a letter" };
     if (/\s/.test(username))
       return { valid: false, message: "Username cannot contain spaces" };
-    if (username.length > 9)
-      return { valid: false, message: "Username max 9 characters" };
+    if (username.length > 20)
+      return { valid: false, message: "Username max 20 characters" };
     return { valid: true };
   };
 
@@ -54,11 +59,6 @@ const RegisterForm = ({
       valid = false;
     }
 
-    if (!emailVerified) {
-      setEmailError("Please verify your email");
-      valid = false;
-    }
-
     if (!validatePhone(phone)) {
       setPhoneError("Invalid phone number");
       valid = false;
@@ -69,8 +69,8 @@ const RegisterForm = ({
       valid = false;
     }
 
-    if (!password || password.length < 6) {
-      setPasswordError("Password min 6 characters");
+    if (!password || password.length < 8) {
+      setPasswordError("Password min 8 characters");
       valid = false;
     }
 
@@ -78,18 +78,9 @@ const RegisterForm = ({
       setTermsError(true);
       valid = false;
     }
-
     if (valid) {
-      onRegisterSuccess({ email, password, username, phone });
+      onRegisterSuccess({ email, password, username, phone, termsChecked: true });
     }
-  };
-
-  const handleEmailVerify = () => {
-    if (!validateEmail(email.trim())) {
-      setEmailError("Please enter a valid email first");
-      return;
-    }
-    onOpenVerifyModal("email", email);
   };
 
   const handlePhoneVerify = () => {
@@ -98,13 +89,13 @@ const RegisterForm = ({
       setPhoneError("Please enter a valid 10-digit phone number first");
       return;
     }
-    onOpenVerifyModal("phone", "+91 " + phone);
+    onOpenVerifyModal("phone", cleanPhone);
   };
 
   return (
     <div>
       <div className="box-head-2">
-        <h1>Register</h1>
+        <h1 className="register-title">Register</h1>
       </div>
       <form id="registerForm" onSubmit={handleSubmit}>
         {/* Username */}
@@ -145,13 +136,6 @@ const RegisterForm = ({
               />
             </div>
 
-            <button
-              type="button"
-              className={`verify-small-btn ${emailVerified ? "verified" : ""}`}
-              onClick={handleEmailVerify}
-            >
-              {emailVerified ? "Verified ✓" : "Verify"}
-            </button>
           </div>
 
           {emailError && <div className="error-message show">{emailError}</div>}
@@ -172,6 +156,7 @@ const RegisterForm = ({
                   setPhone(val);
                   setPhoneError("");
                   if (phoneVerified) resetVerification();
+                  if (onPhoneChange) onPhoneChange();
                 }}
                 className={phoneError ? "error" : ""}
               />
@@ -181,8 +166,9 @@ const RegisterForm = ({
               type="button"
               className={`verify-small-btn ${phoneVerified ? "verified" : ""}`}
               onClick={handlePhoneVerify}
+              disabled={phoneVerified || sendingOtp}
             >
-              {phoneVerified ? "Verified ✓" : "Verify"}
+              {phoneVerified ? "Verified ✓" : sendingOtp ? "Sending..." : otpSent ? "Resend" : "Verify"}
             </button>
           </div>
 
@@ -249,6 +235,23 @@ const RegisterForm = ({
           <button type="submit">Register</button>
         </div>
       </form>
+
+      {/* Already have account link */}
+      <div className="account">
+        <p>
+          Already have an account?{" "}
+          <a
+            href="#"
+            className="creat-acc"
+            onClick={(e) => {
+              e.preventDefault();
+              onSwitchToLogin();
+            }}
+          >
+            Login
+          </a>
+        </p>
+      </div>
     </div>
   );
 };

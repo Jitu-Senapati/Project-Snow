@@ -1,7 +1,8 @@
-import ForgotPasswordForm from "../components/auth/ForgotPasswordForm";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/auth.css";
+import ForgotPasswordForm from "../components/auth/ForgotPasswordForm";
 import logo from "../assets/logo192px.png";
+import "../styles/auth.css";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();

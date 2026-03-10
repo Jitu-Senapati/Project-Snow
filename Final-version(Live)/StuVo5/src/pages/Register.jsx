@@ -1,75 +1,95 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { createRecaptchaVerifier, sendPhoneOtp } from "../firebase/auth";
 import RegisterForm from "../components/auth/RegisterForm";
-import VerificationForm from "../components/auth/VerificationForm";
 import TermsModal from "../components/auth/TermsModal";
 import VerificationModal from "../components/auth/VerificationModal";
+import VerificationForm from "../components/auth/VerificationForm";
 import "../styles/auth.css";
 import logo from "../assets/logo192px.png";
 
 const Register = () => {
   const navigate = useNavigate();
 
-  const [showVerification, setShowVerification] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const [verifyType, setVerifyType] = useState(null);
   const [verifyTarget, setVerifyTarget] = useState("");
-  const [emailVerified, setEmailVerified] = useState(false);
   const [phoneVerified, setPhoneVerified] = useState(false);
   const [generatedCode, setGeneratedCode] = useState("");
-  const [registeredData, setRegisteredData] = useState({});
+  const [formData, setFormData] = useState(null);
+  const [showProfile, setShowProfile] = useState(false);
+  const [profileData, setProfileData] = useState(null);
 
-  const handleSwitchToLogin = () => {
-    navigate("/login");
-  };
+  const [confirmationResult, setConfirmationResult] = useState(null);
+  const [sendingOtp, setSendingOtp] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
 
   const handleShowTerms = () => setShowTerms(true);
   const handleCloseTerms = () => setShowTerms(false);
   const handleAcceptTerms = () => setShowTerms(false);
 
-  const handleOpenVerifyModal = (type, value) => {
+  const handleOpenVerifyModal = async (type, value) => {
     setVerifyType(type);
     setVerifyTarget(value);
-    setGeneratedCode("123456");
+    setOtpSent(true);
+
+    if (type === "phone") {
+  setSendingOtp(true);
+  try {
+    const verifier = createRecaptchaVerifier("recaptcha-container");
+    // Reset sending state as soon as reCAPTCHA renders
+    verifier.render().then(() => setSendingOtp(false));
+    const result = await sendPhoneOtp("+91" + value, verifier);
+    setConfirmationResult(result);
     setShowVerifyModal(true);
+    setOtpSent(true);
+    return true;
+  } catch (err) {
+    setSendingOtp(false);
+    alert(err.message);
+    return false;
+  } finally {
+    setSendingOtp(false);
+  }
+}
   };
 
   const handleCloseVerifyModal = () => {
     setShowVerifyModal(false);
   };
 
-  const handleVerifyCode = (code) => {
-    if (code === generatedCode) {
-      if (verifyType === "email") setEmailVerified(true);
-      if (verifyType === "phone") setPhoneVerified(true);
+  const handleVerifyCode = async (code) => {
+    try {
+      await confirmationResult.confirm(code);
+      setPhoneVerified(true);
       setShowVerifyModal(false);
       return true;
+    } catch (err) {
+      return false;
     }
-    return false;
   };
 
   const handleRegisterSuccess = (data) => {
-    setRegisteredData(data);
-    setShowVerification(true);
+    setFormData(data);
+    setShowProfile(true);
   };
 
   const handleBackToLogin = () => {
-    setShowVerification(false);
     navigate("/login");
   };
 
   const resetVerification = () => {
-    setEmailVerified(false);
     setPhoneVerified(false);
   };
 
-  // Show verification page if registration is complete
-  if (showVerification) {
+  if (showProfile) {
     return (
       <VerificationForm
-        registeredData={registeredData}
-        onBackToLogin={handleBackToLogin}
+        registeredData={formData}
+        initialProfileData={profileData}
+        onProfileChange={(data) => setProfileData(data)}
+        onBackToLogin={() => setShowProfile(false)}
       />
     );
   }
@@ -88,10 +108,13 @@ const Register = () => {
 
       <div className="login-box">
         <RegisterForm
-          onSwitchToLogin={handleSwitchToLogin}
+          initialData={formData}
+          sendingOtp={sendingOtp}
+          otpSent={otpSent}
+          onPhoneChange={() => setOtpSent(false)}
+          onSwitchToLogin={handleBackToLogin}
           onShowTerms={handleShowTerms}
           onOpenVerifyModal={handleOpenVerifyModal}
-          emailVerified={emailVerified}
           phoneVerified={phoneVerified}
           resetVerification={resetVerification}
           onRegisterSuccess={handleRegisterSuccess}
@@ -111,7 +134,8 @@ const Register = () => {
         type={verifyType}
         target={verifyTarget}
       />
-    </div>
+
+      <div id="recaptcha-container"></div>    </div>
   );
 };
 
