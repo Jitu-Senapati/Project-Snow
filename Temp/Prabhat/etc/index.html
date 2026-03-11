@@ -3,341 +3,390 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>STUVO5 - Study Platform</title>
-    <link
-      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css "
-      rel="stylesheet"
-    />
-
+    <title>STUVO5 - Student Dashboard</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="index.css" />
   </head>
   <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-      <div class="nav-logo">
-        <img src="logo.png" alt="STUVO" class="logo-icon" />
-        <span class="logo-text">STUVO5</span>
-      </div>
-      <a href="temp.html" class="login-btn">Login</a>
-    </nav>
+    <div class="main-app" id="mainApp" style="display: block">
+      <div class="app-header">
+        <div class="app-logo">
+          <img src="logo.png" alt="STUVO" class="header-logo-icon" />
+          STUVO5
+        </div>
+        <div class="header-icons">
+          <div class="bell-wrapper">
+            <i class="bx bx-bell" id="notificationToggle"></i>
+            <span class="notif-dot" id="notifDot"></span>
+          </div>
+          <i class="bx bx-menu" id="menuToggle"></i>
+        </div>
 
-    <!-- Hero Section - Text at TOP, Images BELOW with LOOP -->
-    <section class="hero">
-      <!-- Text at MIDDLE-TOP -->
-      <div class="hero-content">
-        <div class="hero-logo-main">
-          <img src="logo.png" alt="STUVO" class="hero-logo-icon" />
-          <h1 class="hero-title">STUVO5</h1>
+        <div class="notification-panel" id="notificationPanel">
+          <div class="notif-panel-header">
+            <span class="notif-panel-title">Notifications</span>
+            <button class="notif-clear-all" id="clearAllNotifs">Clear All</button>
+          </div>
+          <div class="notif-items-wrapper" id="notifItemsWrapper">
+            <div class="notification-item regular-notif">
+              <i class="bx bx-bus"></i>
+              <div class="notification-text">
+                <strong>Bus #101</strong>
+                <p>Arriving in 5 minutes</p>
+              </div>
+            </div>
+            <div class="notification-item regular-notif">
+              <i class="bx bx-calendar"></i>
+              <div class="notification-text">
+                <strong>New Event</strong>
+                <p>Tech Fest starts tomorrow</p>
+              </div>
+            </div>
+            <div class="notification-item regular-notif">
+              <i class="bx bx-book"></i>
+              <div class="notification-text">
+                <strong>Attendance Updated</strong>
+                <p>Your attendance has been updated</p>
+              </div>
+            </div>
+          </div>
+          <div class="notification-footer" id="notifViewAll">View all notifications</div>
+        </div>
+
+        <div class="menu-panel" id="menuPanel">
+          <div class="menu-item" id="settingsBtn">
+            <i class="bx bx-cog"></i><span>Settings</span>
+          </div>
+          <div class="menu-item" id="feedbackBtn">
+            <i class="bx bx-message-dots"></i><span>Feedback</span>
+          </div>
+          <div class="menu-item" id="helpBtn">
+            <i class="bx bx-help-circle"></i><span>Help</span>
+          </div>
+          <div class="menu-item logout" id="logoutBtn">
+            <i class="bx bx-log-out"></i><span>Logout</span>
+          </div>
         </div>
       </div>
 
-      <!-- Images BELOW text with INFINITE LOOP ANIMATION -->
-      <div class="hero-images-container">
-        <div class="parallax-grid" id="parallaxGrid">
-          <div class="grid-column col-1" data-speed="0.3">
-            <div class="grid-item"><img src="books.jpg" alt="Books" /></div>
-            <div class="grid-item"><img src="focous.jpeg" alt="Focus" /></div>
-            <div class="grid-item">
-              <img src="students.jpg" alt="Students" />
-            </div>
-          </div>
-          <div class="grid-column col-2" data-speed="0.5">
-            <div class="grid-item">
-              <img src="study core.jpg" alt="Study Core" />
-            </div>
-            <div class="grid-item"><img src="book-2.jpg" alt="Book" /></div>
-            <div class="grid-item"><img src="coding.jpeg" alt="Coding" /></div>
-          </div>
-          <div class="grid-column col-3" data-speed="0.2">
-            <div class="grid-item">
-              <img src="cotation.jpeg" alt="Now or Never" />
-            </div>
-            <div class="grid-item"><img src="laptops.jpg" alt="laptops" /></div>
-            <div class="grid-item">
-              <img src="levelup.jpeg" alt="Level Up" />
-            </div>
-          </div>
-          <div class="grid-column col-4" data-speed="0.4">
-            <div class="grid-item"><img src="mark.jpeg" alt="Grades" /></div>
-            <div class="grid-item"><img src="desk.jpeg" alt="desk" /></div>
-            <div class="grid-item"><img src="chemistry.png" alt="Study" /></div>
-          </div>
-          <div class="grid-column col-5" data-speed="0.35">
-            <div class="grid-item"><img src="physics.png" alt="Library" /></div>
-            <div class="grid-item"><img src="flexing.jpg" alt="Coding" /></div>
-            <div class="grid-item"><img src="rocket.png" alt="Focus" /></div>
-          </div>
-        </div>
-        <div class="hero-fade"></div>
-      </div>
+      <div class="page-content active" id="profilePage">
 
-     <!-- <div class="scroll-indicator">
-        <i class="bx bx-chevron-down"></i>
-      </div>  -->
-    </section>
-
-    <!-- About Section - DYNAMIC SCALING -->
-    <section class="about-section" id="about">
-      <div class="about-container">
-        <div class="about-animation">
-          <div class="floating-element element-1">
-            <i class="bx bxs-book-bookmark"></i>
-          </div>
-          <div class="floating-element element-2">
-            <i class="bx bxs-graduation"></i>
-          </div>
-          <div class="floating-element element-3">
-            <i class="bx bxs-file-doc"></i>
-          </div>
-          <div class="floating-element element-4">
-            <i class="bx bxs-group"></i>
-          </div>
-          <div class="floating-element element-5">
-            <i class="bx bxs-bulb"></i>
-          </div>
-          <div class="animated-orb orb-1"></div>
-          <div class="animated-orb orb-2"></div>
-          <div class="animated-orb orb-3"></div>
-        </div>
-        <div class="about-content">
-          <h2 class="about-title">
-            Your Ultimate Study <br /><span>Companion Platform</span>
-          </h2>
-          <p class="about-description">
-            STUVO 5 is a comprehensive platform designed exclusively for college
-            students to streamline their academic journey. Access study
-            materials, collaborate with peers, share notes, find valuable
-            resources, and achieve academic excellence - all in one integrated
-            platform.
-          </p>
-          <div class="about-features">
-            <div class="feature-item">
-              <i class="bx bx-check-circle"></i>
-              <span>Access quality study materials anytime, anywhere</span>
+        <!-- COVER PHOTO SECTION -->
+        <div class="cover-photo-section">
+          <div class="cover-photo-container" id="coverPhotoContainer">
+            <div class="cover-photo-placeholder" id="coverPhotoPlaceholder">
+              <i class="bx bx-image-add"></i>
+              <span>Add Cover Photo</span>
             </div>
-            <div class="feature-item">
-              <i class="bx bx-check-circle"></i>
-              <span>Collaborate seamlessly with fellow students</span>
-            </div>
-            <div class="feature-item">
-              <i class="bx bx-check-circle"></i>
-              <span>Share and discover comprehensive notes</span>
-            </div>
-            <div class="feature-item">
-              <i class="bx bx-check-circle"></i>
-              <span>Find resources tailored to your curriculum</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Creators Section - WITH LARGER IMAGES -->
-    <section class="creators-section" id="creators">
-      <h2 class="creators-title">Meet the Creators</h2>
-
-      <div class="creators-wrapper">
-        <div class="creators-row">
-          <div class="creator-card">
-            <div class="creator-image">
-              <img src="prabhat.jpg" alt="Creator 1" />
-            </div>
-            <h3 class="creator-name">Prabhat Kumar Behera</h3>
-            <p class="creator-role">Frontend Developer</p>
-            <div class="creator-socials">
-              <a
-                href="https://www.instagram.com/prabhat4a/"
-                class="social-link"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram"
-                ><i class="bx bxl-instagram"></i
-              ></a>
-              <a
-                href="https://github.com/Prabhat4a"
-                class="social-link"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GitHub"
-                ><i class="bx bxl-github"></i
-              ></a>
-              <a
-                href="https://www.linkedin.com/in/prabhat-kumar-behera-a806a3363/"
-                class="social-link"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn"
-                ><i class="bx bxl-linkedin"></i
-              ></a>
-              <a href="#" class="social-link" aria-label="STUVO"
-                ><img src="logo.png" alt="STUVO"
-              /></a>
+            <img id="coverPhotoImg" class="cover-photo-img" src="" alt="Cover" style="display:none;" />
+            <!-- Cover gradient overlay -->
+          <div class="cover-gradient-overlay"></div>
+          <div class="cover-photo-overlay own-profile">
+              <button class="cover-photo-btn" id="changeCoverBtn">
+                <i class="bx bx-camera"></i> <span id="coverBtnText">Add Cover Photo</span>
+              </button>
             </div>
           </div>
 
-          <div class="creator-card">
-            <div class="creator-image">
-              <img src="jitu.jpeg" alt="Creator 2" />
+          <!-- PROFILE AVATAR overlapping cover -->
+          <div class="profile-avatar-wrapper">
+            <div class="profile-avatar-ring" id="profileAvatarRing">
+              <div class="profile-avatar-inner" id="profileAvatarInner">PB</div>
+              <img id="profileAvatarImg" class="profile-avatar-photo" src="" alt="Profile" style="display:none;" />
             </div>
-            <h3 class="creator-name">Jitu Senapati</h3>
-            <p class="creator-role">UI/UX Designer</p>
-            <div class="creator-socials">
-              <a
-                href="#"
-                class="social-link"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram"
-                ><i class="bx bxl-instagram"></i
-              ></a>
-              <a
-                href="https://github.com/JituSenapati"
-                class="social-link"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GitHub"
-                ><i class="bx bxl-github"></i
-              ></a>
-              <a
-                href="https://www.linkedin.com/in/jitu-senapati-702854363/"
-                class="social-link"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn"
-                ><i class="bx bxl-linkedin"></i
-              ></a>
-              <a href="#" class="social-link" aria-label="STUVO"
-                ><img src="logo.png" alt="STUVO"
-              /></a>
-            </div>
-          </div>
-
-          <div class="creator-card">
-            <div class="creator-image">
-              <img src="Sunny.jpg" alt="Creator 3" />
-            </div>
-            <h3 class="creator-name">N.Eswar Sunny</h3>
-            <p class="creator-role">Backend Developer</p>
-            <div class="creator-socials">
-              <a
-                href="https://www.instagram.com/the_e_square_/"
-                class="social-link"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram"
-                ><i class="bx bxl-instagram"></i
-              ></a>
-              <a
-                href="https://github.com/NESWAR-SUNNY"
-                class="social-link"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GitHub"
-                ><i class="bx bxl-github"></i
-              ></a>
-              <a
-                href="https://www.linkedin.com/in/n-eswar-sunny-483a1937b/"
-                class="social-link"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn"
-                ><i class="bx bxl-linkedin"></i
-              ></a>
-              <a href="#" class="social-link" aria-label="STUVO"
-                ><img src="logo.png" alt="STUVO"
-              /></a>
+            <div class="status-dot" id="statusDot" title="Online"></div>
+            <div class="avatar-edit-btn own-profile" id="changeAvatarBtn" title="Change profile photo">
+              <i class="bx bx-camera"></i>
             </div>
           </div>
         </div>
 
-        <div class="creators-row second">
-          <div class="creator-card">
-            <div class="creator-image">
-              <img src="Aryan.jpg" alt="Creator 4" />
-            </div>
-            <h3 class="creator-name">Aryan Kumar Rajak</h3>
-            <p class="creator-role">Content Strategist</p>
-            <div class="creator-socials">
-              <a
-                href="https://www.instagram.com/aryan_kumar_rajak/"
-                class="social-link"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram"
-                ><i class="bx bxl-instagram"></i
-              ></a>
-              <a
-                href="https://github.com/AryanKumarRajak"
-                class="social-link"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GitHub"
-                ><i class="bx bxl-github"></i
-              ></a>
-              <a
-                href="https://www.linkedin.com/in/aryan-kumar-rajak-702854363/"
-                class="social-link"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn"
-                ><i class="bx bxl-linkedin"></i
-              ></a>
-              <a href="#" class="social-link" aria-label="STUVO"
-                ><img src="logo.png" alt="STUVO"
-              /></a>
-            </div>
+        <!-- PROFILE INFO -->
+        <div class="profile-header-section">
+          <div class="profile-info">
+            <h2 class="profile-name-main">Prabhat Behera</h2>
+            <p class="profile-username">@Prabhat4a</p>
+            <p class="profile-bio">Computer Science Student | Tech Enthusiast | Coffee Lover ☕</p>
           </div>
 
-          <div class="creator-card">
-            <div class="creator-image">
-              <img src="sudhansu.jpeg" alt="Creator 5" />
+          <div class="profile-buttons own-profile">
+            <button class="edit-profile-btn-main">
+              <i class="bx bx-edit"></i> Edit Profile
+            </button>
+            <button class="share-profile-btn">
+              <i class="bx bx-share-alt"></i>
+            </button>
+          </div>
+          <div class="profile-buttons other-profile" style="display: none">
+            <button class="add-friend-btn" id="addFriendBtn">
+              <i class="bx bx-user-plus"></i> Add Friend
+            </button>
+            <button class="message-btn">
+              <i class="bx bx-message-rounded"></i> Message
+            </button>
+            <button class="more-btn">
+              <i class="bx bx-dots-horizontal-rounded"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <h3 class="section-title">Connect With Me</h3>
+          <div class="social-links-card">
+            <div class="social-link-item" id="socialInstagram">
+              <div class="social-icon-wrap instagram">
+                <i class="bx bxl-instagram"></i>
+              </div>
+              <div class="social-link-info">
+                <span class="social-label">Instagram</span>
+                <span class="social-value" id="val-instagram">Not linked</span>
+              </div>
+              <button class="social-edit-btn own-profile" data-social="instagram" title="Edit">
+                <i class="bx bx-pencil"></i>
+              </button>
+              <a class="social-go-btn" id="go-instagram" href="#" target="_blank" style="display:none;" title="Visit">
+                <i class="bx bx-link-external"></i>
+              </a>
             </div>
-            <h3 class="creator-name">Sudhansu Sekhara Sunani</h3>
-            <p class="creator-role">Marketing Lead</p>
-            <div class="creator-socials">
-              <a
-                href="https://www.instagram.com/sudhansu_sudhansu_sekhara_sunani/"
-                class="social-link"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram"
-                ><i class="bx bxl-instagram"></i
-              ></a>
-              <a
-                href="https://github.com/Sudhansu-Sekhara-Sunani"
-                class="social-link"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GitHub"
-                ><i class="bx bxl-github"></i
-              ></a>
-              <a
-                href="https://www.linkedin.com/in/sudhansu-sudhansu-sekhara-sunani-702854363/"
-                class="social-link"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn"
-                ><i class="bx bxl-linkedin"></i
-              ></a>
-              <a href="#" class="social-link" aria-label="STUVO"
-                ><img src="logo.png" alt="STUVO"
-              /></a>
+
+            <div class="social-link-item" id="socialLinkedin">
+              <div class="social-icon-wrap linkedin">
+                <i class="bx bxl-linkedin"></i>
+              </div>
+              <div class="social-link-info">
+                <span class="social-label">LinkedIn</span>
+                <span class="social-value" id="val-linkedin">Not linked</span>
+              </div>
+              <button class="social-edit-btn own-profile" data-social="linkedin" title="Edit">
+                <i class="bx bx-pencil"></i>
+              </button>
+              <a class="social-go-btn" id="go-linkedin" href="#" target="_blank" style="display:none;" title="Visit">
+                <i class="bx bx-link-external"></i>
+              </a>
+            </div>
+
+            <div class="social-link-item" id="socialGithub">
+              <div class="social-icon-wrap github">
+                <i class="bx bxl-github"></i>
+              </div>
+              <div class="social-link-info">
+                <span class="social-label">GitHub</span>
+                <span class="social-value" id="val-github">Not linked</span>
+              </div>
+              <button class="social-edit-btn own-profile" data-social="github" title="Edit">
+                <i class="bx bx-pencil"></i>
+              </button>
+              <a class="social-go-btn" id="go-github" href="#" target="_blank" style="display:none;" title="Visit">
+                <i class="bx bx-link-external"></i>
+              </a>
+            </div>
+
+            <div class="social-link-item" id="socialEmail">
+              <div class="social-icon-wrap email">
+                <i class="bx bx-envelope"></i>
+              </div>
+              <div class="social-link-info">
+                <span class="social-label">Email</span>
+                <span class="social-value" id="val-email">Not linked</span>
+              </div>
+              <button class="social-edit-btn own-profile" data-social="email" title="Edit">
+                <i class="bx bx-pencil"></i>
+              </button>
+              <a class="social-go-btn" id="go-email" href="#" style="display:none;" title="Send Email">
+                <i class="bx bx-link-external"></i>
+              </a>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="cta-section">
-        <h3 class="cta-title">
-          Create your account and experience STUVO5 for yourself
-        </h3>
-        <a href="temp.html" class="cta-button">Join STUVO5</a>
+      <div class="bottom-nav">
+        <div class="nav-item" data-page="homePage">
+          <i class="bx bx-home"></i><span>Home</span>
+        </div>
+        <div class="nav-item" data-page="busPage">
+          <i class="bx bx-bus"></i><span>Bus</span>
+        </div>
+        <div class="nav-item explorer-nav" id="explorerNavBtn">
+          <i class="bx bx-compass"></i><span>Explorer</span>
+        </div>
+        <div class="nav-item" data-page="chatPage">
+          <i class="bx bx-message-rounded-dots"></i><span>Chat</span>
+        </div>
+        <div class="nav-item active" data-page="profilePage">
+          <i class="bx bx-user"></i><span>Profile</span>
+        </div>
       </div>
-    </section>
+    </div>
 
-    <footer class="footer">
-      <p>&copy; 2026 STUVO 5. All rights reserved.</p>
-    </footer>
+    <!-- EDIT PROFILE MODAL -->
+    <div class="edit-modal" id="editModal">
+      <div class="edit-modal-content">
+        <div class="modal-header">
+          <h2>Edit Profile</h2>
+          <i class="bx bx-x" id="closeModal" style="font-size: 28px; cursor: pointer"></i>
+        </div>
+        <form id="editProfileForm">
+          <div class="form-group">
+            <label>Profile Picture</label>
+            <div class="profile-pic-upload">
+              <div class="current-pic" id="modalCurrentPic">PB</div>
+              <button type="button" class="upload-pic-btn" id="modalUploadPicBtn">
+                <i class="bx bx-camera"></i> Change Photo
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="editName">Full Name</label>
+            <input type="text" id="editName" value="Prabhat Behera" placeholder="Enter your name" />
+          </div>
+          <div class="form-group">
+            <label for="editUsername">Username</label>
+            <input type="text" id="editUsername" value="@Prabhat4a" placeholder="@username" />
+          </div>
+          <div class="form-group">
+            <label for="editBio">Bio</label>
+            <textarea id="editBio" rows="3" placeholder="Tell us about yourself...">Computer Science Student | Tech Enthusiast | Coffee Lover ☕</textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="cancel-btn" id="cancelBtn">Cancel</button>
+            <button type="button" class="save-btn" id="saveBtn">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- SOCIAL LINK EDIT MODAL -->
+    <div class="social-modal-overlay" id="socialModal">
+      <div class="social-modal">
+        <div class="social-modal-header">
+          <h3 id="socialModalTitle">Edit Link</h3>
+          <i class="bx bx-x close-social-modal" id="closeSocialModal"></i>
+        </div>
+        <div class="form-group">
+          <label id="socialModalLabel">Enter URL</label>
+          <input type="text" id="socialModalInput" placeholder="https://" />
+        </div>
+        <div class="modal-footer">
+          <button class="cancel-btn" id="cancelSocialBtn">Cancel</button>
+          <button class="save-btn" id="saveSocialBtn">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- IMAGE CROP MODAL -->
+    <div class="crop-modal-overlay" id="cropModal">
+      <div class="crop-modal">
+        <div class="crop-modal-header">
+          <h3 id="cropModalTitle">Crop Image</h3>
+          <i class="bx bx-x" id="closeCropModal"></i>
+        </div>
+        <div class="crop-area-wrapper">
+          <div class="crop-canvas-container">
+            <canvas id="cropCanvas"></canvas>
+            <div class="crop-overlay-ring" id="cropOverlayRing"></div>
+          </div>
+          <div class="crop-controls">
+            <label>Zoom</label>
+            <input type="range" id="cropZoom" min="1" max="3" step="0.01" value="1" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="cancel-btn" id="cancelCropBtn">Cancel</button>
+          <button class="save-btn" id="applyCropBtn">Apply</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MORE BUTTON DROPDOWN -->
+    <div class="more-dropdown" id="moreDropdown">
+      <div class="more-dropdown-item block-item" id="blockUserBtn">
+        <i class="bx bx-block"></i>
+        <span>Block User</span>
+      </div>
+      <div class="more-dropdown-item report-item" id="reportUserBtn">
+        <i class="bx bx-flag"></i>
+        <span>Report User</span>
+      </div>
+    </div>
+
+    <!-- BLOCK CONFIRM MODAL -->
+    <div class="action-modal-overlay" id="blockModal">
+      <div class="action-modal">
+        <div class="action-modal-icon block-icon">
+          <i class="bx bx-block"></i>
+        </div>
+        <h3>Block Prabhat Behera?</h3>
+        <p>They won't be able to see your profile, posts, or send you messages. You can unblock them anytime.</p>
+        <div class="action-modal-buttons">
+          <button class="cancel-btn" id="cancelBlockBtn">Cancel</button>
+          <button class="danger-btn" id="confirmBlockBtn">Block User</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- REPORT MODAL -->
+    <div class="action-modal-overlay" id="reportModal">
+      <div class="action-modal">
+        <div class="action-modal-icon report-icon">
+          <i class="bx bx-flag"></i>
+        </div>
+        <h3>Report Profile</h3>
+        <p>Why are you reporting this profile?</p>
+        <div class="report-reasons">
+          <div class="report-reason" data-reason="fake">
+            <i class="bx bx-user-x"></i><span>Fake Profile</span>
+          </div>
+          <div class="report-reason" data-reason="inappropriate">
+            <i class="bx bx-error-circle"></i><span>Inappropriate Content</span>
+          </div>
+          <div class="report-reason" data-reason="harassment">
+            <i class="bx bx-angry"></i><span>Harassment or Bullying</span>
+          </div>
+          <div class="report-reason" data-reason="spam">
+            <i class="bx bx-message-error"></i><span>Spam</span>
+          </div>
+          <div class="report-reason" data-reason="other">
+            <i class="bx bx-question-mark"></i><span>Other</span>
+          </div>
+        </div>
+        <div class="report-other-input" id="reportOtherInput" style="display:none;">
+          <textarea id="reportOtherText" placeholder="Please describe the issue..." rows="3"></textarea>
+        </div>
+        <div class="action-modal-buttons">
+          <button class="cancel-btn" id="cancelReportBtn">Cancel</button>
+          <button class="danger-btn" id="submitReportBtn" disabled>Submit Report</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE PHOTO VIEWER -->
+    <div class="photo-viewer-overlay" id="photoViewerOverlay">
+      <div class="photo-viewer-close" id="photoViewerClose">
+        <i class="bx bx-x"></i>
+      </div>
+      <div class="photo-viewer-content">
+        <div class="photo-viewer-avatar" id="photoViewerAvatar">PB</div>
+        <img id="photoViewerImg" src="" alt="Profile Photo" style="display:none;" />
+      </div>
+    </div>
+
+    <!-- FRIEND REQUEST NOTIFICATION POPUP -->
+    <div class="friend-request-popup" id="friendRequestPopup" style="display:none;">
+      <div class="friend-req-avatar">PB</div>
+      <div class="friend-req-info">
+        <strong>Prabhat Behera</strong>
+        <p>sent you a friend request</p>
+      </div>
+      <div class="friend-req-actions">
+        <button class="friend-req-accept" id="acceptFriendBtn">Accept</button>
+        <button class="friend-req-decline" id="declineFriendBtn">Decline</button>
+      </div>
+    </div>
+
+    <!-- Hidden file inputs -->
+    <input type="file" id="coverFileInput" accept="image/*" style="display:none;" />
+    <input type="file" id="avatarFileInput" accept="image/*" style="display:none;" />
 
     <script src="index.js"></script>
   </body>
