@@ -3,113 +3,157 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>STUVO5 - Chat</title>
-    <link
-      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
-      rel="stylesheet"
-    />
+    <title>STUVO 5 - Messages</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="chat_style.css" />
   </head>
   <body>
-    <div class="main-app">
-      <!-- Header -->
-      <div class="app-header">
-        <div class="app-logo">
-          <img src="logo.png" alt="STUVO" class="header-logo-icon" />
-          STUVO5
-        </div>
-        <div class="header-icons">
-          <i class="bx bx-bell" id="notificationToggle"></i>
-          <i class="bx bx-menu" id="menuToggle"></i>
+    <div class="app-shell" id="appShell">
+
+      <!-- ===== LEFT PANEL ===== -->
+      <div class="left-panel" id="leftPanel">
+        <div class="left-header">
+          <h2>Messages</h2>
+          <div class="left-header-actions">
+            <button class="icon-btn" title="New chat"><i class="bx bx-edit"></i></button>
+          </div>
         </div>
 
-        <!-- Notification Dropdown -->
-        <div class="notification-panel" id="notificationPanel">
-          <div class="notification-item">
-            <i class="bx bx-bus"></i>
-            <div class="notification-text">
-              <strong>Bus #101</strong>
-              <p>Arriving in 5 minutes</p>
-            </div>
-          </div>
-          <div class="notification-item">
-            <i class="bx bx-calendar"></i>
-            <div class="notification-text">
-              <strong>New Event</strong>
-              <p>Tech Fest starts tomorrow</p>
-            </div>
-          </div>
-          <div class="notification-item">
-            <i class="bx bx-book"></i>
-            <div class="notification-text">
-              <strong>Attendance Updated</strong>
-              <p>Your attendance has been updated</p>
-            </div>
-          </div>
-          <div class="notification-footer">View all notifications</div>
+        <div class="search-bar">
+          <i class="bx bx-search"></i>
+          <input type="text" id="chatSearchInput" placeholder="Search contacts..." />
         </div>
 
-        <!-- Menu Dropdown -->
-        <div class="menu-panel" id="menuPanel">
-          <div class="menu-item" id="settingsBtn">
-            <i class="bx bx-cog"></i><span>Settings</span>
+        <div class="chat-list" id="chatList">
+          <div class="chat-item active-chat" data-user-id="1" data-user-name="Amit Kumar" data-user-initials="AK">
+            <div class="chat-avatar av-blue">AK</div>
+            <div class="chat-info">
+              <div class="chat-name-row">
+                <span class="chat-name">Amit Kumar</span>
+                <span class="chat-time">10:33 AM</span>
+              </div>
+              <div class="chat-preview-row">
+                <span class="chat-message">Great! I will wait for you</span>
+                <span class="unread-badge">2</span>
+              </div>
+            </div>
           </div>
-          <div class="menu-item" id="feedbackBtn">
-            <i class="bx bx-message-dots"></i><span>Feedback</span>
+          <div class="chat-item" data-user-id="2" data-user-name="Priya Sharma" data-user-initials="PS">
+            <div class="chat-avatar av-pink">PS</div>
+            <div class="chat-info">
+              <div class="chat-name-row">
+                <span class="chat-name">Priya Sharma</span>
+                <span class="chat-time">9:52 AM</span>
+              </div>
+              <div class="chat-preview-row">
+                <span class="chat-message">Got it, thanks!</span>
+              </div>
+            </div>
           </div>
-          <div class="menu-item" id="helpBtn">
-            <i class="bx bx-help-circle"></i><span>Help</span>
+          <div class="chat-item" data-user-id="3" data-user-name="Rahul Verma" data-user-initials="RV">
+            <div class="chat-avatar av-green">RV</div>
+            <div class="chat-info">
+              <div class="chat-name-row">
+                <span class="chat-name">Rahul Verma</span>
+                <span class="chat-time">8:26 AM</span>
+              </div>
+              <div class="chat-preview-row">
+                <span class="chat-message">Let me know if you need anything</span>
+              </div>
+            </div>
           </div>
-          <div class="menu-item logout" id="logoutBtn">
-            <i class="bx bx-log-out"></i><span>Logout</span>
-          </div>
+        </div>
+        <div id="emptyContacts" class="empty-contacts" style="display:none;">
+          <i class="bx bx-search-alt"></i>
+          <p>No chats found</p>
+          <span>Try a different name</span>
         </div>
       </div>
 
-      <!-- Chat Page Content -->
-      <div class="page-content active" id="chatPage">
-        <h2 style="margin-bottom: 20px">Messages</h2>
-        <div class="chat-list">
-          <div class="chat-item" data-name="Amit Kumar" data-initials="AK">
-            <div class="chat-avatar">AK</div>
-            <div class="chat-info">
-              <div class="chat-name">Amit Kumar</div>
-              <div class="chat-message">Hey, are you coming to the lab?</div>
-            </div>
-            <div style="color: #888; font-size: 12px">2m</div>
-          </div>
-          <div class="chat-item" data-name="Priya Sharma" data-initials="PS">
-            <div class="chat-avatar">PS</div>
-            <div class="chat-info">
-              <div class="chat-name">Priya Sharma</div>
-              <div class="chat-message">Can you share the notes?</div>
-            </div>
-            <div style="color: #888; font-size: 12px">15m</div>
-          </div>
-        </div>
-      </div>
+      <!-- ===== RIGHT PANEL ===== -->
+      <div class="right-panel" id="rightPanel">
 
-      <!-- Bottom Navigation -->
-      <div class="bottom-nav">
-        <div class="nav-item" data-page="home">
-          <i class="bx bx-home"></i><span>Home</span>
+        <!-- Empty state (no chat selected) -->
+        <div class="no-chat-selected" id="noChatSelected">
+          <div class="no-chat-inner">
+            <div class="no-chat-icon"><i class="bx bx-message-rounded-dots"></i></div>
+            <h3>Select a chat to start messaging</h3>
+            <p>Choose from your existing conversations or search for someone</p>
+          </div>
         </div>
-        <div class="nav-item" data-page="bus">
-          <i class="bx bx-bus"></i><span>Bus</span>
-        </div>
-        <div class="nav-item explorer-nav" id="explorerNavBtn">
-          <i class="bx bx-compass"></i><span>Explorer</span>
-        </div>
-        <div class="nav-item active" data-page="chat">
-          <i class="bx bx-message-rounded-dots"></i><span>Chat</span>
-        </div>
-        <div class="nav-item" data-page="profile">
-          <i class="bx bx-user"></i><span>Profile</span>
+
+        <!-- Chat conversation view -->
+        <div class="chat-view" id="chatView">
+          <!-- Header -->
+          <div class="chat-header">
+            <button class="back-button" id="backButton"><i class="bx bx-arrow-back"></i></button>
+            <div class="chat-avatar" id="chatHeaderAvatar">AK</div>
+            <div class="chat-header-info">
+              <div class="chat-header-name" id="chatHeaderName">Amit Kumar</div>
+              <div class="chat-header-status" id="chatHeaderStatus">Online</div>
+            </div>
+            <div class="chat-header-right">
+              <button class="icon-btn" id="searchInChatToggle" title="Search"><i class="bx bx-search"></i></button>
+              <div class="chat-menu">
+                <button class="icon-btn" id="menuButton"><i class="bx bx-dots-vertical-rounded"></i></button>
+                <div class="menu-dropdown" id="menuDropdown">
+                  <div class="menu-item" id="blockUserBtn"><i class="bx bx-block"></i><span>Block user</span></div>
+                  <div class="menu-item" id="clearChatBtn"><i class="bx bx-trash"></i><span>Clear chat</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Search bar -->
+          <div class="chat-search-bar" id="chatSearchBar">
+            <i class="bx bx-search"></i>
+            <input type="text" id="chatMessageSearch" placeholder="Search in conversation..." />
+            <button class="icon-btn" id="closeSearchBtn"><i class="bx bx-x"></i></button>
+          </div>
+
+          <!-- Messages -->
+          <div class="messages-container" id="messagesContainer"></div>
+
+          <!-- Emoji panel -->
+          <div class="emoji-panel" id="emojiPanel">
+            <span>😀</span><span>😍</span><span>😂</span><span>😎</span>
+            <span>😢</span><span>😡</span><span>👍</span><span>❤️</span>
+            <span>🔥</span><span>🎉</span><span>🙏</span><span>😊</span>
+          </div>
+
+          <!-- Input -->
+          <div class="message-input-container" id="messageInputContainer">
+            <div class="input-row">
+              <i class="bx bx-smile" id="emojiToggle"></i>
+              <input type="text" id="messageInput" placeholder="Type a message..." />
+              <button class="send-button" id="sendButton"><i class="bx bx-send"></i></button>
+            </div>
+          </div>
+
+          <!-- Blocked overlay -->
+          <div class="blocked-overlay" id="blockedOverlay">
+            <div class="blocked-inner">
+              <i class="bx bx-block"></i>
+              <h3>User Blocked</h3>
+              <p>You have blocked this user. Unblock to send messages.</p>
+              <button class="unblock-button" id="unblockButton">Unblock User</button>
+            </div>
+          </div>
+
+          <!-- Clear chat confirm -->
+          <div class="confirm-overlay" id="confirmOverlay">
+            <div class="confirm-box">
+              <h3>Clear this chat?</h3>
+              <p>This will permanently delete all messages in this chat.</p>
+              <div class="confirm-actions">
+                <button class="btn-cancel" id="cancelClearChat">Cancel</button>
+                <button class="btn-danger" id="confirmClearChat">Clear chat</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-
-    <!-- Chat Window Overlay (Dynamically Created via JS) -->
 
     <script src="chat_style.js"></script>
   </body>
