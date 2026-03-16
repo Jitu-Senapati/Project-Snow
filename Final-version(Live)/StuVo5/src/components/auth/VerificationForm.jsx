@@ -1,12 +1,13 @@
-import { registerUserWithEmailAndPassword } from "../../firebase/auth";
+import { linkEmailPasswordToPhoneAccount, registerUserWithEmailAndPassword, linkGoogleAfterRegistration} from "../../firebase/auth";
+
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import logo from "../../assets/logo192px.png";
 
 const VerificationForm = ({ registeredData, onBackToLogin, initialProfileData, onProfileChange }) => {
-  
+
   const navigate = useNavigate();
-  
+
   const [fullName, setFullName] = useState(initialProfileData?.fullName || ""); const [roll, setRoll] = useState(initialProfileData?.roll || "");
   const [branch, setBranch] = useState(initialProfileData?.branch || "");
   const [year, setYear] = useState(initialProfileData?.year || "");
@@ -22,7 +23,7 @@ const VerificationForm = ({ registeredData, onBackToLogin, initialProfileData, o
       onProfileChange({ fullName, roll, branch, year, photoPreview });
     }
   }, [fullName, roll, branch, year, photoPreview]);
-  
+
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -83,24 +84,26 @@ const VerificationForm = ({ registeredData, onBackToLogin, initialProfileData, o
       isValid = false;
     }
 
-    if (isValid) {
-      try {
-        await registerUserWithEmailAndPassword(
-          registeredData.email,
-          registeredData.password,
-          registeredData.username,
-          registeredData.phone,
-          fullName,
-          roll,
-          branch,
-          year
-        );
-        alert("✅ Registration Successful! Please login.");
-        navigate("/login");
-      } catch (err) {
-        alert(err.message);
-      }
-    }
+if (isValid) {
+  try {
+    await linkEmailPasswordToPhoneAccount(
+      registeredData.email,
+      registeredData.password,
+      registeredData.username,
+      registeredData.phone,
+      fullName,
+      roll,
+      branch,
+      year
+    );
+    // Link Google if user came from Google login
+    await linkGoogleAfterRegistration();
+    alert("✅ Registration Successful! Please login.");
+    navigate("/login");
+  } catch (err) {
+    alert(err.message);
+  }
+}
   };
 
   return (

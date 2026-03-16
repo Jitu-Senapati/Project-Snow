@@ -1,15 +1,16 @@
 import { Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import './App.css'
-
-import Landing from "./pages/Landing"; // NOT lazy loading for better performance on initial load
+import Landing from "./pages/auth/Landing";
 import FullScreenLoader from "./components/FullScreenLoader";
+import { ProtectedRoute, GuestRoute } from "./routes/AppRoutes";
 
-const Login = lazy(() => import("./pages/Login"));
-const Register = lazy(() => import("./pages/Register"));
-const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
-const Explore = lazy(() => import("./pages/Explore"));
-const CompleteRegister = lazy(() => import("./pages/CompleteRegister"));
+const Login = lazy(() => import("./pages/auth/Login"));
+const Register = lazy(() => import("./pages/auth/Register"));
+const ForgotPassword = lazy(() => import("./pages/auth/ForgotPassword"));
+const LinkAccount = lazy(() => import("./pages/auth/LinkAccount"));
+const Explore = lazy(() => import("./pages/explore/Explore"));
+const AdminExplore = lazy(() => import("./pages/explore/AdminExplore"));
 
 function App() {
   return (
@@ -18,10 +19,10 @@ function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/complete-register" element={<CompleteRegister />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/explore" element={<Explore />} />
-        <Route path="/FullScreenLoader" element={<FullScreenLoader />} />      
+        <Route path="/forgot-password" element={<GuestRoute><ForgotPassword /></GuestRoute>} />
+        <Route path="/link-account" element={<LinkAccount />} />
+        <Route path="/explore" element={<ProtectedRoute><Explore /></ProtectedRoute>} />
+        <Route path="/admin-explore" element={<ProtectedRoute><AdminExplore /></ProtectedRoute>} />
       </Routes>
     </Suspense>
   )

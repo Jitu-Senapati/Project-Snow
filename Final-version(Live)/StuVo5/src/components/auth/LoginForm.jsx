@@ -1,9 +1,9 @@
 import React, { useState, forwardRef, useEffect } from "react";
-import { createPortal } from "react-dom";
 
 const LoginForm = forwardRef(
-  ({ onSwitchToRegister, onForgotPassword, onLogin, onSendOtp, onVerifyOtp, sendingOtp }, ref) => {
+  ({ onSwitchToRegister, onForgotPassword, onLogin, onSendOtp, onVerifyOtp, sendingOtp, onGoogleLogin }, ref) => {
     const [activeTab, setActiveTab] = useState("email");
+    const [rememberMe, setRememberMe] = useState(false);
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -19,41 +19,16 @@ const LoginForm = forwardRef(
     const [otpError, setOtpError] = useState("");
 
     const [countdown, setCountdown] = useState(0);
-
-    // ── NEW: tracks whether OTP has been sent ──
     const [otpSent, setOtpSent] = useState(false);
-
-    /* ── Success overlay ── */
-    // const [success, setSuccess] = useState(null);
-    // const [successCount, setSuccessCount] = useState(3);
 
     const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-    /* ── OTP send countdown ── */
     useEffect(() => {
       if (countdown === 0) return;
       const timer = setInterval(() => setCountdown((prev) => prev - 1), 1000);
       return () => clearInterval(timer);
     }, [countdown]);
 
-    /* ── Success countdown → redirect to /home ── */
-    // useEffect(() => {
-    //   if (!success) return;
-    //   setSuccessCount(3);
-    //   const t = setInterval(() => {
-    //     setSuccessCount((p) => {
-    //       if (p <= 1) {
-    //         clearInterval(t);
-    //         window.location.href = "/explore";
-    //         return 0;
-    //       }
-    //       return p - 1;
-    //     });
-    //   }, 1000);
-    //   return () => clearInterval(t);
-    // }, [success]);
-
-    // Reset otpSent whenever the phone number changes
     const handlePhoneChange = (e) => {
       setPhone(e.target.value.replace(/[^0-9]/g, ""));
       setOtpSent(false);
@@ -68,12 +43,13 @@ const LoginForm = forwardRef(
         setPhoneError("Enter a valid 10-digit number");
         return;
       }
-      const success = await onSendOtp(phone);
+      const success = await onSendOtp(phone, rememberMe);
       if (success) {
         setCountdown(30);
         setOtpSent(true);
       }
     };
+
     const handleEmailLogin = (e) => {
       e.preventDefault();
       setEmailError("");
@@ -97,11 +73,7 @@ const LoginForm = forwardRef(
       }
 
       if (valid) {
-        onLogin(email, password);
-        //   setSuccess({
-        //     title: "Logged In!",
-        //     message: "You have successfully logged in. Welcome back!",
-        //   });
+        onLogin(email, password, rememberMe);
       }
     };
 
@@ -116,7 +88,6 @@ const LoginForm = forwardRef(
         valid = false;
       }
 
-      // ── NEW: block login if OTP was never sent ──
       if (!otpSent) {
         setOtpError("Please send the OTP first");
         valid = false;
@@ -136,37 +107,13 @@ const LoginForm = forwardRef(
       }
     };
 
-    /* ── Portalled to document.body so backdrop-filter on login-box
-          doesn't trap it inside the stacking context ── */
-    // const successOverlay = createPortal(
-    //   <div className={`success-overlay${success ? " show" : ""}`}>
-    //     <div className="success-card" key={success ? success.title : "hidden"}>
-    //       <div className="success-icon-circle">
-    //         <i className="bx bx-check"></i>
-    //       </div>
-    //       <h2>{success?.title}</h2>
-    //       <p>{success?.message}</p>
-    //       <div className="success-progress-bar">
-    //         <div className="success-progress-fill"></div>
-    //       </div>
-    //       <p className="success-redirect-text">
-    //         Redirecting in <span>{successCount}</span>s...
-    //       </p>
-    //     </div>
-    //   </div>,
-    //   document.body,
-    // );
-
     return (
       <>
-        {/* {successOverlay} */}
-
         <div className="objects">
           <div className="box-head">
             <h1>Log in</h1>
           </div>
 
-          {/* LOGIN TABS */}
           <div className="login-tabs">
             <button
               type="button"
@@ -175,7 +122,6 @@ const LoginForm = forwardRef(
             >
               Email
             </button>
-
             <button
               type="button"
               className={`tab-btn ${activeTab === "phone" ? "active" : ""}`}
@@ -195,16 +141,11 @@ const LoginForm = forwardRef(
                     type="email"
                     placeholder="Enter your email"
                     value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      setEmailError("");
-                    }}
+                    onChange={(e) => { setEmail(e.target.value); setEmailError(""); }}
                     className={emailError ? "error" : ""}
                   />
                 </div>
-                <div className={`error-message ${emailError ? "show" : ""}`}>
-                  {emailError}
-                </div>
+                <div className={`error-message ${emailError ? "show" : ""}`}>{emailError}</div>
               </div>
 
               <div className="input-box">
@@ -214,10 +155,7 @@ const LoginForm = forwardRef(
                     type={showPassword ? "text" : "password"}
                     placeholder="Password"
                     value={password}
-                    onChange={(e) => {
-                      setPassword(e.target.value);
-                      setPasswordError("");
-                    }}
+                    onChange={(e) => { setPassword(e.target.value); setPasswordError(""); }}
                     className={passwordError ? "error" : ""}
                   />
                   <i
@@ -225,22 +163,18 @@ const LoginForm = forwardRef(
                     onClick={() => setShowPassword(!showPassword)}
                   ></i>
                 </div>
-                <div className={`error-message ${passwordError ? "show" : ""}`}>
-                  {passwordError}
-                </div>
+                <div className={`error-message ${passwordError ? "show" : ""}`}>{passwordError}</div>
               </div>
 
               <div className="remember-forgot">
                 <label>
-                  <input type="checkbox" /> Remember me
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                  /> Remember me
                 </label>
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (onForgotPassword) onForgotPassword();
-                  }}
-                >
+                <a href="#" onClick={(e) => { e.preventDefault(); if (onForgotPassword) onForgotPassword(); }}>
                   Forgot password?
                 </a>
               </div>
@@ -275,9 +209,7 @@ const LoginForm = forwardRef(
                     {sendingOtp ? "Sending..." : countdown > 0 ? `(${countdown}s)` : "Send OTP"}
                   </button>
                 </div>
-                <div className={`error-message ${phoneError ? "show" : ""}`}>
-                  {phoneError}
-                </div>
+                <div className={`error-message ${phoneError ? "show" : ""}`}>{phoneError}</div>
               </div>
 
               <div className="input-box">
@@ -288,20 +220,19 @@ const LoginForm = forwardRef(
                     placeholder="Enter OTP"
                     maxLength="6"
                     value={otp}
-                    onChange={(e) => {
-                      setOtp(e.target.value);
-                      setOtpError("");
-                    }}
+                    onChange={(e) => { setOtp(e.target.value); setOtpError(""); }}
                   />
                 </div>
-                <div className={`error-message ${otpError ? "show" : ""}`}>
-                  {otpError}
-                </div>
+                <div className={`error-message ${otpError ? "show" : ""}`}>{otpError}</div>
               </div>
 
               <div className="remember-forgot">
                 <label>
-                  <input type="checkbox" /> Remember me
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                  /> Remember me
                 </label>
               </div>
 
@@ -311,12 +242,9 @@ const LoginForm = forwardRef(
             </form>
           )}
 
-          {/* GOOGLE LOGIN */}
-          <div className="divider">
-            <span>OR</span>
-          </div>
+          <div className="divider"><span>OR</span></div>
 
-          <button type="button" className="google-login">
+          <button type="button" className="google-login" onClick={onGoogleLogin}>
             <img
               src="https://www.svgrepo.com/show/475656/google-color.svg"
               alt="Google"
@@ -325,18 +253,10 @@ const LoginForm = forwardRef(
             Continue with Google
           </button>
 
-          {/* REGISTER LINK */}
           <div className="account">
             <p>
               Don't have an account?
-              <a
-                href="#"
-                className="creat-acc"
-                onClick={(e) => {
-                  e.preventDefault();
-                  onSwitchToRegister();
-                }}
-              >
+              <a href="#" className="creat-acc" onClick={(e) => { e.preventDefault(); onSwitchToRegister(); }}>
                 Create an account
               </a>
             </p>
