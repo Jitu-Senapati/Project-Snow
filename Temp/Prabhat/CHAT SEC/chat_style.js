@@ -473,6 +473,9 @@ cancelDeleteMsg.addEventListener("click", () =>
 function openChat(userName, initials, userId) {
   // Exit message select if open
   if (msgSelectMode) exitMsgSelectMode();
+  // Hide any active typing indicator from previous chat
+  hideTypingIndicator();
+  clearTimeout(typingTimeout);
 
   currentUserId = userId;
   currentUserInitials = initials;
@@ -847,6 +850,49 @@ document.addEventListener("keydown", (e) => {
 });
 
 // ===============================
+// TYPING INDICATOR
+// ===============================
+let typingIndicatorEl = null;
+let typingTimeout = null;
+
+function showTypingIndicator() {
+  if (typingIndicatorEl) return; // already showing
+  typingIndicatorEl = document.createElement("div");
+  typingIndicatorEl.className = "typing-indicator";
+  typingIndicatorEl.innerHTML = `
+    <div class="typing-avatar ${avatarClass[currentUserId] || "av-purple"}">${currentUserInitials}</div>
+    <div class="typing-bubble">
+      <span class="typing-dot"></span>
+      <span class="typing-dot"></span>
+      <span class="typing-dot"></span>
+    </div>
+  `;
+  messagesContainer.appendChild(typingIndicatorEl);
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+  // Also show "typing..." in header status
+  const statusEl = document.querySelector(".chat-header-status");
+  if (statusEl) {
+    statusEl.dataset.prev = statusEl.textContent;
+    statusEl.textContent = "typing...";
+    statusEl.style.color = "#a78bfa";
+  }
+}
+
+function hideTypingIndicator() {
+  if (typingIndicatorEl) {
+    typingIndicatorEl.remove();
+    typingIndicatorEl = null;
+  }
+  // Restore header status
+  const statusEl = document.querySelector(".chat-header-status");
+  if (statusEl && statusEl.dataset.prev) {
+    statusEl.textContent = statusEl.dataset.prev;
+    statusEl.style.color = "";
+  }
+}
+
+// ===============================
 // SEND MESSAGE
 // ===============================
 function sendMessage() {
@@ -883,8 +929,16 @@ function sendMessage() {
   messageInput.value = "";
   messageInput.focus();
 
-  // Simulate received reply with ping after 1.5s (demo purposes)
-  // In real app this would be a real incoming message
+  // Show typing indicator after short delay, then hide
+  clearTimeout(typingTimeout);
+  setTimeout(() => {
+    if (currentUserId && !blockedUsers[currentUserId]) {
+      showTypingIndicator();
+      typingTimeout = setTimeout(() => {
+        hideTypingIndicator();
+      }, 2200);
+    }
+  }, 600);
 }
 sendButton.addEventListener("click", sendMessage);
 messageInput.addEventListener("keypress", (e) => {
