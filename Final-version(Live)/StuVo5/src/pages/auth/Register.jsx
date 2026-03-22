@@ -21,7 +21,6 @@ const Register = () => {
     }
   }, [currentUser]);
 
-  // Pre-fill email if coming from Google login
   const googleEmail = location.state?.email || "";
   const googleDisplayName = location.state?.displayName || "";
 
@@ -30,6 +29,7 @@ const Register = () => {
   const [verifyType, setVerifyType] = useState(null);
   const [verifyTarget, setVerifyTarget] = useState("");
   const [phoneVerified, setPhoneVerified] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [formData, setFormData] = useState(
     googleEmail ? { email: googleEmail, username: "", password: "", phone: "", termsChecked: false } : null
   );
@@ -44,7 +44,10 @@ const Register = () => {
 
   const handleShowTerms = () => setShowTerms(true);
   const handleCloseTerms = () => setShowTerms(false);
-  const handleAcceptTerms = () => setShowTerms(false);
+  const handleAcceptTerms = () => {
+    setShowTerms(false);
+    setTermsAccepted(true);
+  };
 
   const handleOpenVerifyModal = async (type, value) => {
     setVerifyType(type);
@@ -118,6 +121,7 @@ const Register = () => {
       <div className="login-box">
         <RegisterForm
           initialData={formData}
+          googleEmail={googleEmail}
           sendingOtp={sendingOtp}
           otpSent={otpSent}
           onPhoneChange={() => setOtpSent(false)}
@@ -127,6 +131,8 @@ const Register = () => {
           phoneVerified={phoneVerified}
           resetVerification={resetVerification}
           onRegisterSuccess={handleRegisterSuccess}
+          termsAccepted={termsAccepted}
+          onTermsAccepted={() => setTermsAccepted(false)}
         />
       </div>
 

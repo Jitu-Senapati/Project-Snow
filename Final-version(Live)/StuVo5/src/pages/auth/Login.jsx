@@ -1,6 +1,6 @@
 import { createRecaptchaVerifier, loginWithPhone, loginWithEmail, loginWithGoogle, signOutUser } from "../../firebase/auth";
 import { GoogleAuthProvider } from "firebase/auth";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase/config";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -17,12 +17,6 @@ const Login = () => {
   const [googleLoginInProgress, setGoogleLoginInProgress] = useState(false);
 
   useEffect(() => {
-    if (currentUser && !googleLoginInProgress) {
-      navigate("/explore", { replace: true });
-    }
-  }, [currentUser]);
-
-  useEffect(() => {
     return () => {
       if (window.recaptchaVerifier) {
         window.recaptchaVerifier.clear();
@@ -30,6 +24,12 @@ const Login = () => {
       }
     };
   }, []);
+
+  const redirectByRole = async (user) => {
+    const snap = await getDoc(doc(db, "users", user.uid));
+    const admin = snap.exists() && snap.data()?.admin === true;
+    navigate(admin ? "/admin-explore" : "/explore", { replace: true });
+  };
 
   const handleSendOtp = async (phone, rememberMe) => {
     setSendingOtp(true);
@@ -48,8 +48,8 @@ const Login = () => {
 
   const handleVerifyOtp = async (otp) => {
     try {
-      await confirmationResult.confirm(otp);
-      navigate("/explore");
+      const result = await confirmationResult.confirm(otp);
+      await redirectByRole(result.user);
       return true;
     } catch (err) {
       return false;
@@ -58,8 +58,8 @@ const Login = () => {
 
   const handleLogin = async (email, password, rememberMe) => {
     try {
-      await loginWithEmail(email, password, rememberMe);
-      navigate("/explore");
+      const user = await loginWithEmail(email, password, rememberMe);
+      await redirectByRole(user);
     } catch (err) {
       alert(err.message);
     }
@@ -71,8 +71,6 @@ const Login = () => {
       const result = await loginWithGoogle();
       const user = result.user;
       const email = user.email;
-      console.log("email:", email);
-      console.log("providerData:", user.providerData);
 
       if (!email) {
         await signOutUser();
@@ -81,34 +79,28 @@ const Login = () => {
       }
 
       const providers = user.providerData.map(p => p.providerId);
-      console.log("providers:", providers);
 
       if (providers.includes("password")) {
-        console.log("→ navigate to /explore");
-        navigate("/explore");
+        await redirectByRole(user);
         return;
       }
 
       const usersRef = collection(db, "users");
       const q = query(usersRef, where("email", "==", email));
       const snapshot = await getDocs(q);
-      console.log("Snapshot empty:", snapshot.empty);
 
       if (!snapshot.empty) {
-        console.log("→ navigate to /link-account");
         const credential = GoogleAuthProvider.credentialFromResult(result);
         if (credential?.idToken) sessionStorage.setItem('googleIdToken', credential.idToken);
         if (credential?.accessToken) sessionStorage.setItem('googleAccessToken', credential.accessToken);
         sessionStorage.setItem('linkEmail', email);
-        // Delete the auto-created Google account before navigating
         await result.user.delete();
         navigate("/link-account", { state: { email } });
       } else {
-        console.log("→ navigate to /register");
         const credential = GoogleAuthProvider.credentialFromResult(result);
         if (credential?.idToken) sessionStorage.setItem('googleIdToken', credential.idToken);
         if (credential?.accessToken) sessionStorage.setItem('googleAccessToken', credential.accessToken);
-        await result.user.delete(); // delete instead of signOut
+        await result.user.delete();
         navigate("/register", { state: { email, displayName: user.displayName, photoURL: user.photoURL } });
       }
     } catch (err) {

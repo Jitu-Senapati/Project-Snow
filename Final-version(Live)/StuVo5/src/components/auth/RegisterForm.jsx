@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "../../firebase/config";
 
 const RegisterForm = ({
   initialData,
+  googleEmail,
   otpSent,
   sendingOtp,
   onPhoneChange,
@@ -12,7 +15,18 @@ const RegisterForm = ({
   phoneVerified,
   resetVerification,
   onRegisterSuccess,
+  termsAccepted,
+  onTermsAccepted,
 }) => {
+
+  useEffect(() => {
+    if (termsAccepted) {
+      setTermsChecked(true);
+      setTermsError(false);
+      if (onTermsAccepted) onTermsAccepted();
+    }
+  }, [termsAccepted]);
+
   const [username, setUsername] = useState(initialData?.username || "");
   const [email, setEmail] = useState(initialData?.email || "");
   const [phone, setPhone] = useState(initialData?.phone || "");
@@ -44,7 +58,7 @@ const RegisterForm = ({
     return { valid: true };
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let valid = true;
 
@@ -78,17 +92,32 @@ const RegisterForm = ({
       setTermsError(true);
       valid = false;
     }
-    if (valid) {
-      onRegisterSuccess({ email, password, username, phone, termsChecked: true });
+
+    if (!valid) return;
+
+    // Check if email already exists
+    const emailSnap = await getDocs(query(collection(db, "users"), where("email", "==", email.trim())));
+    if (!emailSnap.empty) {
+      setEmailError("This email already exists in our database");
+      return;
     }
+
+    onRegisterSuccess({ email, password, username, phone, termsChecked: true });
   };
 
-  const handlePhoneVerify = () => {
+  const handlePhoneVerify = async () => {
     const cleanPhone = phone.replace(/\D/g, "");
     if (cleanPhone.length !== 10) {
       setPhoneError("Please enter a valid 10-digit phone number first");
       return;
     }
+
+    const phoneSnap = await getDocs(query(collection(db, "users"), where("phone", "==", cleanPhone)));
+    if (!phoneSnap.empty) {
+      setPhoneError("This phone number already exists in our database");
+      return;
+    }
+
     onOpenVerifyModal("phone", cleanPhone);
   };
 
@@ -123,21 +152,28 @@ const RegisterForm = ({
           <div className="input-wrapper-with-btn">
             <div className="input-wrapper">
               <i className="bx bx-envelope"></i>
-              <input
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  setEmailError("");
-                  if (emailVerified) resetVerification();
-                }}
-                className={emailError ? "error" : ""}
-              />
+              {googleEmail ? (
+                <input
+                  type="email"
+                  value={email}
+                  readOnly
+                  style={{ color: "#888", cursor: "not-allowed", fontStyle: "italic" }}
+                />
+              ) : (
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setEmailError("");
+                    if (emailVerified) resetVerification();
+                  }}
+                  className={emailError ? "error" : ""}
+                />
+              )}
             </div>
-
           </div>
-
           {emailError && <div className="error-message show">{emailError}</div>}
         </div>
 

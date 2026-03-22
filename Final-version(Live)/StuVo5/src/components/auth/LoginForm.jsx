@@ -220,6 +220,7 @@ const LoginForm = forwardRef(
                     placeholder="Enter OTP"
                     maxLength="6"
                     value={otp}
+                    autoComplete="one-time-code"
                     onChange={(e) => { setOtp(e.target.value); setOtpError(""); }}
                   />
                 </div>

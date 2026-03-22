@@ -52,6 +52,7 @@ const VerificationModal = ({ show, onClose, onVerify, type, target }) => {
               placeholder="000000"
               maxLength="6"
               value={code}
+              autoComplete="one-time-code"
               onChange={(e) => {
                 setCode(e.target.value);
                 setError("");
