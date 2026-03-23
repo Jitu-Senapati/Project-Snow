@@ -10,130 +10,30 @@ function daysAgo(n) {
 
 const messageData = {
   1: [
-    {
-      type: "received",
-      text: "Hey! Long time no see.",
-      time: "10:10 AM",
-      date: daysAgo(3),
-    },
-    {
-      type: "sent",
-      text: "I know right! How have you been?",
-      time: "10:12 AM",
-      date: daysAgo(3),
-    },
-    {
-      type: "received",
-      text: "All good! You coming to college tomorrow?",
-      time: "6:00 PM",
-      date: daysAgo(1),
-    },
-    {
-      type: "sent",
-      text: "Yes, I will be there!",
-      time: "6:05 PM",
-      date: daysAgo(1),
-    },
-    {
-      type: "received",
-      text: "Hey, are you coming to the lab?",
-      time: "10:30 AM",
-      date: daysAgo(0),
-    },
-    {
-      type: "sent",
-      text: "Yes, I will be there in 15 minutes",
-      time: "10:32 AM",
-      date: daysAgo(0),
-    },
-    {
-      type: "received",
-      text: "Great! I will wait for you",
-      time: "10:33 AM",
-      date: daysAgo(0),
-    },
+    { type: "received", text: "Hey! Long time no see.", time: "10:10 AM", date: daysAgo(3) },
+    { type: "sent", text: "I know right! How have you been?", time: "10:12 AM", date: daysAgo(3) },
+    { type: "received", text: "All good! You coming to college tomorrow?", time: "6:00 PM", date: daysAgo(1) },
+    { type: "sent", text: "Yes, I will be there!", time: "6:05 PM", date: daysAgo(1) },
+    { type: "received", text: "Hey, are you coming to the lab?", time: "10:30 AM", date: daysAgo(0) },
+    { type: "sent", text: "Yes, I will be there in 15 minutes", time: "10:32 AM", date: daysAgo(0) },
+    { type: "received", text: "Great! I will wait for you", time: "10:33 AM", date: daysAgo(0) },
   ],
   2: [
-    {
-      type: "received",
-      text: "Did you finish the assignment?",
-      time: "9:00 AM",
-      date: daysAgo(2),
-    },
-    {
-      type: "sent",
-      text: "Almost done, a few more questions left.",
-      time: "9:15 AM",
-      date: daysAgo(2),
-    },
-    {
-      type: "received",
-      text: "Can you share the notes?",
-      time: "9:45 AM",
-      date: daysAgo(0),
-    },
-    {
-      type: "sent",
-      text: "Sure, I will send them right away",
-      time: "9:50 AM",
-      date: daysAgo(0),
-    },
-    {
-      type: "sent",
-      text: "Check your email",
-      time: "9:51 AM",
-      date: daysAgo(0),
-    },
-    {
-      type: "received",
-      text: "Got it, thanks!",
-      time: "9:52 AM",
-      date: daysAgo(0),
-    },
+    { type: "received", text: "Did you finish the assignment?", time: "9:00 AM", date: daysAgo(2) },
+    { type: "sent", text: "Almost done, a few more questions left.", time: "9:15 AM", date: daysAgo(2) },
+    { type: "received", text: "Can you share the notes?", time: "9:45 AM", date: daysAgo(0) },
+    { type: "sent", text: "Sure, I will send them right away", time: "9:50 AM", date: daysAgo(0) },
+    { type: "sent", text: "Check your email", time: "9:51 AM", date: daysAgo(0) },
+    { type: "received", text: "Got it, thanks!", time: "9:52 AM", date: daysAgo(0) },
   ],
   3: [
-    {
-      type: "sent",
-      text: "Hey Rahul, need help with the project.",
-      time: "4:00 PM",
-      date: daysAgo(4),
-    },
-    {
-      type: "received",
-      text: "Sure! What do you need?",
-      time: "4:10 PM",
-      date: daysAgo(4),
-    },
-    {
-      type: "sent",
-      text: "The database part is confusing me.",
-      time: "8:00 AM",
-      date: daysAgo(1),
-    },
-    {
-      type: "received",
-      text: "I can explain it to you after class.",
-      time: "8:05 AM",
-      date: daysAgo(1),
-    },
-    {
-      type: "received",
-      text: "Thanks for the help!",
-      time: "8:20 AM",
-      date: daysAgo(0),
-    },
-    {
-      type: "sent",
-      text: "No problem, happy to help!",
-      time: "8:25 AM",
-      date: daysAgo(0),
-    },
-    {
-      type: "received",
-      text: "Let me know if you need anything",
-      time: "8:26 AM",
-      date: daysAgo(0),
-    },
+    { type: "sent", text: "Hey Rahul, need help with the project.", time: "4:00 PM", date: daysAgo(4) },
+    { type: "received", text: "Sure! What do you need?", time: "4:10 PM", date: daysAgo(4) },
+    { type: "sent", text: "The database part is confusing me.", time: "8:00 AM", date: daysAgo(1) },
+    { type: "received", text: "I can explain it to you after class.", time: "8:05 AM", date: daysAgo(1) },
+    { type: "received", text: "Thanks for the help!", time: "8:20 AM", date: daysAgo(0) },
+    { type: "sent", text: "No problem, happy to help!", time: "8:25 AM", date: daysAgo(0) },
+    { type: "received", text: "Let me know if you need anything", time: "8:26 AM", date: daysAgo(0) },
   ],
 };
 
@@ -150,19 +50,12 @@ let currentUserId = null;
 let currentUserInitials = null;
 let currentUserName = null;
 
-// Message multi-select
 let msgSelectMode = false;
-let selectedMsgEls = new Set(); // Set of message DOM elements
+let selectedMsgEls = new Set();
 
-function saveBlocked() {
-  localStorage.setItem("blockedUsers", JSON.stringify(blockedUsers));
-}
-function savePinned() {
-  localStorage.setItem("pinnedUsers", JSON.stringify(pinnedUsers));
-}
-function saveMuted() {
-  localStorage.setItem("mutedUsers", JSON.stringify(mutedUsers));
-}
+function saveBlocked() { localStorage.setItem("blockedUsers", JSON.stringify(blockedUsers)); }
+function savePinned() { localStorage.setItem("pinnedUsers", JSON.stringify(pinnedUsers)); }
+function saveMuted() { localStorage.setItem("mutedUsers", JSON.stringify(mutedUsers)); }
 
 // ===============================
 // ELEMENTS
@@ -180,11 +73,7 @@ const sendButton = document.getElementById("sendButton");
 const searchInput = document.getElementById("chatSearchInput");
 const menuButton = document.getElementById("menuButton");
 const menuDropdown = document.getElementById("menuDropdown");
-const searchInChatToggle = document.getElementById("searchInChatToggle");
 const blockUserBtn = document.getElementById("blockUserBtn");
-const chatSearchBar = document.getElementById("chatSearchBar");
-const chatMessageSearch = document.getElementById("chatMessageSearch");
-const closeSearchBtn = document.getElementById("closeSearchBtn");
 const messageInputContainer = document.getElementById("messageInputContainer");
 const emojiToggle = document.getElementById("emojiToggle");
 const emojiPanel = document.getElementById("emojiPanel");
@@ -201,7 +90,6 @@ const replyPreviewUser = document.getElementById("replyPreviewUser");
 const replyPreviewText = document.getElementById("replyPreviewText");
 const closeReplyBtn = document.getElementById("closeReplyBtn");
 
-// Message select bar
 const msgSelectBar = document.getElementById("msgSelectBar");
 const msgSelectCancel = document.getElementById("msgSelectCancel");
 const msgSelectCount = document.getElementById("msgSelectCount");
@@ -210,13 +98,11 @@ const msgStarBtn = document.getElementById("msgStarBtn");
 const msgDeleteBtn = document.getElementById("msgDeleteBtn");
 const msgForwardBtn = document.getElementById("msgForwardBtn");
 
-// Delete message modal
 const deleteMsgOverlay = document.getElementById("deleteMsgOverlay");
 const deleteForEveryoneBtn = document.getElementById("deleteForEveryoneBtn");
 const deleteForMeBtn = document.getElementById("deleteForMeBtn");
 const cancelDeleteMsg = document.getElementById("cancelDeleteMsg");
 
-// Contact context menu
 const contactCtxOverlay = document.getElementById("contactCtxOverlay");
 const contactCtxMenu = document.getElementById("contactCtxMenu");
 let ctxTargetUserId = null;
@@ -228,24 +114,13 @@ chatList.addEventListener("contextmenu", (e) => {
   const item = e.target.closest(".chat-item");
   if (!item) return;
   e.preventDefault();
-
   ctxTargetUserId = item.dataset.userId;
 
-  // Update pin/mute labels dynamically
-  const pinItem = contactCtxMenu.querySelector("[data-action='pin']");
   const muteItem = contactCtxMenu.querySelector("[data-action='mute']");
-  pinItem.querySelector("span").textContent = pinnedUsers[ctxTargetUserId]
-    ? "Unpin chat"
-    : "Pin chat";
-  muteItem.querySelector("span").textContent = mutedUsers[ctxTargetUserId]
-    ? "Unmute notifications"
-    : "Mute notifications";
+  muteItem.querySelector("span").textContent = mutedUsers[ctxTargetUserId] ? "Unmute notifications" : "Mute notifications";
 
-  // Position menu
-  const vw = window.innerWidth,
-    vh = window.innerHeight;
-  let x = e.clientX,
-    y = e.clientY;
+  const vw = window.innerWidth, vh = window.innerHeight;
+  let x = e.clientX, y = e.clientY;
   contactCtxOverlay.style.display = "block";
   const mw = contactCtxMenu.offsetWidth || 210;
   const mh = contactCtxMenu.offsetHeight || 250;
@@ -262,9 +137,7 @@ contactCtxOverlay.addEventListener("click", (e) => {
 
 function closeContactCtx() {
   contactCtxOverlay.classList.remove("active");
-  setTimeout(() => {
-    contactCtxOverlay.style.display = "";
-  }, 150);
+  setTimeout(() => { contactCtxOverlay.style.display = ""; }, 150);
   ctxTargetUserId = null;
 }
 
@@ -274,27 +147,13 @@ contactCtxMenu.querySelectorAll(".ctx-item").forEach((item) => {
     const uid = ctxTargetUserId;
     if (!uid) return;
 
-    if (action === "pin") {
-      if (pinnedUsers[uid]) delete pinnedUsers[uid];
-      else pinnedUsers[uid] = true;
-      savePinned();
-      refreshChatList();
-    }
     if (action === "mute") {
-      if (mutedUsers[uid]) delete mutedUsers[uid];
-      else mutedUsers[uid] = true;
-      saveMuted();
-      refreshChatList();
+      if (mutedUsers[uid]) delete mutedUsers[uid]; else mutedUsers[uid] = true;
+      saveMuted(); refreshChatList();
     }
     if (action === "block") {
-      if (!blockedUsers[uid]) {
-        blockedUsers[uid] = true;
-        saveBlocked();
-      }
-      if (currentUserId === uid) {
-        updateBlockedState();
-        appendBlockedNoticeMessages();
-      }
+      if (!blockedUsers[uid]) { blockedUsers[uid] = true; saveBlocked(); }
+      if (currentUserId === uid) { updateBlockedState(); appendBlockedNoticeMessages(); }
       refreshChatList();
     }
     if (action === "clear") {
@@ -330,8 +189,21 @@ function refreshChatList() {
     item.classList.toggle("pinned", !!pinnedUsers[uid]);
     item.classList.toggle("muted", !!mutedUsers[uid]);
     item.classList.toggle("blocked", !!blockedUsers[uid]);
+
+    // Pin badge icon inside list item
+    let pinBadge = item.querySelector(".pin-badge");
+    if (pinnedUsers[uid]) {
+      if (!pinBadge) {
+        pinBadge = document.createElement("span");
+        pinBadge.className = "pin-badge";
+        pinBadge.innerHTML = '<i class="bx bx-pin"></i>';
+        item.querySelector(".chat-name-row").appendChild(pinBadge);
+      }
+    } else {
+      if (pinBadge) pinBadge.remove();
+    }
   });
-  // Pinned to top
+
   const items = [...chatList.querySelectorAll(".chat-item")];
   const pinned = items.filter((i) => pinnedUsers[i.dataset.userId]);
   const unpinned = items.filter((i) => !pinnedUsers[i.dataset.userId]);
@@ -344,11 +216,7 @@ function refreshChatList() {
 chatList.addEventListener("click", (e) => {
   const item = e.target.closest(".chat-item");
   if (!item) return;
-  openChat(
-    item.dataset.userName,
-    item.dataset.userInitials,
-    item.dataset.userId,
-  );
+  openChat(item.dataset.userName, item.dataset.userInitials, item.dataset.userId);
 });
 
 // ===============================
@@ -380,7 +248,6 @@ function toggleMsgSelect(msgEl) {
     msgEl.classList.add("selected-msg");
   }
   updateMsgSelectCount();
-  // If nothing selected, exit
   if (selectedMsgEls.size === 0) exitMsgSelectMode();
 }
 
@@ -389,7 +256,6 @@ function updateMsgSelectCount() {
   msgSelectCount.textContent = n === 1 ? "1 selected" : `${n} selected`;
 }
 
-// Click message in select mode → toggle
 messagesContainer.addEventListener("click", (e) => {
   if (!msgSelectMode) return;
   const msgEl = e.target.closest(".message");
@@ -399,37 +265,20 @@ messagesContainer.addEventListener("click", (e) => {
 
 msgSelectCancel.addEventListener("click", exitMsgSelectMode);
 
-// Copy selected
 msgCopyBtn.addEventListener("click", () => {
-  const texts = [...selectedMsgEls].map(
-    (el) => el.querySelector(".message-text")?.textContent?.trim() || "",
-  );
+  const texts = [...selectedMsgEls].map((el) => el.querySelector(".message-text")?.textContent?.trim() || "");
   navigator.clipboard.writeText(texts.join("\n")).catch(() => {});
   exitMsgSelectMode();
 });
 
-// Star selected
-msgStarBtn.addEventListener("click", () => {
-  selectedMsgEls.forEach((el) =>
-    el.querySelector(".message-bubble")?.classList.toggle("starred"),
-  );
-  exitMsgSelectMode();
-});
-
-// Forward → show contact picker
 msgForwardBtn.addEventListener("click", () => {
-  const texts = [...selectedMsgEls].map(
-    (el) => el.querySelector(".message-text")?.textContent?.trim() || "",
-  );
+  const texts = [...selectedMsgEls].map((el) => el.querySelector(".message-text")?.textContent?.trim() || "");
   openForwardPicker(texts);
   exitMsgSelectMode();
 });
 
-// Delete → show modal, hide "Delete for everyone" if any received msg selected
 msgDeleteBtn.addEventListener("click", () => {
-  const allSent = [...selectedMsgEls].every((el) =>
-    el.classList.contains("sent"),
-  );
+  const allSent = [...selectedMsgEls].every((el) => el.classList.contains("sent"));
   deleteForEveryoneBtn.style.display = allSent ? "" : "none";
   deleteMsgOverlay.classList.add("active");
 });
@@ -463,17 +312,13 @@ deleteForMeBtn.addEventListener("click", () => {
   exitMsgSelectMode();
 });
 
-cancelDeleteMsg.addEventListener("click", () =>
-  deleteMsgOverlay.classList.remove("active"),
-);
+cancelDeleteMsg.addEventListener("click", () => deleteMsgOverlay.classList.remove("active"));
 
 // ===============================
 // OPEN CHAT
 // ===============================
 function openChat(userName, initials, userId) {
-  // Exit message select if open
   if (msgSelectMode) exitMsgSelectMode();
-  // Hide any active typing indicator from previous chat
   hideTypingIndicator();
   clearTimeout(typingTimeout);
 
@@ -483,12 +328,9 @@ function openChat(userName, initials, userId) {
 
   chatHeaderName.textContent = userName;
   chatHeaderAvatar.textContent = initials;
-  chatHeaderAvatar.className =
-    "chat-avatar " + (avatarClass[userId] || "av-purple");
+  chatHeaderAvatar.className = "chat-avatar " + (avatarClass[userId] || "av-purple");
 
-  document
-    .querySelectorAll(".chat-item")
-    .forEach((i) => i.classList.remove("active-chat"));
+  document.querySelectorAll(".chat-item").forEach((i) => i.classList.remove("active-chat"));
   const activeItem = chatList.querySelector(`[data-user-id="${userId}"]`);
   if (activeItem) {
     activeItem.classList.add("active-chat");
@@ -503,9 +345,6 @@ function openChat(userName, initials, userId) {
   if (window.innerWidth <= 768) leftPanel.classList.add("hidden-mobile");
 
   menuDropdown.classList.remove("active");
-  chatSearchBar.classList.remove("active");
-  chatMessageSearch.value = "";
-  clearMessageHighlights();
   emojiPanel.classList.remove("active");
 }
 
@@ -513,18 +352,13 @@ function openChat(userName, initials, userId) {
 // BACK BUTTON
 // ===============================
 backButton.addEventListener("click", () => {
-  if (msgSelectMode) {
-    exitMsgSelectMode();
-    return;
-  }
+  if (msgSelectMode) { exitMsgSelectMode(); return; }
   chatView.classList.remove("active");
   noChatSelected.classList.remove("hidden");
   leftPanel.classList.remove("hidden-mobile");
   messageInput.value = "";
   removeReplyPreview();
   menuDropdown.classList.remove("active");
-  chatSearchBar.classList.remove("active");
-  clearMessageHighlights();
   emojiPanel.classList.remove("active");
 });
 
@@ -544,21 +378,14 @@ function getDateLabel(dateStr) {
   const msgDate = new Date(dateStr);
   const now = new Date();
   const toDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const mDay = new Date(
-    msgDate.getFullYear(),
-    msgDate.getMonth(),
-    msgDate.getDate(),
-  );
+  const mDay = new Date(msgDate.getFullYear(), msgDate.getMonth(), msgDate.getDate());
   const diff = Math.round((toDay - mDay) / 86400000);
   if (diff === 0) return "Today";
   if (diff === 1) return "Yesterday";
   if (diff < 7) return msgDate.toLocaleDateString("en-US", { weekday: "long" });
-  return msgDate.toLocaleDateString("en-US", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+  return msgDate.toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" });
 }
+
 function createDayDivider(label) {
   const div = document.createElement("div");
   div.className = "day-divider";
@@ -592,7 +419,6 @@ function loadMessages(userId) {
   messagesContainer.innerHTML = "";
   const messages = messageData[userId] || [];
 
-  // Empty chat state
   if (messages.length === 0 && !blockedUsers[userId]) {
     const empty = document.createElement("div");
     empty.className = "empty-chat-state";
@@ -613,14 +439,7 @@ function loadMessages(userId) {
       messagesContainer.appendChild(createDayDivider(label));
       lastLabel = label;
     }
-    addMessage(
-      msg.text,
-      msg.type,
-      msg.time,
-      msg.reply || null,
-      false,
-      msg.forwarded || false,
-    );
+    addMessage(msg.text, msg.type, msg.time, msg.reply || null, false, msg.forwarded || false);
   });
   if (blockedUsers[userId]) appendBlockedNoticeMessages();
   messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -629,34 +448,24 @@ function loadMessages(userId) {
 // ===============================
 // ADD MESSAGE
 // ===============================
-function addMessage(
-  text,
-  type,
-  time,
-  reply = null,
-  animate = true,
-  forwarded = false,
-) {
+function addMessage(text, type, time, reply = null, animate = true, forwarded = false) {
   const div = document.createElement("div");
   div.className = `message ${type}`;
-  if (animate)
-    div.style.animation = "msgIn 0.25s cubic-bezier(0.34,1.56,0.64,1)";
+  if (animate) div.style.animation = "msgIn 0.25s cubic-bezier(0.34,1.56,0.64,1)";
 
-  const avatarHTML =
-    type === "received"
-      ? `<div class="message-avatar ${avatarClass[currentUserId] || ""}">${currentUserInitials}</div>`
-      : "";
+  const avatarHTML = type === "received"
+    ? `<div class="message-avatar ${avatarClass[currentUserId] || ""}">${currentUserInitials}</div>`
+    : "";
 
   const replyHTML = reply
-    ? `
-    <div class="reply-quote">
-      <span class="reply-user">${reply.user}</span>
-      <span class="reply-text">${escapeHtml(reply.text)}</span>
-    </div>`
+    ? `<div class="reply-quote">
+        <span class="reply-user">${reply.user}</span>
+        <span class="reply-text">${escapeHtml(reply.text)}</span>
+      </div>`
     : "";
 
   const forwardedHTML = forwarded
-    ? `<div class="forwarded-label"><i class="bx bx-share"></i> Forwarded</div>`
+    ? `<div class="forwarded-label"><i class="bx bx-forward-big"></i> Forwarded</div>`
     : "";
 
   div.innerHTML = `
@@ -673,20 +482,14 @@ function addMessage(
 
   messagesContainer.appendChild(div);
 
-  // Play ping for incoming messages (only when animate=true = real-time, not on load)
   if (type === "received" && animate) playPing();
 
   const bubble = div.querySelector(".message-bubble");
   const arrowBtn = div.querySelector(".bubble-arrow-btn");
 
-  // In msg select mode, clicking message toggles selection (handled by container listener)
-  // Normal mode: right-click or arrow opens bubble menu
   bubble.addEventListener("contextmenu", (e) => {
     e.preventDefault();
-    if (msgSelectMode) {
-      toggleMsgSelect(div);
-      return;
-    }
+    if (msgSelectMode) { toggleMsgSelect(div); return; }
     openBubbleMenu(e, div, text, type);
   });
   arrowBtn.addEventListener("click", (e) => {
@@ -696,17 +499,10 @@ function addMessage(
   });
 
   let touchTimer = null;
-  bubble.addEventListener(
-    "touchstart",
-    (e) => {
-      if (msgSelectMode) return;
-      touchTimer = setTimeout(
-        () => openBubbleMenu(e.touches[0], div, text, type),
-        500,
-      );
-    },
-    { passive: true },
-  );
+  bubble.addEventListener("touchstart", (e) => {
+    if (msgSelectMode) return;
+    touchTimer = setTimeout(() => openBubbleMenu(e.touches[0], div, text, type), 500);
+  }, { passive: true });
   bubble.addEventListener("touchend", () => clearTimeout(touchTimer));
   bubble.addEventListener("touchmove", () => clearTimeout(touchTimer));
 
@@ -724,20 +520,14 @@ function openBubbleMenu(e, msgEl, text, type) {
   overlay.className = "bm-overlay";
 
   const emojis = ["👍", "❤️", "😂", "😮", "😢", "🙏", "+"];
-  const emojiRow = emojis
-    .map((em) => `<span class="bm-emoji">${em}</span>`)
-    .join("");
+  const emojiRow = emojis.map((em) => `<span class="bm-emoji">${em}</span>`).join("");
+
   const items = [
-    { icon: "bx-reply", label: "Reply", action: "reply", danger: false },
-    { icon: "bx-copy", label: "Copy", action: "copy", danger: false },
-    { icon: "bx-share", label: "Forward", action: "forward", danger: false },
-    {
-      icon: "bx-check-square",
-      label: "Select",
-      action: "select",
-      danger: false,
-    },
-    { icon: "bx-trash", label: "Delete", action: "delete", danger: true },
+    { icon: "bx-reply-big",    label: "Reply",   action: "reply",   danger: false, svg: null },
+    { icon: "bx-copy",         label: "Copy",    action: "copy",    danger: false, svg: null },
+    { icon: "bx-forward-big",  label: "Forward", action: "forward", danger: false, svg: null },
+    { icon: "bx-check-square", label: "Select",  action: "select",  danger: false, svg: null },
+    { icon: "bx-trash",        label: "Delete",  action: "delete",  danger: true,  svg: null },
   ];
 
   overlay.innerHTML = `
@@ -745,27 +535,20 @@ function openBubbleMenu(e, msgEl, text, type) {
     <div class="bm-popup">
       <div class="bm-emoji-row">${emojiRow}</div>
       <div class="bm-sep"></div>
-      ${items
-        .map(
-          (
-            i,
-          ) => `<div class="bm-item${i.danger ? " bm-danger" : ""}" data-action="${i.action}">
-        <i class="bx ${i.icon}"></i><span>${i.label}</span></div>`,
-        )
-        .join("")}
+      ${items.map((i) => `
+        <div class="bm-item${i.danger ? " bm-danger" : ""}" data-action="${i.action}">
+          <i class="bx ${i.icon}"></i><span>${i.label}</span>
+        </div>`).join("")}
     </div>`;
 
   document.body.appendChild(overlay);
   activeBubbleMenu = overlay;
 
   const popup = overlay.querySelector(".bm-popup");
-  const vw = window.innerWidth,
-    vh = window.innerHeight;
-  let x = e.clientX ?? vw / 2,
-    y = e.clientY ?? vh / 2;
+  const vw = window.innerWidth, vh = window.innerHeight;
+  let x = e.clientX ?? vw / 2, y = e.clientY ?? vh / 2;
   requestAnimationFrame(() => {
-    const pw = popup.offsetWidth || 220,
-      ph = popup.offsetHeight || 300;
+    const pw = popup.offsetWidth || 220, ph = popup.offsetHeight || 300;
     if (x + pw + 10 > vw) x = vw - pw - 10;
     if (y + ph + 10 > vh) y = vh - ph - 10;
     if (x < 10) x = 10;
@@ -775,16 +558,11 @@ function openBubbleMenu(e, msgEl, text, type) {
     popup.style.opacity = "1";
   });
 
-  overlay
-    .querySelector(".bm-backdrop")
-    .addEventListener("click", closeAllBubbleMenus);
+  overlay.querySelector(".bm-backdrop").addEventListener("click", closeAllBubbleMenus);
 
   overlay.querySelectorAll(".bm-emoji").forEach((span, idx) => {
     span.addEventListener("click", () => {
-      if (idx === emojis.length - 1) {
-        closeAllBubbleMenus();
-        return;
-      }
+      if (idx === emojis.length - 1) { closeAllBubbleMenus(); return; }
       let reaction = msgEl.querySelector(".reaction");
       if (!reaction) {
         reaction = document.createElement("div");
@@ -799,17 +577,14 @@ function openBubbleMenu(e, msgEl, text, type) {
   overlay.querySelectorAll(".bm-item").forEach((item) => {
     item.addEventListener("click", () => {
       const action = item.dataset.action;
-      if (action === "copy")
-        navigator.clipboard.writeText(text).catch(() => {});
+      if (action === "copy") navigator.clipboard.writeText(text).catch(() => {});
       if (action === "delete") {
         selectedMsgEls.clear();
         selectedMsgEls.add(msgEl);
         deleteForEveryoneBtn.style.display = type === "sent" ? "" : "none";
         deleteMsgOverlay.classList.add("active");
       }
-      if (action === "forward") {
-        openForwardPicker([text]);
-      }
+      if (action === "forward") openForwardPicker([text]);
       if (action === "reply") {
         replyData = { user: type === "sent" ? "You" : currentUserName, text };
         showReplyPreview(replyData);
@@ -824,11 +599,9 @@ function openBubbleMenu(e, msgEl, text, type) {
     });
   });
 }
+
 function closeAllBubbleMenus() {
-  if (activeBubbleMenu) {
-    activeBubbleMenu.remove();
-    activeBubbleMenu = null;
-  }
+  if (activeBubbleMenu) { activeBubbleMenu.remove(); activeBubbleMenu = null; }
 }
 
 // Keyframe styles
@@ -856,7 +629,7 @@ let typingIndicatorEl = null;
 let typingTimeout = null;
 
 function showTypingIndicator() {
-  if (typingIndicatorEl) return; // already showing
+  if (typingIndicatorEl) return;
   typingIndicatorEl = document.createElement("div");
   typingIndicatorEl.className = "typing-indicator";
   typingIndicatorEl.innerHTML = `
@@ -870,7 +643,6 @@ function showTypingIndicator() {
   messagesContainer.appendChild(typingIndicatorEl);
   messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-  // Also show "typing..." in header status
   const statusEl = document.querySelector(".chat-header-status");
   if (statusEl) {
     statusEl.dataset.prev = statusEl.textContent;
@@ -880,11 +652,7 @@ function showTypingIndicator() {
 }
 
 function hideTypingIndicator() {
-  if (typingIndicatorEl) {
-    typingIndicatorEl.remove();
-    typingIndicatorEl = null;
-  }
-  // Restore header status
+  if (typingIndicatorEl) { typingIndicatorEl.remove(); typingIndicatorEl = null; }
   const statusEl = document.querySelector(".chat-header-status");
   if (statusEl && statusEl.dataset.prev) {
     statusEl.textContent = statusEl.dataset.prev;
@@ -899,12 +667,8 @@ function sendMessage() {
   const text = messageInput.value.trim();
   if (!text || blockedUsers[currentUserId]) return;
   const now = new Date();
-  const time = now.toLocaleTimeString("en-US", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const time = now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
 
-  // Clear empty state if present
   const emptyState = messagesContainer.querySelector(".empty-chat-state");
   if (emptyState) emptyState.remove();
 
@@ -912,787 +676,82 @@ function sendMessage() {
   const lastDivider = allDividers[allDividers.length - 1];
   if (!lastDivider || lastDivider.querySelector("span").textContent !== "Today")
     messagesContainer.appendChild(createDayDivider("Today"));
+
   const currentReply = replyData ? { ...replyData } : null;
   addMessage(text, "sent", time, currentReply, true);
   if (!messageData[currentUserId]) messageData[currentUserId] = [];
-  messageData[currentUserId].push({
-    type: "sent",
-    text,
-    time,
-    date: daysAgo(0),
-    reply: currentReply,
-  });
+  messageData[currentUserId].push({ type: "sent", text, time, date: daysAgo(0), reply: currentReply });
+
   const item = chatList.querySelector(`[data-user-id="${currentUserId}"]`);
   if (item) item.querySelector(".chat-message").textContent = text;
+
   replyData = null;
   removeReplyPreview();
   messageInput.value = "";
   messageInput.focus();
 
-  // Show typing indicator after short delay, then hide
   clearTimeout(typingTimeout);
   setTimeout(() => {
     if (currentUserId && !blockedUsers[currentUserId]) {
       showTypingIndicator();
-      typingTimeout = setTimeout(() => {
-        hideTypingIndicator();
-      }, 2200);
+      typingTimeout = setTimeout(hideTypingIndicator, 2200);
     }
   }, 600);
 }
+
 sendButton.addEventListener("click", sendMessage);
-messageInput.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") sendMessage();
+messageInput.addEventListener("keypress", (e) => { if (e.key === "Enter") sendMessage(); });
+
+// ===============================
+// CLOSE CHAT BUTTON (desktop arrow next to name)
+// ===============================
+document.getElementById("closeChatBtn").addEventListener("click", (e) => {
+  e.stopPropagation(); // prevent profile navigation
+  chatView.classList.remove("active");
+  noChatSelected.classList.remove("hidden");
+  leftPanel.classList.remove("hidden-mobile");
+  document.querySelectorAll(".chat-item").forEach((i) => i.classList.remove("active-chat"));
+  messageInput.value = "";
+  removeReplyPreview();
+  menuDropdown.classList.remove("active");
+  emojiPanel.classList.remove("active");
+  currentUserId = null;
 });
 
 // ===============================
-// CONTACT SEARCH
+// CONTACT SEARCH — filter only, NEVER auto-open
 // ===============================
 searchInput.addEventListener("input", (e) => {
   const term = e.target.value.toLowerCase().trim();
   const items = chatList.querySelectorAll(".chat-item");
-  let visible = [];
+  let visible = 0;
   items.forEach((item) => {
     const name = item.querySelector(".chat-name").textContent.toLowerCase();
     const show = name.includes(term);
     item.style.display = show ? "flex" : "none";
-    if (show) visible.push(item);
+    if (show) visible++;
   });
-  emptyContacts.style.display =
-    visible.length === 0 && term.length > 0 ? "block" : "none";
-  if (term.length > 0 && visible.length === 1)
-    openChat(
-      visible[0].dataset.userName,
-      visible[0].dataset.userInitials,
-      visible[0].dataset.userId,
-    );
+  emptyContacts.style.display = visible === 0 && term.length > 0 ? "block" : "none";
 });
 
 // ===============================
 // FULL EMOJI PICKER
 // ===============================
 const emojiCategories = {
-  "😀 Smileys": [
-    "😀",
-    "😃",
-    "😄",
-    "😁",
-    "😆",
-    "😅",
-    "🤣",
-    "😂",
-    "🙂",
-    "🙃",
-    "😉",
-    "😊",
-    "😇",
-    "🥰",
-    "😍",
-    "🤩",
-    "😘",
-    "😗",
-    "😚",
-    "😙",
-    "🥲",
-    "😋",
-    "😛",
-    "😜",
-    "🤪",
-    "😝",
-    "🤑",
-    "🤗",
-    "🤭",
-    "🤫",
-    "🤔",
-    "🤐",
-    "🤨",
-    "😐",
-    "😑",
-    "😶",
-    "😏",
-    "😒",
-    "🙄",
-    "😬",
-    "🤥",
-    "😌",
-    "😔",
-    "😪",
-    "🤤",
-    "😴",
-    "😷",
-    "🤒",
-    "🤕",
-    "🤢",
-    "🤮",
-    "🤧",
-    "🥵",
-    "🥶",
-    "🥴",
-    "😵",
-    "🤯",
-    "🤠",
-    "🥳",
-    "🥸",
-    "😎",
-    "🤓",
-    "🧐",
-    "😕",
-    "😟",
-    "🙁",
-    "☹️",
-    "😮",
-    "😯",
-    "😲",
-    "😳",
-    "🥺",
-    "😦",
-    "😧",
-    "😨",
-    "😰",
-    "😥",
-    "😢",
-    "😭",
-    "😱",
-    "😖",
-    "😣",
-    "😞",
-    "😓",
-    "😩",
-    "😫",
-    "🥱",
-    "😤",
-    "😡",
-    "😠",
-    "🤬",
-    "😈",
-    "👿",
-    "💀",
-    "☠️",
-    "💩",
-    "🤡",
-    "👹",
-    "👺",
-    "👻",
-    "👽",
-    "👾",
-    "🤖",
-  ],
-  "👋 People": [
-    "👋",
-    "🤚",
-    "🖐️",
-    "✋",
-    "🖖",
-    "👌",
-    "🤌",
-    "🤏",
-    "✌️",
-    "🤞",
-    "🤟",
-    "🤘",
-    "🤙",
-    "👈",
-    "👉",
-    "👆",
-    "🖕",
-    "👇",
-    "☝️",
-    "👍",
-    "👎",
-    "✊",
-    "👊",
-    "🤛",
-    "🤜",
-    "👏",
-    "🙌",
-    "👐",
-    "🤲",
-    "🤝",
-    "🙏",
-    "✍️",
-    "💅",
-    "🤳",
-    "💪",
-    "🦾",
-    "🦵",
-    "🦶",
-    "👂",
-    "🦻",
-    "👃",
-    "🫀",
-    "🫁",
-    "🧠",
-    "🦷",
-    "🦴",
-    "👀",
-    "👁️",
-    "👅",
-    "👄",
-    "💋",
-    "👶",
-    "🧒",
-    "👦",
-    "👧",
-    "🧑",
-    "👱",
-    "👨",
-    "🧔",
-    "👩",
-    "🧓",
-    "👴",
-    "👵",
-    "🙍",
-    "🙎",
-    "🙅",
-    "🙆",
-    "💁",
-    "🙋",
-    "🧏",
-    "🙇",
-    "🤦",
-    "🤷",
-  ],
-  "🐶 Animals": [
-    "🐶",
-    "🐱",
-    "🐭",
-    "🐹",
-    "🐰",
-    "🦊",
-    "🐻",
-    "🐼",
-    "🐨",
-    "🐯",
-    "🦁",
-    "🐮",
-    "🐷",
-    "🐸",
-    "🐵",
-    "🙈",
-    "🙉",
-    "🙊",
-    "🐔",
-    "🐧",
-    "🐦",
-    "🐤",
-    "🦆",
-    "🦅",
-    "🦉",
-    "🦇",
-    "🐺",
-    "🐗",
-    "🐴",
-    "🦄",
-    "🐝",
-    "🐛",
-    "🦋",
-    "🐌",
-    "🐞",
-    "🐜",
-    "🦟",
-    "🦗",
-    "🕷️",
-    "🦂",
-    "🐢",
-    "🐍",
-    "🦎",
-    "🦖",
-    "🦕",
-    "🐙",
-    "🦑",
-    "🦐",
-    "🦞",
-    "🦀",
-    "🐡",
-    "🐠",
-    "🐟",
-    "🐬",
-    "🐳",
-    "🐋",
-    "🦈",
-    "🐊",
-    "🐅",
-    "🐆",
-    "🦓",
-    "🦍",
-    "🦧",
-    "🦣",
-    "🐘",
-    "🦛",
-    "🦏",
-    "🐪",
-    "🐫",
-    "🦒",
-    "🦘",
-    "🦬",
-    "🐃",
-    "🐂",
-    "🐄",
-    "🐎",
-    "🐖",
-    "🐏",
-    "🐑",
-    "🦙",
-    "🐐",
-    "🦌",
-    "🐕",
-    "🐩",
-    "🦮",
-    "🐈",
-    "🐓",
-    "🦃",
-    "🦤",
-    "🦚",
-    "🦜",
-    "🦢",
-    "🦩",
-    "🕊️",
-    "🐇",
-    "🦝",
-    "🦨",
-    "🦡",
-    "🦫",
-    "🦦",
-    "🦥",
-    "🐁",
-    "🐀",
-    "🐿️",
-    "🦔",
-  ],
-  "🍎 Food": [
-    "🍎",
-    "🍐",
-    "🍊",
-    "🍋",
-    "🍌",
-    "🍉",
-    "🍇",
-    "🍓",
-    "🫐",
-    "🍈",
-    "🍒",
-    "🍑",
-    "🥭",
-    "🍍",
-    "🥥",
-    "🥝",
-    "🍅",
-    "🫒",
-    "🥑",
-    "🍆",
-    "🥔",
-    "🥕",
-    "🌽",
-    "🌶️",
-    "🫑",
-    "🥒",
-    "🥬",
-    "🥦",
-    "🧄",
-    "🧅",
-    "🍄",
-    "🥜",
-    "🌰",
-    "🍞",
-    "🥐",
-    "🥖",
-    "🫓",
-    "🥨",
-    "🥯",
-    "🥞",
-    "🧇",
-    "🧈",
-    "🍳",
-    "🍲",
-    "🥘",
-    "🍜",
-    "🍝",
-    "🍠",
-    "🍢",
-    "🍣",
-    "🍤",
-    "🍙",
-    "🍚",
-    "🍛",
-    "🍥",
-    "🥮",
-    "🍡",
-    "🥟",
-    "🥠",
-    "🥡",
-    "🍦",
-    "🍧",
-    "🍨",
-    "🍩",
-    "🍪",
-    "🎂",
-    "🍰",
-    "🧁",
-    "🥧",
-    "🍫",
-    "🍬",
-    "🍭",
-    "🍮",
-    "🍯",
-    "🍼",
-    "🥛",
-    "☕",
-    "🫖",
-    "🍵",
-    "🍶",
-    "🍾",
-    "🍷",
-    "🍸",
-    "🍹",
-    "🍺",
-    "🍻",
-    "🥂",
-    "🥃",
-    "🫗",
-    "🥤",
-    "🧋",
-    "🧃",
-    "🧉",
-    "🧊",
-  ],
-  "⚽ Activity": [
-    "⚽",
-    "🏀",
-    "🏈",
-    "⚾",
-    "🥎",
-    "🎾",
-    "🏐",
-    "🏉",
-    "🥏",
-    "🎱",
-    "🏓",
-    "🏸",
-    "🏒",
-    "🏑",
-    "🥍",
-    "🏏",
-    "🪃",
-    "🥅",
-    "⛳",
-    "🪁",
-    "🏹",
-    "🎣",
-    "🤿",
-    "🥊",
-    "🥋",
-    "🎽",
-    "🛹",
-    "🛼",
-    "🛷",
-    "⛸️",
-    "🥌",
-    "🎿",
-    "⛷️",
-    "🏂",
-    "🪂",
-    "🏋️",
-    "🤼",
-    "🤸",
-    "🤺",
-    "⛺",
-    "🎭",
-    "🎨",
-    "🎬",
-    "🎤",
-    "🎧",
-    "🎼",
-    "🎹",
-    "🥁",
-    "🎷",
-    "🎺",
-    "🎸",
-    "🪕",
-    "🎻",
-    "🎲",
-    "♟️",
-    "🎯",
-    "🎳",
-    "🎮",
-    "🎰",
-    "🧩",
-  ],
-  "🚗 Travel": [
-    "🚗",
-    "🚕",
-    "🚙",
-    "🚌",
-    "🚎",
-    "🏎️",
-    "🚓",
-    "🚑",
-    "🚒",
-    "🚐",
-    "🛻",
-    "🚚",
-    "🚛",
-    "🚜",
-    "🏍️",
-    "🛵",
-    "🛺",
-    "🚲",
-    "🛴",
-    "🛹",
-    "🛼",
-    "🚏",
-    "🛣️",
-    "🛤️",
-    "⛽",
-    "🚨",
-    "🚥",
-    "🚦",
-    "🚧",
-    "⚓",
-    "🛟",
-    "⛵",
-    "🛶",
-    "🚤",
-    "🛳️",
-    "⛴️",
-    "🛥️",
-    "🚢",
-    "✈️",
-    "🛩️",
-    "🛫",
-    "🛬",
-    "🪂",
-    "💺",
-    "🚁",
-    "🚟",
-    "🚠",
-    "🚡",
-    "🛰️",
-    "🚀",
-    "🛸",
-    "🪐",
-    "🌍",
-    "🌎",
-    "🌏",
-    "🌐",
-    "🗺️",
-    "🧭",
-    "🏔️",
-    "⛰️",
-    "🌋",
-    "🗻",
-    "🏕️",
-    "🏖️",
-    "🏜️",
-    "🏝️",
-    "🏞️",
-    "🏟️",
-    "🏛️",
-    "🏗️",
-    "🧱",
-    "🏘️",
-    "🏚️",
-    "🏠",
-    "🏡",
-    "🏢",
-    "🏣",
-    "🏤",
-    "🏥",
-    "🏦",
-    "🏨",
-    "🏩",
-    "🏪",
-    "🏫",
-    "🏬",
-    "🏭",
-    "🏯",
-    "🏰",
-    "💒",
-    "🗼",
-    "🗽",
-  ],
-  "💡 Objects": [
-    "💡",
-    "🔦",
-    "🕯️",
-    "🪔",
-    "🧱",
-    "💰",
-    "💴",
-    "💵",
-    "💶",
-    "💷",
-    "💸",
-    "💳",
-    "🪙",
-    "💹",
-    "📈",
-    "📉",
-    "📊",
-    "📋",
-    "📌",
-    "📍",
-    "✂️",
-    "🗃️",
-    "🗄️",
-    "🗑️",
-    "🔒",
-    "🔓",
-    "🔏",
-    "🔐",
-    "🔑",
-    "🗝️",
-    "🔨",
-    "🪓",
-    "⛏️",
-    "⚒️",
-    "🛠️",
-    "🗡️",
-    "⚔️",
-    "🔫",
-    "🪃",
-    "🏹",
-    "🛡️",
-    "🔧",
-    "🔩",
-    "⚙️",
-    "🗜️",
-    "🔗",
-    "⛓️",
-    "🧲",
-    "🪜",
-    "🧰",
-    "🧲",
-    "💊",
-    "💉",
-    "🩸",
-    "🩹",
-    "🩺",
-    "🩻",
-    "🚪",
-    "🛋️",
-    "🪑",
-    "🚽",
-    "🪠",
-    "🚿",
-    "🛁",
-    "🪤",
-    "🧴",
-    "🧷",
-    "🧹",
-    "🧺",
-    "🧻",
-    "🧼",
-    "🫧",
-    "🧽",
-    "🧯",
-    "🛒",
-    "🚬",
-    "⚰️",
-    "🪦",
-    "⚱️",
-    "🗿",
-    "🪧",
-    "🪪",
-  ],
-  "❤️ Symbols": [
-    "❤️",
-    "🧡",
-    "💛",
-    "💚",
-    "💙",
-    "💜",
-    "🖤",
-    "🤍",
-    "🤎",
-    "💔",
-    "❣️",
-    "💕",
-    "💞",
-    "💓",
-    "💗",
-    "💖",
-    "💘",
-    "💝",
-    "💟",
-    "☮️",
-    "✝️",
-    "☪️",
-    "🕉️",
-    "☸️",
-    "✡️",
-    "🔯",
-    "🕎",
-    "☯️",
-    "☦️",
-    "🛐",
-    "⛎",
-    "♈",
-    "♉",
-    "♊",
-    "♋",
-    "♌",
-    "♍",
-    "♎",
-    "♏",
-    "♐",
-    "♑",
-    "♒",
-    "♓",
-    "🆔",
-    "⚛️",
-    "🉑",
-    "☢️",
-    "☣️",
-    "📴",
-    "📳",
-    "🈶",
-    "🈚",
-    "🈸",
-    "🈺",
-    "🈷️",
-    "✴️",
-    "🆚",
-    "💮",
-    "🉐",
-    "㊙️",
-    "㊗️",
-    "🈴",
-    "🈵",
-    "🈹",
-    "🈲",
-    "🅰️",
-    "🅱️",
-    "🆎",
-    "🆑",
-    "🅾️",
-    "🆘",
-    "❌",
-    "⭕",
-    "🛑",
-    "⛔",
-    "📛",
-    "🚫",
-    "💯",
-    "💢",
-    "♨️",
-    "🚷",
-    "🚯",
-    "🚳",
-    "🚱",
-    "🔞",
-    "📵",
-    "🔕",
-  ],
+  "😀 Smileys": ["😀","😃","😄","😁","😆","😅","🤣","😂","🙂","🙃","😉","😊","😇","🥰","😍","🤩","😘","😗","😚","😙","🥲","😋","😛","😜","🤪","😝","🤑","🤗","🤭","🤫","🤔","🤐","🤨","😐","😑","😶","😏","😒","🙄","😬","🤥","😌","😔","😪","🤤","😴","😷","🤒","🤕","🤢","🤮","🤧","🥵","🥶","🥴","😵","🤯","🤠","🥳","🥸","😎","🤓","🧐","😕","😟","🙁","☹️","😮","😯","😲","😳","🥺","😦","😧","😨","😰","😥","😢","😭","😱","😖","😣","😞","😓","😩","😫","🥱","😤","😡","😠","🤬","😈","👿","💀","☠️","💩","🤡","👹","👺","👻","👽","👾","🤖"],
+  "👋 People": ["👋","🤚","🖐️","✋","🖖","👌","🤌","🤏","✌️","🤞","🤟","🤘","🤙","👈","👉","👆","🖕","👇","☝️","👍","👎","✊","👊","🤛","🤜","👏","🙌","👐","🤲","🤝","🙏","✍️","💅","🤳","💪","🦾","🦵","🦶","👂","🦻","👃","🫀","🫁","🧠","🦷","🦴","👀","👁️","👅","👄","💋","👶","🧒","👦","👧","🧑","👱","👨","🧔","👩","🧓","👴","👵","🙍","🙎","🙅","🙆","💁","🙋","🧏","🙇","🤦","🤷"],
+  "🐶 Animals": ["🐶","🐱","🐭","🐹","🐰","🦊","🐻","🐼","🐨","🐯","🦁","🐮","🐷","🐸","🐵","🙈","🙉","🙊","🐔","🐧","🐦","🐤","🦆","🦅","🦉","🦇","🐺","🐗","🐴","🦄","🐝","🐛","🦋","🐌","🐞","🐜","🦟","🦗","🕷️","🦂","🐢","🐍","🦎","🦖","🦕","🐙","🦑","🦐","🦞","🦀","🐡","🐠","🐟","🐬","🐳","🐋","🦈","🐊","🐅","🐆","🦓","🦍","🦧","🦣","🐘","🦛","🦏","🐪","🐫","🦒","🦘","🦬","🐃","🐂","🐄","🐎","🐖","🐏","🐑","🦙","🐐","🦌","🐕","🐩","🦮","🐈","🐓","🦃","🦤","🦚","🦜","🦢","🦩","🕊️","🐇","🦝","🦨","🦡","🦫","🦦","🦥","🐁","🐀","🐿️","🦔"],
+  "🍎 Food": ["🍎","🍐","🍊","🍋","🍌","🍉","🍇","🍓","🫐","🍈","🍒","🍑","🥭","🍍","🥥","🥝","🍅","🫒","🥑","🍆","🥔","🥕","🌽","🌶️","🫑","🥒","🥬","🥦","🧄","🧅","🍄","🥜","🌰","🍞","🥐","🥖","🫓","🥨","🥯","🥞","🧇","🧈","🍳","🍲","🥘","🍜","🍝","🍠","🍢","🍣","🍤","🍙","🍚","🍛","🍥","🥮","🍡","🥟","🥠","🥡","🍦","🍧","🍨","🍩","🍪","🎂","🍰","🧁","🥧","🍫","🍬","🍭","🍮","🍯","🍼","🥛","☕","🫖","🍵","🍶","🍾","🍷","🍸","🍹","🍺","🍻","🥂","🥃","🫗","🥤","🧋","🧃","🧉","🧊"],
+  "⚽ Activity": ["⚽","🏀","🏈","⚾","🥎","🎾","🏐","🏉","🥏","🎱","🏓","🏸","🏒","🏑","🥍","🏏","🪃","🥅","⛳","🪁","🏹","🎣","🤿","🥊","🥋","🎽","🛹","🛼","🛷","⛸️","🥌","🎿","⛷️","🏂","🪂","🏋️","🤼","🤸","🤺","⛺","🎭","🎨","🎬","🎤","🎧","🎼","🎹","🥁","🎷","🎺","🎸","🪕","🎻","🎲","♟️","🎯","🎳","🎮","🎰","🧩"],
+  "🚗 Travel": ["🚗","🚕","🚙","🚌","🚎","🏎️","🚓","🚑","🚒","🚐","🛻","🚚","🚛","🚜","🏍️","🛵","🛺","🚲","🛴","🛹","🛼","🚏","🛣️","🛤️","⛽","🚨","🚥","🚦","🚧","⚓","🛟","⛵","🛶","🚤","🛳️","⛴️","🛥️","🚢","✈️","🛩️","🛫","🛬","🪂","💺","🚁","🚟","🚠","🚡","🛰️","🚀","🛸","🪐","🌍","🌎","🌏","🌐","🗺️","🧭","🏔️","⛰️","🌋","🗻","🏕️","🏖️","🏜️","🏝️","🏞️","🏟️","🏛️","🏗️","🧱","🏘️","🏚️","🏠","🏡","🏢","🏣","🏤","🏥","🏦","🏨","🏩","🏪","🏫","🏬","🏭","🏯","🏰","💒","🗼","🗽"],
+  "💡 Objects": ["💡","🔦","🕯️","🪔","🧱","💰","💴","💵","💶","💷","💸","💳","🪙","💹","📈","📉","📊","📋","📌","📍","✂️","🗃️","🗄️","🗑️","🔒","🔓","🔏","🔐","🔑","🗝️","🔨","🪓","⛏️","⚒️","🛠️","🗡️","⚔️","🔫","🪃","🏹","🛡️","🔧","🔩","⚙️","🗜️","🔗","⛓️","🧲","🪜","🧰","💊","💉","🩸","🩹","🩺","🩻","🚪","🛋️","🪑","🚽","🪠","🚿","🛁","🪤","🧴","🧷","🧹","🧺","🧻","🧼","🫧","🧽","🧯","🛒","🚬","⚰️","🪦","⚱️","🗿","🪧","🪪"],
+  "❤️ Symbols": ["❤️","🧡","💛","💚","💙","💜","🖤","🤍","🤎","💔","❣️","💕","💞","💓","💗","💖","💘","💝","💟","☮️","✝️","☪️","🕉️","☸️","✡️","🔯","🕎","☯️","☦️","🛐","⛎","♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓","🆔","⚛️","🉑","☢️","☣️","📴","📳","🈶","🈚","🈸","🈺","🈷️","✴️","🆚","💮","🉐","㊙️","㊗️","🈴","🈵","🈹","🈲","🅰️","🅱️","🆎","🆑","🅾️","🆘","❌","⭕","🛑","⛔","📛","🚫","💯","💢","♨️","🚷","🚯","🚳","🚱","🔞","📵","🔕"],
 };
 
 let emojiPickerEl = null;
 
 function openEmojiPicker() {
-  if (emojiPickerEl) {
-    emojiPickerEl.remove();
-    emojiPickerEl = null;
-    return;
-  }
+  if (emojiPickerEl) { emojiPickerEl.remove(); emojiPickerEl = null; return; }
 
   const picker = document.createElement("div");
   picker.className = "emoji-picker";
@@ -1702,27 +761,19 @@ function openEmojiPicker() {
       <input class="ep-search" placeholder="Search emoji..." />
     </div>
     <div class="ep-tabs">
-      ${Object.keys(emojiCategories)
-        .map(
-          (cat, i) =>
-            `<button class="ep-tab${i === 0 ? " active" : ""}" data-cat="${cat}">${cat.split(" ")[0]}</button>`,
-        )
-        .join("")}
+      ${Object.keys(emojiCategories).map((cat, i) =>
+        `<button class="ep-tab${i === 0 ? " active" : ""}" data-cat="${cat}">${cat.split(" ")[0]}</button>`
+      ).join("")}
     </div>
     <div class="ep-body">
-      ${Object.entries(emojiCategories)
-        .map(
-          ([cat, emojis], i) => `
+      ${Object.entries(emojiCategories).map(([cat, emojis], i) => `
         <div class="ep-section${i === 0 ? "" : " hidden"}" data-section="${cat}">
           <div class="ep-cat-label">${cat}</div>
           <div class="ep-grid">${emojis.map((em) => `<span class="ep-em">${em}</span>`).join("")}</div>
-        </div>`,
-        )
-        .join("")}
+        </div>`).join("")}
     </div>
   `;
 
-  // Position above input box, aligned to right panel
   const inputRect = messageInputContainer.getBoundingClientRect();
   picker.style.position = "fixed";
   picker.style.bottom = window.innerHeight - inputRect.top + 8 + "px";
@@ -1732,12 +783,9 @@ function openEmojiPicker() {
   document.body.appendChild(picker);
   emojiPickerEl = picker;
 
-  // Tab switching
   picker.querySelectorAll(".ep-tab").forEach((tab) => {
     tab.addEventListener("click", () => {
-      picker
-        .querySelectorAll(".ep-tab")
-        .forEach((t) => t.classList.remove("active"));
+      picker.querySelectorAll(".ep-tab").forEach((t) => t.classList.remove("active"));
       tab.classList.add("active");
       const cat = tab.dataset.cat;
       picker.querySelectorAll(".ep-section").forEach((s) => {
@@ -1746,56 +794,31 @@ function openEmojiPicker() {
     });
   });
 
-  // Search
   picker.querySelector(".ep-search").addEventListener("input", (e) => {
     const term = e.target.value.trim().toLowerCase();
     if (!term) {
-      // Restore first tab
-      picker
-        .querySelectorAll(".ep-section")
-        .forEach((s, i) => s.classList.toggle("hidden", i !== 0));
-      picker
-        .querySelectorAll(".ep-tab")
-        .forEach((t, i) => t.classList.toggle("active", i === 0));
+      picker.querySelectorAll(".ep-section").forEach((s, i) => s.classList.toggle("hidden", i !== 0));
+      picker.querySelectorAll(".ep-tab").forEach((t, i) => t.classList.toggle("active", i === 0));
       return;
     }
-    // Show all matching emojis in a flat list
-    picker
-      .querySelectorAll(".ep-tab")
-      .forEach((t) => t.classList.remove("active"));
+    picker.querySelectorAll(".ep-tab").forEach((t) => t.classList.remove("active"));
     picker.querySelectorAll(".ep-section").forEach((s) => {
       const all = [...s.querySelectorAll(".ep-em")];
-      const matches = all.filter(
-        (em) => em.textContent.includes(term) || term.length <= 2,
-      );
+      const matches = all.filter((em) => em.textContent.includes(term) || term.length <= 2);
       s.classList.toggle("hidden", matches.length === 0);
-      all.forEach(
-        (em) =>
-          (em.style.display = matches.includes(em) || !term ? "" : "none"),
-      );
+      all.forEach((em) => (em.style.display = matches.includes(em) || !term ? "" : "none"));
     });
   });
 
-  // Insert emoji on click
   picker.querySelectorAll(".ep-em").forEach((em) => {
-    em.addEventListener("click", () => {
-      messageInput.value += em.textContent;
-      messageInput.focus();
-    });
+    em.addEventListener("click", () => { messageInput.value += em.textContent; messageInput.focus(); });
   });
 
-  // Close on outside click
-  setTimeout(() => {
-    document.addEventListener("click", closeEmojiPickerOutside);
-  }, 10);
+  setTimeout(() => { document.addEventListener("click", closeEmojiPickerOutside); }, 10);
 }
 
 function closeEmojiPickerOutside(e) {
-  if (
-    emojiPickerEl &&
-    !emojiPickerEl.contains(e.target) &&
-    e.target !== emojiToggle
-  ) {
+  if (emojiPickerEl && !emojiPickerEl.contains(e.target) && e.target !== emojiToggle) {
     emojiPickerEl.remove();
     emojiPickerEl = null;
     document.removeEventListener("click", closeEmojiPickerOutside);
@@ -1821,43 +844,6 @@ document.addEventListener("click", (e) => {
 });
 
 // ===============================
-// SEARCH IN CHAT
-// ===============================
-searchInChatToggle.addEventListener("click", () => {
-  chatSearchBar.classList.toggle("active");
-  if (chatSearchBar.classList.contains("active")) chatMessageSearch.focus();
-  else {
-    chatMessageSearch.value = "";
-    clearMessageHighlights();
-  }
-});
-closeSearchBtn.addEventListener("click", () => {
-  chatSearchBar.classList.remove("active");
-  chatMessageSearch.value = "";
-  clearMessageHighlights();
-});
-chatMessageSearch.addEventListener("input", (e) => {
-  const term = e.target.value.toLowerCase();
-  clearMessageHighlights();
-  if (!term) return;
-  messagesContainer.querySelectorAll(".message").forEach((m) => {
-    const t = m.querySelector(".message-text");
-    if (!t) return;
-    t.textContent.toLowerCase().includes(term)
-      ? m.classList.add("highlight")
-      : m.classList.add("faded");
-  });
-  messagesContainer
-    .querySelector(".message.highlight")
-    ?.scrollIntoView({ behavior: "smooth", block: "center" });
-});
-function clearMessageHighlights() {
-  messagesContainer
-    .querySelectorAll(".message")
-    .forEach((m) => m.classList.remove("highlight", "faded", "hidden"));
-}
-
-// ===============================
 // BLOCK / UNBLOCK
 // ===============================
 blockUserBtn.addEventListener("click", () => {
@@ -1870,6 +856,7 @@ blockUserBtn.addEventListener("click", () => {
   menuDropdown.classList.remove("active");
 });
 blockNoticeUnblock.addEventListener("click", doUnblock);
+
 function doUnblock() {
   delete blockedUsers[currentUserId];
   saveBlocked();
@@ -1877,6 +864,7 @@ function doUnblock() {
   refreshChatList();
   loadMessages(currentUserId);
 }
+
 function updateBlockedState() {
   const blocked = !!blockedUsers[currentUserId];
   blockNotice.classList.toggle("active", blocked);
@@ -1885,6 +873,7 @@ function updateBlockedState() {
     ? `<i class='bx bx-check'></i><span>User blocked</span>`
     : `<i class='bx bx-block'></i><span>Block user</span>`;
 }
+
 function appendBlockedNoticeMessages() {
   messagesContainer.appendChild(createDayDivider("Today"));
   const n = document.createElement("div");
@@ -1918,14 +907,11 @@ clearChatBtn.addEventListener("click", (e) => {
   menuDropdown.classList.remove("active");
   confirmOverlay.classList.add("active");
 });
-cancelClearChat.addEventListener("click", () =>
-  confirmOverlay.classList.remove("active"),
-);
+cancelClearChat.addEventListener("click", () => confirmOverlay.classList.remove("active"));
 confirmClearChat.addEventListener("click", () => {
   if (!currentUserId) return;
   messageData[currentUserId] = [];
   messagesContainer.innerHTML = "";
-  // Clear preview in contact list
   const item = chatList.querySelector(`[data-user-id="${currentUserId}"]`);
   if (item) item.querySelector(".chat-message").textContent = "";
   confirmOverlay.classList.remove("active");
@@ -1935,7 +921,6 @@ confirmClearChat.addEventListener("click", () => {
 // FORWARD PICKER
 // ===============================
 function openForwardPicker(texts) {
-  // Build list of available contacts from chat list
   const contacts = [...chatList.querySelectorAll(".chat-item")].map((item) => ({
     userId: item.dataset.userId,
     name: item.querySelector(".chat-name").textContent,
@@ -1956,19 +941,15 @@ function openForwardPicker(texts) {
         <input type="text" placeholder="Search name..." id="forwardSearchInput" />
       </div>
       <div class="forward-list">
-        ${contacts
-          .map(
-            (c) => `
+        ${contacts.map((c) => `
           <div class="forward-item" data-uid="${c.userId}">
             <div class="forward-check"><i class="bx bx-check"></i></div>
             <div class="chat-avatar ${c.avClass}" style="width:42px;height:42px;font-size:14px;">${c.initials}</div>
             <span>${c.name}</span>
-          </div>`,
-          )
-          .join("")}
+          </div>`).join("")}
       </div>
       <button class="forward-send-btn" id="forwardSendBtn" disabled>
-        <i class="bx bx-send"></i>
+        <i class="bx bx-forward-big"></i>
       </button>
     </div>
   `;
@@ -1976,75 +957,41 @@ function openForwardPicker(texts) {
   document.body.appendChild(overlay);
   const selectedFwd = new Set();
 
-  // Search filter
-  overlay
-    .querySelector("#forwardSearchInput")
-    .addEventListener("input", (e) => {
-      const term = e.target.value.toLowerCase();
-      overlay.querySelectorAll(".forward-item").forEach((item) => {
-        item.style.display = item
-          .querySelector("span")
-          .textContent.toLowerCase()
-          .includes(term)
-          ? "flex"
-          : "none";
-      });
-    });
-
-  // Toggle contact selection
-  overlay.querySelectorAll(".forward-item").forEach((item) => {
-    item.addEventListener("click", () => {
-      const uid = item.dataset.uid;
-      if (selectedFwd.has(uid)) {
-        selectedFwd.delete(uid);
-        item.classList.remove("fwd-selected");
-      } else {
-        selectedFwd.add(uid);
-        item.classList.add("fwd-selected");
-      }
-      overlay.querySelector("#forwardSendBtn").disabled =
-        selectedFwd.size === 0;
+  overlay.querySelector("#forwardSearchInput").addEventListener("input", (e) => {
+    const term = e.target.value.toLowerCase();
+    overlay.querySelectorAll(".forward-item").forEach((item) => {
+      item.style.display = item.querySelector("span").textContent.toLowerCase().includes(term) ? "flex" : "none";
     });
   });
 
-  // Send forwarded messages
+  overlay.querySelectorAll(".forward-item").forEach((item) => {
+    item.addEventListener("click", () => {
+      const uid = item.dataset.uid;
+      if (selectedFwd.has(uid)) { selectedFwd.delete(uid); item.classList.remove("fwd-selected"); }
+      else { selectedFwd.add(uid); item.classList.add("fwd-selected"); }
+      overlay.querySelector("#forwardSendBtn").disabled = selectedFwd.size === 0;
+    });
+  });
+
   overlay.querySelector("#forwardSendBtn").addEventListener("click", () => {
     const now = new Date();
-    const time = now.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+    const time = now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
     selectedFwd.forEach((uid) => {
       if (!messageData[uid]) messageData[uid] = [];
       texts.forEach((txt) => {
-        messageData[uid].push({
-          type: "sent",
-          text: txt,
-          time,
-          date: daysAgo(0),
-          forwarded: true,
-        });
+        messageData[uid].push({ type: "sent", text: txt, time, date: daysAgo(0), forwarded: true });
       });
-      // If currently viewing that chat, add messages live
       if (currentUserId === uid) {
         texts.forEach((txt) => addMessage(txt, "sent", time, null, true, true));
       }
-      // Update contact preview
       const listItem = chatList.querySelector(`[data-user-id="${uid}"]`);
-      if (listItem)
-        listItem.querySelector(".chat-message").textContent =
-          "Forwarded: " + texts[texts.length - 1];
+      if (listItem) listItem.querySelector(".chat-message").textContent = "Forwarded: " + texts[texts.length - 1];
     });
     overlay.remove();
   });
 
-  // Close button
-  overlay
-    .querySelector(".forward-close")
-    .addEventListener("click", () => overlay.remove());
-  overlay.addEventListener("click", (e) => {
-    if (e.target === overlay) overlay.remove();
-  });
+  overlay.querySelector(".forward-close").addEventListener("click", () => overlay.remove());
+  overlay.addEventListener("click", (e) => { if (e.target === overlay) overlay.remove(); });
 }
 
 // ===============================
@@ -2059,52 +1006,30 @@ function escapeHtml(text) {
 // ===============================
 // SWIPE RIGHT TO GO BACK (mobile)
 // ===============================
-let swipeStartX = 0;
-let swipeStartY = 0;
+let swipeStartX = 0, swipeStartY = 0;
 
-document.addEventListener(
-  "touchstart",
-  (e) => {
-    swipeStartX = e.touches[0].clientX;
-    swipeStartY = e.touches[0].clientY;
-  },
-  { passive: true },
-);
+document.addEventListener("touchstart", (e) => {
+  swipeStartX = e.touches[0].clientX;
+  swipeStartY = e.touches[0].clientY;
+}, { passive: true });
 
-document.addEventListener(
-  "touchend",
-  (e) => {
-    const dx = e.changedTouches[0].clientX - swipeStartX;
-    const dy = Math.abs(e.changedTouches[0].clientY - swipeStartY);
-    // Swipe right: dx > 80px, mostly horizontal (dy < 60px), starting from left 40% of screen
-    if (dx > 80 && dy < 60 && swipeStartX < window.innerWidth * 0.4) {
-      if (chatView.classList.contains("active") && window.innerWidth <= 768) {
-        if (msgSelectMode) {
-          exitMsgSelectMode();
-          return;
-        }
-        chatView.classList.remove("active");
-        noChatSelected.classList.remove("hidden");
-        leftPanel.classList.remove("hidden-mobile");
-        removeReplyPreview();
-        menuDropdown.classList.remove("active");
-      }
+document.addEventListener("touchend", (e) => {
+  const dx = e.changedTouches[0].clientX - swipeStartX;
+  const dy = Math.abs(e.changedTouches[0].clientY - swipeStartY);
+  if (dx > 80 && dy < 60 && swipeStartX < window.innerWidth * 0.4) {
+    if (chatView.classList.contains("active") && window.innerWidth <= 768) {
+      if (msgSelectMode) { exitMsgSelectMode(); return; }
+      chatView.classList.remove("active");
+      noChatSelected.classList.remove("hidden");
+      leftPanel.classList.remove("hidden-mobile");
+      removeReplyPreview();
+      menuDropdown.classList.remove("active");
     }
-  },
-  { passive: true },
-);
+  }
+}, { passive: true });
 
 // ===============================
 // INIT
 // ===============================
 refreshChatList();
-
-if (window.innerWidth > 768) {
-  const firstItem = chatList.querySelector(".chat-item");
-  if (firstItem)
-    openChat(
-      firstItem.dataset.userName,
-      firstItem.dataset.userInitials,
-      firstItem.dataset.userId,
-    );
-}
+// Do NOT auto-open any chat on load — user must click a contact

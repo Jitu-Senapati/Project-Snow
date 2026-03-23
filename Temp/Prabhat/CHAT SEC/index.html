@@ -16,11 +16,6 @@
       <div class="left-panel" id="leftPanel">
         <div class="left-header">
           <h2>Messages</h2>
-          <div class="left-header-actions">
-            <button class="icon-btn" title="New chat">
-              <i class="bx bx-edit"></i>
-            </button>
-          </div>
         </div>
 
         <div class="search-bar">
@@ -117,16 +112,16 @@
             <div class="chat-header-clickable" id="chatHeaderClickable">
               <div class="chat-avatar" id="chatHeaderAvatar">AK</div>
               <div class="chat-header-info">
-                <div class="chat-header-name" id="chatHeaderName">
-                  Amit Kumar
+                <div class="chat-header-name-row">
+                  <div class="chat-header-name" id="chatHeaderName">Amit Kumar</div>
+                  <button class="close-chat-btn" id="closeChatBtn" title="Close chat">
+                    <i class="bx bx-arrow-back"></i>
+                  </button>
                 </div>
                 <div class="chat-header-status">Online</div>
               </div>
             </div>
             <div class="chat-header-right">
-              <button class="icon-btn" id="searchInChatToggle" title="Search">
-                <i class="bx bx-search"></i>
-              </button>
               <div class="chat-menu">
                 <button class="icon-btn" id="menuButton">
                   <i class="bx bx-dots-vertical-rounded"></i>
@@ -141,19 +136,6 @@
                 </div>
               </div>
             </div>
-          </div>
-
-          <!-- Search bar -->
-          <div class="chat-search-bar" id="chatSearchBar">
-            <i class="bx bx-search"></i>
-            <input
-              type="text"
-              id="chatMessageSearch"
-              placeholder="Search in conversation..."
-            />
-            <button class="icon-btn" id="closeSearchBtn">
-              <i class="bx bx-x"></i>
-            </button>
           </div>
 
           <!-- Messages -->
@@ -176,14 +158,11 @@
               <button class="msg-sel-btn" id="msgCopyBtn" title="Copy">
                 <i class="bx bx-copy"></i>
               </button>
-              <button class="msg-sel-btn" id="msgStarBtn" title="Star">
-                <i class="bx bx-star"></i>
-              </button>
               <button class="msg-sel-btn" id="msgDeleteBtn" title="Delete">
                 <i class="bx bx-trash"></i>
               </button>
               <button class="msg-sel-btn" id="msgForwardBtn" title="Forward">
-                <i class="bx bx-share-alt"></i>
+                <i class="bx bx-forward-big"></i>
               </button>
             </div>
           </div>
