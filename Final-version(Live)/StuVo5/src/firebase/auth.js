@@ -16,8 +16,9 @@ import {
   browserSessionPersistence,
   setPersistence
 } from "firebase/auth";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore";
-import { auth, db } from "./config";
+import { doc, setDoc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { auth, db, storage } from "./config";
 
 export const registerUserWithEmailAndPassword = async (email, password, username, phone, fullName, roll, branch, year) => {
   try {
@@ -33,6 +34,7 @@ export const registerUserWithEmailAndPassword = async (email, password, username
       roll: roll || "",
       branch,
       year,
+      admin: false,  // ← add this line
       createdAt: serverTimestamp(),
     });
 
@@ -117,23 +119,37 @@ export const signOutUser = async () => {
   await signOut(auth);
 };
 
-export const linkEmailPasswordToPhoneAccount = async (email, password, username, phone, fullName, roll, branch, year) => {
+export const linkEmailPasswordToPhoneAccount = async (email, password, username, phone, fullName, role, studentData, facultyData, photoURL = "") => {
   const credential = EmailAuthProvider.credential(email, password);
   const result = await linkWithCredential(auth.currentUser, credential);
   const user = result.user;
 
-  await setDoc(doc(db, "users", user.uid), {
+  const userData = {
     uid: user.uid,
     username,
     email,
     phone,
     fullName,
-    roll: roll || "",
-    branch,
-    year,
+    role,
+    photoURL,
+    admin: false,  // ← add this line
     createdAt: serverTimestamp(),
-  });
+  };
 
+  if (role === "student") {
+    userData.roll = studentData.roll || "";
+    userData.branch = studentData.branch;
+    userData.year = studentData.year;
+  } else {
+    userData.department = facultyData.department;
+    userData.subject = facultyData.subject || "";
+    userData.workingSince = facultyData.workingSince;
+  }
+
+console.log("Writing to Firestore:", userData);
+await setDoc(doc(db, "users", user.uid), userData);
+
+  await setDoc(doc(db, "users", user.uid), userData);
   return user;
 };
 
@@ -167,4 +183,26 @@ export const linkGoogleAfterRegistration = async () => {
 
   sessionStorage.removeItem('googleIdToken');
   sessionStorage.removeItem('googleAccessToken');
+};
+
+export const uploadProfilePhoto = async (uid, file) => {
+  const storageRef = ref(storage, `profilePhotos/${uid}`);
+  await uploadBytes(storageRef, file);
+  const downloadURL = await getDownloadURL(storageRef);
+  return downloadURL;
+};
+
+// --------------------------------------------------------------------------------------------------------------------
+// 
+// profile 
+
+
+export const updateUserProfile = async (uid, data) => {
+  await updateDoc(doc(db, "users", uid), data);
+};
+
+export const uploadCoverPhoto = async (uid, file) => {
+  const storageRef = ref(storage, `coverPhotos/${uid}`);
+  await uploadBytes(storageRef, file);
+  return await getDownloadURL(storageRef);
 };

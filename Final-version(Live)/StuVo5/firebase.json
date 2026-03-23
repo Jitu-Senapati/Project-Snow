@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "stuvo5",
     "public": "dist",
     "ignore": [
       "firebase.json",
