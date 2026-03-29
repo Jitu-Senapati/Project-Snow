@@ -1,0 +1,157 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f5f7fb;
+}
+
+/* Container */
+.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 15px;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#adminToggle {
+    padding: 6px 10px;
+    font-size: 12px;
+    border: none;
+    background: #4f46e5;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    overflow-x: auto;
+}
+
+.tab {
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 20px;
+    border: none;
+    background: #e5e7eb;
+    cursor: pointer;
+}
+
+.tab.active {
+    background: #4f46e5;
+    color: white;
+}
+
+/* Arrow Animation */
+.arrow {
+    animation: move 1s infinite alternate;
+}
+
+@keyframes move {
+    from { transform: translateX(0); }
+    to { transform: translateX(5px); }
+}
+
+/* Cards */
+.cards {
+    margin-top: 15px;
+    display: grid;
+    gap: 10px;
+}
+
+.card {
+    background: white;
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.card h4 {
+    margin: 0;
+    font-size: 14px;
+}
+
+.card p {
+    margin: 2px 0;
+    font-size: 12px;
+    color: gray;
+}
+
+/* Admin Buttons */
+.card .actions {
+    margin-top: 5px;
+}
+
+.card button {
+    font-size: 10px;
+    margin-right: 5px;
+}
+
+/* Add Button */
+.add-btn {
+    margin-top: 10px;
+    padding: 8px;
+    width: 100%;
+    border: none;
+    background: #10b981;
+    color: white;
+    border-radius: 8px;
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 300px;
+}
+
+.modal input, .modal select {
+    width: 100%;
+    margin: 5px 0;
+    padding: 6px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Hidden */
+.hidden {
+    display: none;
+}
+
+/* Responsive */
+@media(min-width:768px){
+    .cards {
+        grid-template-columns: repeat(2,1fr);
+    }
+}
+
+@media(min-width:1024px){
+    .cards {
+        grid-template-columns: repeat(3,1fr);
+    }
+}

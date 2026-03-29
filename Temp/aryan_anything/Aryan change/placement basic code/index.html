@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Placement Section</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Header -->
+    <div class="header">
+        <h2>Placement Section</h2>
+        <button id="adminToggle">Admin Mode</button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab active" data-tab="ongoing">🏢 Ongoing</button>
+        <button class="tab" data-tab="upcoming">📅 Upcoming <span class="arrow">➜</span></button>
+        <button class="tab" data-tab="finished">✅ Finished</button>
+    </div>
+
+    <!-- Content -->
+    <div id="cards" class="cards"></div>
+
+    <!-- Admin Add Button -->
+    <button id="addBtn" class="add-btn hidden">+ Add Company</button>
+
+</div>
+
+<!-- Modal -->
+<div id="modal" class="modal hidden">
+    <div class="modal-content">
+        <h3>Add / Edit Company</h3>
+
+        <input type="text" id="name" placeholder="Company Name">
+        <input type="text" id="role" placeholder="Role">
+        <input type="date" id="date">
+
+        <select id="status">
+            <option value="ongoing">Ongoing</option>
+            <option value="upcoming">Upcoming</option>
+            <option value="finished">Finished</option>
+        </select>
+
+        <div class="modal-actions">
+            <button id="saveBtn">Save</button>
+            <button id="closeBtn">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

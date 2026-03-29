@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Placement | College Management System</title>
+  <link rel="stylesheet" href="placement.css" />
+  <!-- Remix Icons CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ===================== SIDEBAR (consistent with your CMS layout) ===================== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <i class="ri-graduation-cap-fill logo-icon"></i>
+        <span class="logo-text">CMS</span>
+      </div>
+      <button class="sidebar-toggle" id="sidebarToggle" title="Toggle Sidebar">
+        <i class="ri-menu-fold-line"></i>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group">
+        <span class="nav-label">Main</span>
+        <a href="#" class="nav-item"><i class="ri-dashboard-line"></i><span>Dashboard</span></a>
+        <a href="#" class="nav-item"><i class="ri-user-3-line"></i><span>Students</span></a>
+        <a href="#" class="nav-item"><i class="ri-book-open-line"></i><span>Courses</span></a>
+        <a href="#" class="nav-item active"><i class="ri-building-2-line"></i><span>Placement</span></a>
+        <a href="#" class="nav-item"><i class="ri-calendar-line"></i><span>Attendance</span></a>
+      </div>
+      <div class="nav-group">
+        <span class="nav-label">Admin</span>
+        <a href="#" class="nav-item"><i class="ri-settings-3-line"></i><span>Settings</span></a>
+        <a href="#" class="nav-item"><i class="ri-shield-user-line"></i><span>Roles</span></a>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-badge">
+        <div class="user-avatar">A</div>
+        <div class="user-info">
+          <span class="user-name">Admin</span>
+          <span class="user-role">Super Admin</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===================== MAIN CONTENT ===================== -->
+  <main class="main-content" id="mainContent">
+
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1 class="page-title">
+          <i class="ri-building-2-line"></i>
+          Placement Cell
+        </h1>
+        <div class="breadcrumb">
+          <span>Dashboard</span>
+          <i class="ri-arrow-right-s-line"></i>
+          <span class="active">Placement</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <!-- Search Bar -->
+        <div class="search-wrapper">
+          <i class="ri-search-line search-icon"></i>
+          <input type="text" class="search-input" id="globalSearch" placeholder="Search companies, roles..." />
+          <kbd class="search-shortcut">⌘K</kbd>
+        </div>
+        <!-- Add Company Button (Admin) -->
+        <button class="btn btn-primary" id="openAddModal" title="Add New Company">
+          <i class="ri-add-circle-line"></i>
+          <span>Add Company</span>
+        </button>
+        <button class="btn btn-icon" title="Notifications">
+          <i class="ri-notification-3-line"></i>
+          <span class="notif-dot"></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ===================== STATS STRIP ===================== -->
+    <section class="stats-strip">
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="ri-checkbox-circle-line"></i></div>
+        <div class="stat-info">
+          <span class="stat-number" id="statOngoing">0</span>
+          <span class="stat-label">Ongoing</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon blue"><i class="ri-time-line"></i></div>
+        <div class="stat-info">
+          <span class="stat-number" id="statUpcoming">0</span>
+          <span class="stat-label">Upcoming</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon gray"><i class="ri-flag-line"></i></div>
+        <div class="stat-info">
+          <span class="stat-number" id="statFinished">0</span>
+          <span class="stat-label">Finished</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon orange"><i class="ri-team-line"></i></div>
+        <div class="stat-info">
+          <span class="stat-number" id="statTotal">0</span>
+          <span class="stat-label">Total Companies</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== TAB NAVIGATION ===================== -->
+    <section class="placement-container">
+
+      <div class="tab-header">
+        <!-- Tabs -->
+        <div class="tab-nav" role="tablist">
+          <button class="tab-btn active" data-tab="ongoing" role="tab" aria-selected="true">
+            <span class="tab-indicator green-dot pulse"></span>
+            <i class="ri-checkbox-circle-line"></i>
+            Ongoing
+            <span class="tab-badge" id="badgeOngoing">0</span>
+          </button>
+          <button class="tab-btn" data-tab="upcoming" role="tab" aria-selected="false">
+            <span class="tab-indicator blue-dot blink"></span>
+            <i class="ri-time-line"></i>
+            Upcoming
+            <span class="tab-badge" id="badgeUpcoming">0</span>
+            <!-- Arrow animation for upcoming -->
+            <span class="arrow-wave" aria-hidden="true">
+              <i class="ri-arrow-right-line"></i>
+              <i class="ri-arrow-right-line"></i>
+              <i class="ri-arrow-right-line"></i>
+            </span>
+          </button>
+          <button class="tab-btn" data-tab="finished" role="tab" aria-selected="false">
+            <span class="tab-indicator gray-dot"></span>
+            <i class="ri-flag-line"></i>
+            Finished
+            <span class="tab-badge" id="badgeFinished">0</span>
+          </button>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="filter-controls">
+          <div class="filter-select-wrapper">
+            <i class="ri-filter-3-line"></i>
+            <select class="filter-select" id="filterBranch">
+              <option value="">All Branches</option>
+              <option value="CSE">CSE</option>
+              <option value="IT">IT</option>
+              <option value="ECE">ECE</option>
+              <option value="MECH">MECH</option>
+              <option value="CIVIL">CIVIL</option>
+              <option value="EEE">EEE</option>
+            </select>
+          </div>
+          <div class="filter-select-wrapper">
+            <i class="ri-sort-desc"></i>
+            <select class="filter-select" id="filterSort">
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="package_high">Package ↑</option>
+              <option value="package_low">Package ↓</option>
+            </select>
+          </div>
+          <button class="btn btn-ghost btn-sm" id="clearFilters" title="Clear Filters">
+            <i class="ri-refresh-line"></i> Reset
+          </button>
+        </div>
+      </div>
+
+      <!-- ===================== TAB PANELS ===================== -->
+
+      <!-- Ongoing Tab -->
+      <div class="tab-panel active" id="panel-ongoing" role="tabpanel">
+        <div class="company-grid" id="grid-ongoing">
+          <!-- Cards injected by JS -->
+        </div>
+        <div class="empty-state hidden" id="empty-ongoing">
+          <i class="ri-building-2-line"></i>
+          <p>No ongoing drives right now.</p>
+          <span>Check back soon or explore upcoming companies.</span>
+        </div>
+        <!-- Pagination -->
+        <div class="pagination" id="page-ongoing"></div>
+      </div>
+
+      <!-- Upcoming Tab -->
+      <div class="tab-panel" id="panel-upcoming" role="tabpanel">
+        <!-- Upcoming spotlight banner -->
+        <div class="upcoming-banner" id="upcomingBanner">
+          <div class="banner-pulse"></div>
+          <i class="ri-rocket-2-line"></i>
+          <div class="banner-text">
+            <strong>New Opportunities Ahead!</strong>
+            <span>These companies are arriving soon. Prepare your resume and skills.</span>
+          </div>
+          <div class="banner-arrows" aria-hidden="true">
+            <i class="ri-arrow-right-double-line"></i>
+          </div>
+        </div>
+        <div class="company-grid" id="grid-upcoming">
+          <!-- Cards injected by JS -->
+        </div>
+        <div class="empty-state hidden" id="empty-upcoming">
+          <i class="ri-calendar-todo-line"></i>
+          <p>No upcoming companies scheduled.</p>
+          <span>Admin will add upcoming companies soon.</span>
+        </div>
+        <div class="pagination" id="page-upcoming"></div>
+      </div>
+
+      <!-- Finished Tab -->
+      <div class="tab-panel" id="panel-finished" role="tabpanel">
+        <div class="company-grid" id="grid-finished">
+          <!-- Cards injected by JS -->
+        </div>
+        <div class="empty-state hidden" id="empty-finished">
+          <i class="ri-flag-line"></i>
+          <p>No finished drives yet.</p>
+          <span>Completed placement drives will appear here.</span>
+        </div>
+        <div class="pagination" id="page-finished"></div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- ===================== ADD / EDIT MODAL ===================== -->
+  <div class="modal-overlay hidden" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal" id="companyModal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">
+          <i class="ri-add-circle-line" id="modalIcon"></i>
+          <span id="modalTitleText">Add New Company</span>
+        </h2>
+        <button class="modal-close" id="closeModal" title="Close">
+          <i class="ri-close-line"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form id="companyForm" novalidate>
+          <!-- Hidden ID field for edit -->
+          <input type="hidden" id="fieldId" />
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fieldName">Company Name <span class="required">*</span></label>
+              <div class="input-wrapper">
+                <i class="ri-building-line"></i>
+                <input type="text" id="fieldName" placeholder="e.g. Google, TCS, Infosys" required />
+              </div>
+              <span class="field-error" id="errName"></span>
+            </div>
+            <div class="form-group">
+              <label for="fieldLogo">Logo URL</label>
+              <div class="input-wrapper">
+                <i class="ri-image-line"></i>
+                <input type="url" id="fieldLogo" placeholder="https://logo.clearbit.com/google.com" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fieldRole">Job Role <span class="required">*</span></label>
+              <div class="input-wrapper">
+                <i class="ri-briefcase-line"></i>
+                <input type="text" id="fieldRole" placeholder="e.g. Software Engineer" required />
+              </div>
+              <span class="field-error" id="errRole"></span>
+            </div>
+            <div class="form-group">
+              <label for="fieldPackage">Package (LPA) <span class="required">*</span></label>
+              <div class="input-wrapper">
+                <i class="ri-money-rupee-circle-line"></i>
+                <input type="number" id="fieldPackage" placeholder="e.g. 12" min="1" step="0.5" required />
+              </div>
+              <span class="field-error" id="errPackage"></span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fieldDate">Drive Date <span class="required">*</span></label>
+              <div class="input-wrapper">
+                <i class="ri-calendar-event-line"></i>
+                <input type="date" id="fieldDate" required />
+              </div>
+              <span class="field-error" id="errDate"></span>
+            </div>
+            <div class="form-group">
+              <label for="fieldDeadline">Application Deadline</label>
+              <div class="input-wrapper">
+                <i class="ri-calendar-close-line"></i>
+                <input type="date" id="fieldDeadline" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fieldStatus">Status <span class="required">*</span></label>
+              <div class="input-wrapper select-wrapper">
+                <i class="ri-toggle-line"></i>
+                <select id="fieldStatus" required>
+                  <option value="">Select Status</option>
+                  <option value="ongoing">🟢 Ongoing</option>
+                  <option value="upcoming">🔵 Upcoming</option>
+                  <option value="finished">⚪ Finished</option>
+                </select>
+              </div>
+              <span class="field-error" id="errStatus"></span>
+            </div>
+            <div class="form-group">
+              <label for="fieldCGPA">Min. CGPA</label>
+              <div class="input-wrapper">
+                <i class="ri-star-line"></i>
+                <input type="number" id="fieldCGPA" placeholder="e.g. 6.5" min="0" max="10" step="0.1" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fieldBranches">Eligible Branches <span class="required">*</span></label>
+              <div class="checkbox-group" id="branchCheckboxes">
+                <label class="check-item"><input type="checkbox" value="CSE" /><span>CSE</span></label>
+                <label class="check-item"><input type="checkbox" value="IT"  /><span>IT</span></label>
+                <label class="check-item"><input type="checkbox" value="ECE" /><span>ECE</span></label>
+                <label class="check-item"><input type="checkbox" value="MECH"/><span>MECH</span></label>
+                <label class="check-item"><input type="checkbox" value="CIVIL"/><span>CIVIL</span></label>
+                <label class="check-item"><input type="checkbox" value="EEE" /><span>EEE</span></label>
+              </div>
+              <span class="field-error" id="errBranches"></span>
+            </div>
+            <div class="form-group">
+              <label for="fieldType">Employment Type</label>
+              <div class="input-wrapper select-wrapper">
+                <i class="ri-user-follow-line"></i>
+                <select id="fieldType">
+                  <option value="Full Time">Full Time</option>
+                  <option value="Internship">Internship</option>
+                  <option value="Contract">Contract</option>
+                  <option value="PPO">PPO</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="fieldDesc">Description / Notes</label>
+            <div class="textarea-wrapper">
+              <i class="ri-file-text-line"></i>
+              <textarea id="fieldDesc" rows="3" placeholder="Add any details, rounds info, requirements..."></textarea>
+            </div>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="fieldLocation">Work Location</label>
+            <div class="input-wrapper">
+              <i class="ri-map-pin-line"></i>
+              <input type="text" id="fieldLocation" placeholder="e.g. Bangalore, Remote, Hybrid" />
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="cancelModal">Cancel</button>
+        <button class="btn btn-primary" id="saveCompany">
+          <i class="ri-save-line"></i>
+          <span id="saveBtnText">Save Company</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== DELETE CONFIRM MODAL ===================== -->
+  <div class="modal-overlay hidden" id="deleteOverlay">
+    <div class="modal modal-sm">
+      <div class="modal-header danger-header">
+        <h2 class="modal-title">
+          <i class="ri-delete-bin-line"></i>
+          Confirm Delete
+        </h2>
+        <button class="modal-close" id="closeDelete"><i class="ri-close-line"></i></button>
+      </div>
+      <div class="modal-body">
+        <p class="delete-msg">Are you sure you want to delete <strong id="deleteCompanyName">this company</strong>? This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="cancelDelete">Cancel</button>
+        <button class="btn btn-danger" id="confirmDelete">
+          <i class="ri-delete-bin-line"></i> Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== TOAST NOTIFICATION ===================== -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="placement.js"></script>
+</body>
+</html>
