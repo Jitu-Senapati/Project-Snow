@@ -14,7 +14,13 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     let unsubscribeProfile = null;
 
+    // Safety net — if Firebase hangs for > 5s, unblock the app
+    const safetyTimeout = setTimeout(() => {
+      setLoading(false);
+    }, 5000);
+
     const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      clearTimeout(safetyTimeout); // Firebase responded — cancel the timeout
       setCurrentUser(user);
 
       if (unsubscribeProfile) {
@@ -29,7 +35,7 @@ export const AuthProvider = ({ children }) => {
             if (snap.exists()) {
               const data = snap.data();
               setUserProfile(data);
-              setIsAdmin(data?.admin === true); // ← this was missing
+              setIsAdmin(data?.admin === true);
             } else {
               setUserProfile(null);
               setIsAdmin(false);
@@ -50,14 +56,16 @@ export const AuthProvider = ({ children }) => {
     });
 
     return () => {
+      clearTimeout(safetyTimeout);
       unsubscribeAuth();
       if (unsubscribeProfile) unsubscribeProfile();
     };
   }, []);
 
   return (
+    // ✅ Always render children — route guards handle loading per-page
     <AuthContext.Provider value={{ currentUser, userProfile, isAdmin, loading }}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 };

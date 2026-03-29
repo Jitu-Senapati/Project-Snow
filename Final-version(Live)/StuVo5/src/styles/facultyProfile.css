@@ -1,0 +1,476 @@
+/* ══════════════════════════════════════════
+   FacultyProfile.css — HEADACHE / STUVO5
+══════════════════════════════════════════ */
+
+/* ─── CSS Custom Properties ─── */
+:root {
+  --fp-bg: #070d09;
+  --fp-surface: #0d1510;
+  --fp-card: #111a13;
+  --fp-border: #1a2b1d;
+  --fp-border-light: #223326;
+  --fp-emerald: #10b981;
+  --fp-emerald-light: #34d399;
+  --fp-emerald-dim: #0d7a56;
+  --fp-emerald-glow: rgba(16, 185, 129, 0.15);
+  --fp-emerald-glow2: rgba(16, 185, 129, 0.07);
+  --fp-text: #e4ede6;
+  --fp-text-muted: #7a9e82;
+  --fp-text-dim: #2e4433;
+  --fp-danger: #ef4444;
+  --fp-success: #10b981;
+  --fp-warn: #f59e0b;
+}
+
+/* ─── Resets ─── */
+.fp-root *,
+.fp-root *::before,
+.fp-root *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.fp-root input,
+.fp-root textarea,
+.fp-root select {
+  font-family: inherit;
+  color: var(--fp-text);
+}
+
+.fp-root input::placeholder,
+.fp-root textarea::placeholder {
+  color: var(--fp-text-dim);
+}
+
+/* ─── Scrollbar ─── */
+.fp-root ::-webkit-scrollbar {
+  width: 4px;
+}
+.fp-root ::-webkit-scrollbar-track {
+  background: transparent;
+}
+.fp-root ::-webkit-scrollbar-thumb {
+  background: var(--fp-border);
+  border-radius: 4px;
+}
+
+/* ─── Keyframe Animations ─── */
+@keyframes fp-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes fp-fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fp-slideUp {
+  from {
+    transform: translateY(28px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fp-slideInRight {
+  from {
+    transform: translateX(420px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fp-scaleIn {
+  from {
+    transform: scale(0.88);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fp-fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fp-pulseGreen {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 9px rgba(16, 185, 129, 0);
+  }
+}
+
+/* ─── Animation utility classes ─── */
+.fp-bwrap {
+  animation: fp-fadeSlideUp 0.4s ease both;
+}
+.fp-hwrap {
+  animation: fp-fadeSlideUp 0.4s ease 0.14s both;
+}
+.fp-swrap {
+  animation: fp-fadeSlideUp 0.4s ease 0.28s both;
+}
+
+/* ─── Skeleton shimmer ─── */
+.fp-skeleton {
+  background: linear-gradient(90deg, #111a13 25%, #1a2b1d 50%, #111a13 75%);
+  background-size: 600px 100%;
+  animation: fp-shimmer 1.4s infinite linear;
+  flex-shrink: 0;
+}
+
+/* ─── Social row hover ─── */
+.fp-srow {
+  transition: all 0.2s;
+}
+.fp-srow:hover {
+  background: #101a12 !important;
+  padding-left: 24px !important;
+}
+
+/* ─── Avatar ring hover ─── */
+.fp-aring {
+  transition:
+    transform 0.24s,
+    box-shadow 0.24s;
+}
+.fp-aring:hover {
+  transform: scale(1.04) !important;
+  box-shadow: 0 8px 34px rgba(16, 185, 129, 0.32) !important;
+}
+
+/* ─── Overlay / modal backdrop ─── */
+.fp-overlay {
+  animation: fp-fadeIn 0.2s;
+}
+
+/* ─── Modal panels ─── */
+.fp-modal-panel {
+  animation: fp-scaleIn 0.22s ease;
+}
+
+/* ─── Toast ─── */
+.fp-toast {
+  animation: fp-slideUp 0.3s ease;
+}
+
+/* ─── Connect popup ─── */
+.fp-connect-popup {
+  animation: fp-slideInRight 0.32s ease;
+}
+
+/* ─── More dropdown ─── */
+.fp-more-dropdown {
+  animation: fp-slideUp 0.14s ease;
+}
+
+/* ─── Photo viewer ─── */
+.fp-photo-viewer {
+  animation: fp-fadeIn 0.22s;
+}
+
+/* ─── Avatar bounce on load ─── */
+.fp-avatar-wrap .fp-status-dot {
+  animation: fp-pulseGreen 2.4s infinite;
+}
+
+/* ─── Banner grid overlay ─── */
+.fp-banner-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 80px,
+      rgba(16, 185, 129, 0.04) 80px,
+      rgba(16, 185, 129, 0.04) 81px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 60px,
+      rgba(16, 185, 129, 0.04) 60px,
+      rgba(16, 185, 129, 0.04) 61px
+    );
+  pointer-events: none;
+}
+
+/* ─── Banner gradient fade ─── */
+.fp-banner-fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60%;
+  background: linear-gradient(to top, var(--fp-bg), transparent);
+  pointer-events: none;
+}
+
+/* ─── Edit / Cancel button base ─── */
+.fp-btn {
+  flex: 1;
+  padding: 11px 18px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  transition: all 0.18s;
+}
+
+.fp-btn-green {
+  background: linear-gradient(
+    135deg,
+    var(--fp-emerald),
+    var(--fp-emerald-light)
+  );
+  color: #060d08;
+}
+
+.fp-btn-cancel {
+  background: var(--fp-surface);
+  border: 1px solid var(--fp-border-light) !important;
+  color: var(--fp-text-muted);
+}
+
+.fp-btn-danger {
+  background: var(--fp-danger);
+  color: #fff;
+}
+
+/* ─── Chip tags ─── */
+.fp-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.fp-chip-accent {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid var(--fp-emerald-dim);
+  color: var(--fp-emerald-light);
+  font-weight: 700;
+}
+
+.fp-chip-muted {
+  background: var(--fp-surface);
+  border: 1px solid var(--fp-border-light);
+  color: var(--fp-text-muted);
+}
+
+/* ─── Toggle bar ─── */
+.fp-toggle-bar {
+  padding: 8px 18px;
+  background: #050a06;
+  border-bottom: 1px solid var(--fp-border);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.fp-toggle-btn {
+  padding: 5px 14px;
+  background: linear-gradient(
+    135deg,
+    var(--fp-emerald),
+    var(--fp-emerald-light)
+  );
+  border: none;
+  border-radius: 7px;
+  color: #060d08;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: inherit;
+}
+
+/* ─── Section label ─── */
+.fp-section-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2.8px;
+  color: var(--fp-emerald);
+  text-transform: uppercase;
+}
+
+/* ─── Unblock button ─── */
+.fp-unblock-btn {
+  padding: 9px 26px;
+  background: linear-gradient(
+    135deg,
+    var(--fp-emerald),
+    var(--fp-emerald-light)
+  );
+  border: none;
+  border-radius: 20px;
+  color: #060d08;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* ─── Camera / edit buttons ─── */
+.fp-banner-cam-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  background: rgba(6, 13, 8, 0.78);
+  border: 1px solid var(--fp-border-light);
+  color: var(--fp-text);
+  border-radius: 9px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  backdrop-filter: blur(6px);
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.fp-banner-cam-btn:hover {
+  border-color: var(--fp-emerald) !important;
+}
+
+/* ─── Edit profile / share buttons ─── */
+.fp-header-btn {
+  padding: 10px 16px;
+  background: var(--fp-surface);
+  border: 1px solid var(--fp-border-light);
+  color: var(--fp-text);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  transition: all 0.18s;
+  font-family: inherit;
+}
+
+.fp-header-btn:hover {
+  border-color: var(--fp-emerald);
+  color: var(--fp-emerald-light);
+}
+
+.fp-icon-btn {
+  width: 44px;
+  padding: 10px;
+  background: var(--fp-surface);
+  border: 1px solid var(--fp-border-light);
+  color: var(--fp-text-muted);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s;
+  font-family: inherit;
+}
+
+.fp-icon-btn:hover {
+  border-color: var(--fp-emerald);
+}
+
+/* ─── Social row action buttons ─── */
+.fp-social-edit-btn {
+  width: 34px;
+  height: 34px;
+  background: var(--fp-surface);
+  border: 1px solid var(--fp-border-light);
+  border-radius: 9px;
+  color: var(--fp-text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.18s;
+  flex-shrink: 0;
+}
+
+.fp-social-edit-btn:hover {
+  border-color: var(--fp-emerald);
+  color: var(--fp-emerald);
+}
+
+/* ─── More dropdown items ─── */
+.fp-drop-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.14s;
+}
+
+.fp-drop-item-block {
+  color: var(--fp-danger);
+}
+.fp-drop-item-block:hover {
+  background: #1a0d0d;
+}
+
+.fp-drop-item-report {
+  color: var(--fp-warn);
+}
+.fp-drop-item-report:hover {
+  background: #1a1408;
+}
+
+/* ─── Share modal grid items ─── */
+.fp-share-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.fp-share-item:hover {
+  transform: translateY(-4px);
+}
+
+/* ─── Range input accent ─── */
+.fp-root input[type="range"] {
+  accent-color: var(--fp-emerald);
+}

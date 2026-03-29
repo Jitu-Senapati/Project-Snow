@@ -218,13 +218,44 @@ function SocialModal({ isOpen, type, value, onClose, onSave }) {
 
 /* ═══════════════════════════════════════════════════════════
    EDIT PROFILE MODAL
+   — shows Branch + Year for students, Department + Subject for faculty
 ═══════════════════════════════════════════════════════════ */
-function EditProfileModal({ isOpen, onClose, profile, onSave }) {
+function EditProfileModal({ isOpen, onClose, profile, role, onSave }) {
   const [name, setName] = useState(profile.name);
   const [username, setUsername] = useState(profile.username);
   const [bio, setBio] = useState(profile.bio);
-  useEffect(() => { setName(profile.name); setUsername(profile.username); setBio(profile.bio); }, [profile, isOpen]);
+  const [branch, setBranch] = useState(profile.branch || "");
+  const [year, setYear] = useState(profile.year || "");
+  const [department, setDepartment] = useState(profile.department || "");
+  const [subject, setSubject] = useState(profile.subject || "");
+
+  useEffect(() => {
+    setName(profile.name);
+    setUsername(profile.username);
+    setBio(profile.bio);
+    setBranch(profile.branch || "");
+    setYear(profile.year || "");
+    setDepartment(profile.department || "");
+    setSubject(profile.subject || "");
+  }, [profile, isOpen]);
+
   if (!isOpen) return null;
+
+  const YEAR_OPTIONS = ["1st year", "2nd year", "3rd year", "4th year"];
+  const isStudent = role === "student";
+
+  const handleSave = () => {
+    const data = { name, username, bio };
+    if (isStudent) {
+      data.branch = branch;
+      data.year = year;
+    } else {
+      data.department = department;
+      data.subject = subject;
+    }
+    onSave(data);
+  };
+
   return (
     <div className="edit-modal active" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <div className="edit-modal-content">
@@ -232,6 +263,7 @@ function EditProfileModal({ isOpen, onClose, profile, onSave }) {
           <h2>Edit Profile</h2>
           <i className="bx bx-x" onClick={onClose} style={{ fontSize: 28, cursor: "pointer" }} />
         </div>
+
         <div className="form-group">
           <label>Full Name</label>
           <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter your name" />
@@ -244,9 +276,45 @@ function EditProfileModal({ isOpen, onClose, profile, onSave }) {
           <label>Bio</label>
           <textarea rows={3} value={bio} onChange={(e) => setBio(e.target.value)} placeholder="Tell us about yourself..." />
         </div>
+
+        {/* Student fields */}
+        {isStudent && (
+          <>
+            <div className="form-group">
+              <label>Branch / Course</label>
+              <input type="text" value={branch} onChange={(e) => setBranch(e.target.value)} placeholder="e.g. BCA, B.Tech CSE, MBA…" />
+            </div>
+            <div className="form-group">
+              <label>Year</label>
+              <select
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
+                style={{ background: "#1a1a1a", border: "1px solid #2a2a2a", borderRadius: 10, padding: "10px 13px", color: year ? "#fff" : "#555", fontSize: 13, outline: "none", fontFamily: "inherit", width: "100%" }}
+              >
+                <option value="" disabled>Select year</option>
+                {YEAR_OPTIONS.map((y) => (<option key={y} value={y}>{y}</option>))}
+              </select>
+            </div>
+          </>
+        )}
+
+        {/* Faculty fields */}
+        {!isStudent && (
+          <>
+            <div className="form-group">
+              <label>Department</label>
+              <input type="text" value={department} onChange={(e) => setDepartment(e.target.value)} placeholder="e.g. Computer Science" />
+            </div>
+            <div className="form-group">
+              <label>Subject (optional)</label>
+              <input type="text" value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="e.g. Data Structures" />
+            </div>
+          </>
+        )}
+
         <div className="modal-footer">
           <button className="cancel-btn" onClick={onClose}>Cancel</button>
-          <button className="save-btn" onClick={() => onSave({ name, username, bio })}>Save Changes</button>
+          <button className="save-btn" onClick={handleSave}>Save Changes</button>
         </div>
       </div>
     </div>
@@ -418,11 +486,12 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  const [profile, setProfile] = useState({ name: "", username: "", bio: "" });
+  const [profile, setProfile] = useState({ name: "", username: "", bio: "", branch: "", year: "", department: "", subject: "" });
   const [coverUrl, setCoverUrl] = useState(null);
   const [avatarUrl, setAvatarUrl] = useState(null);
   const [bioExpanded, setBioExpanded] = useState(false);
   const [socialValues, setSocialValues] = useState({ instagram: "", linkedin: "", github: "", email: "" });
+  const [role, setRole] = useState("student"); // "student" | "faculty"
 
   const [cropModal, setCropModal] = useState({ open: false, type: null, imageUrl: null });
   const [editProfileOpen, setEditProfileOpen] = useState(false);
@@ -441,16 +510,26 @@ export default function Profile() {
   const moreButtonRef = useRef(null);
   const toastKey = useRef(0);
 
-  // Load user data from Firestore via AuthContext
+  // Load user data from Firestore via AuthContext (real-time onSnapshot)
   useEffect(() => {
     if (userProfile) {
+      const r = userProfile.role || "student";
+      setRole(r);
       setProfile({
         name: userProfile.fullName || "",
         username: "@" + (userProfile.username || ""),
         bio: userProfile.bio || "",
+        // student fields
+        branch: userProfile.branch || "",
+        year: userProfile.year || "",
+        roll: userProfile.roll || "",
+        // faculty fields
+        department: userProfile.department || "",
+        subject: userProfile.subject || "",
+        workingSince: userProfile.workingSince || "",
       });
       setAvatarUrl(userProfile.photoURL || null);
-      setCoverUrl(userProfile.coverURL || null);
+      setCoverUrl(userProfile.coverPhotoURL || null); // ← coverPhotoURL
       setSocialValues({
         instagram: userProfile.social?.instagram || "",
         linkedin: userProfile.social?.linkedin || "",
@@ -459,7 +538,6 @@ export default function Profile() {
       });
       setLoading(false);
     } else if (currentUser && !userProfile) {
-      // userProfile not yet loaded — add fallback timeout
       const timeout = setTimeout(() => setLoading(false), 5000);
       return () => clearTimeout(timeout);
     }
@@ -491,7 +569,7 @@ export default function Profile() {
         const storageRef = ref(storage, `coverPhotos/${currentUser.uid}`);
         await uploadBytes(storageRef, blob);
         const url = await getDownloadURL(storageRef);
-        await updateDoc(doc(db, "users", currentUser.uid), { coverURL: url });
+        await updateDoc(doc(db, "users", currentUser.uid), { coverPhotoURL: url }); // ← coverPhotoURL
         showToast("Cover photo updated!");
       } else {
         setAvatarUrl(dataUrl);
@@ -511,12 +589,21 @@ export default function Profile() {
   const handleSaveProfile = async (data) => {
     setSaving(true);
     try {
-      await updateDoc(doc(db, "users", currentUser.uid), {
+      const updates = {
         fullName: data.name,
         username: data.username.replace("@", ""),
         bio: data.bio,
-      });
-      setProfile(data);
+      };
+      // Save role-specific editable fields
+      if (role === "student") {
+        updates.branch = data.branch || "";
+        updates.year = data.year || "";
+      } else {
+        updates.department = data.department || "";
+        updates.subject = data.subject || "";
+      }
+      await updateDoc(doc(db, "users", currentUser.uid), updates);
+      setProfile((prev) => ({ ...prev, ...data }));
       setEditProfileOpen(false);
       showToast("Profile updated successfully!");
     } catch (err) {
@@ -546,6 +633,8 @@ export default function Profile() {
   const handleSubmitReport = () => { setHasReported(true); setReportModalOpen(false); showToast("Report submitted. We'll review this profile within 24 hours."); };
 
   const initials = profile.name ? profile.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase() : "?";
+  const isStudent = role === "student";
+
   const socialMeta = [
     { key: "instagram", label: "Instagram", iconClass: "bxl-instagram", wrapClass: "instagram" },
     { key: "linkedin", label: "LinkedIn", iconClass: "bxl-linkedin", wrapClass: "linkedin" },
@@ -561,12 +650,12 @@ export default function Profile() {
 
       {/* COVER PHOTO */}
       <div className="cover-photo-section">
-        <div className="cover-photo-container" onClick={() => coverFileRef.current.click()}>
+        <div className="cover-photo-container">
           {!coverUrl && (<div className="cover-photo-placeholder"><i className="bx bx-image-add" /><span>Add Cover Photo</span></div>)}
           {coverUrl && <img src={coverUrl} alt="Cover" className="cover-photo-img" />}
           <div className="cover-gradient-overlay" />
           <div className="cover-photo-overlay">
-            <button className="cover-photo-btn" onClick={(e) => { e.stopPropagation(); coverFileRef.current.click(); }}>
+            <button className="cover-photo-btn" onClick={() => coverFileRef.current.click()}>
               <i className="bx bx-camera" /> {coverUrl ? "Change Cover" : "Add Cover Photo"}
             </button>
           </div>
@@ -588,6 +677,50 @@ export default function Profile() {
         <div className="profile-info">
           <h2 className="profile-name-main">{profile.name}</h2>
           <p className="profile-username">{profile.username}</p>
+
+          {/* Role + Branch/Year chips */}
+          <div className="profile-chips">
+            {/* Role badge */}
+            <span className={`profile-chip profile-chip--role ${isStudent ? "chip-student" : "chip-faculty"}`}>
+              <i className={`bx ${isStudent ? "bx-user" : "bx-chalkboard"}`} />
+              {isStudent ? "Student" : "Faculty"}
+            </span>
+
+            {/* Student chips */}
+            {isStudent && profile.branch && (
+              <span className="profile-chip">
+                <i className="bx bx-book-alt" />{profile.branch}
+              </span>
+            )}
+            {isStudent && profile.year && (
+              <span className="profile-chip">
+                <i className="bx bx-calendar" />{profile.year}
+              </span>
+            )}
+            {isStudent && profile.roll && (
+              <span className="profile-chip">
+                <i className="bx bx-id-card" />{profile.roll}
+              </span>
+            )}
+
+            {/* Faculty chips */}
+            {!isStudent && profile.department && (
+              <span className="profile-chip">
+                <i className="bx bx-buildings" />{profile.department}
+              </span>
+            )}
+            {!isStudent && profile.subject && (
+              <span className="profile-chip">
+                <i className="bx bx-book-open" />{profile.subject}
+              </span>
+            )}
+            {!isStudent && profile.workingSince && (
+              <span className="profile-chip">
+                <i className="bx bx-time-five" />Since {profile.workingSince}
+              </span>
+            )}
+          </div>
+
           <p className={`profile-bio${bioExpanded ? " expanded" : ""}`}>{profile.bio || "No bio yet"}</p>
           <button className="bio-toggle-btn" style={{ display: "block" }} onClick={() => setBioExpanded(!bioExpanded)}>
             {bioExpanded ? "less" : "more"}
@@ -618,6 +751,7 @@ export default function Profile() {
               {socialValues[key] && <a className="social-go-btn" href={socialValues[key]} target="_blank" rel="noreferrer"><i className="bx bx-link-external" /></a>}
             </div>
           ))}
+          {/* Email row */}
           <div className="social-link-item">
             <div className="social-icon-wrap" style={{ background: "#fff", padding: "6px" }}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="32" height="32">
@@ -638,14 +772,21 @@ export default function Profile() {
         </div>
       </div>
 
+      {/* MODALS */}
       <CropModal isOpen={cropModal.open} type={cropModal.type} imageUrl={cropModal.imageUrl} onClose={() => setCropModal({ open: false, type: null, imageUrl: null })} onApply={handleCropApply} />
-      <EditProfileModal isOpen={editProfileOpen} onClose={() => setEditProfileOpen(false)} profile={profile} onSave={handleSaveProfile} />
+      <EditProfileModal isOpen={editProfileOpen} onClose={() => setEditProfileOpen(false)} profile={profile} role={role} onSave={handleSaveProfile} />
       <SocialModal isOpen={socialModal.open} type={socialModal.type} value={socialValues[socialModal.type]} onClose={() => setSocialModal({ open: false, type: null })} onSave={handleSaveSocial} />
       <ShareModal isOpen={shareModalOpen} onClose={() => setShareModalOpen(false)} onToast={showToast} profile={profile} />
       <BlockModal isOpen={blockModalOpen} onClose={() => setBlockModalOpen(false)} onConfirm={handleConfirmBlock} name={profile.name} />
       <ReportModal isOpen={reportModalOpen} onClose={() => setReportModalOpen(false)} onSubmit={handleSubmitReport} name={profile.name} />
       <PhotoViewer isOpen={photoViewerOpen} onClose={() => setPhotoViewerOpen(false)} avatarUrl={avatarUrl} initials={initials} />
       <MoreDropdown isOpen={moreDropdownOpen} onBlock={() => { setMoreDropdownOpen(false); setBlockModalOpen(true); }} onReport={() => { if (hasReported) { showToast("You have already reported this profile"); setMoreDropdownOpen(false); return; } setMoreDropdownOpen(false); setReportModalOpen(true); }} buttonRef={moreButtonRef} />
+
+      {saving && (
+        <div style={{ position: "fixed", bottom: 90, right: 16, background: "#1a1a1a", border: "1px solid #333", borderRadius: 10, padding: "8px 14px", color: "#a78bfa", fontSize: 13, display: "flex", alignItems: "center", gap: 8, zIndex: 999 }}>
+          <i className="bx bx-loader-alt bx-spin" /> Saving...
+        </div>
+      )}
 
       {toast && <Toast key={toast.key} message={toast.msg} onDone={() => setToast(null)} />}
     </div>

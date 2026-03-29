@@ -1414,15 +1414,19 @@ body {
   transform: translateX(-50%) translateY(100px);
   background: #1a1a1a;
   border: 1px solid #a78bfa;
-  padding: 12px 20px;
+  padding: 10px 16px;
   border-radius: 25px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   color: white;
   z-index: 1003;
   opacity: 0;
   transition: all 0.3s ease;
+  white-space: nowrap;
+  max-width: calc(100vw - 32px);
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .toast-notification.active {
   opacity: 1;
@@ -1431,6 +1435,7 @@ body {
 .toast-notification i {
   color: #10b981;
   font-size: 20px;
+  flex-shrink: 0;
 }
 
 /* ===============================
@@ -2361,4 +2366,50 @@ body {
 .ps-social-value {
   height: 12px;
   width: 65%;
+}
+
+/* ===============================
+   PROFILE CHIPS (branch, year, role, etc.)
+================================ */
+.profile-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0 10px;
+}
+.profile-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #1e1e1e;
+  border: 1px solid #2a2a2a;
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: #ccc;
+  font-weight: 500;
+}
+.profile-chip i {
+  font-size: 13px;
+  color: #a78bfa;
+}
+.profile-chip--role {
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+.chip-student {
+  background: rgba(167, 139, 250, 0.1);
+  border-color: rgba(167, 139, 250, 0.3);
+  color: #a78bfa;
+}
+.chip-student i {
+  color: #a78bfa;
+}
+.chip-faculty {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: #10b981;
+}
+.chip-faculty i {
+  color: #10b981;
 }

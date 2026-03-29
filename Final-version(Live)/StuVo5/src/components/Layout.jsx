@@ -36,7 +36,12 @@ export default function Layout() {
   const [menuPosition, setMenuPosition] = useState({ top: 0, right: 0 });
 
   useEffect(() => {
-    const t = setTimeout(() => setBannerVisible(true), 600);
+    const alreadyShown = sessionStorage.getItem("installBannerShown");
+    if (alreadyShown) return;
+    const t = setTimeout(() => {
+      setBannerVisible(true);
+      sessionStorage.setItem("installBannerShown", "true");
+    }, 600);
     return () => clearTimeout(t);
   }, []);
 
@@ -61,6 +66,7 @@ export default function Layout() {
     setLogoutConfirmOpen(false);
     setLogoutToast(true);
     setTimeout(async () => {
+      sessionStorage.removeItem("installBannerShown"); // ← add this
       await signOutUser();
       setLogoutToast(false);
       navigate("/login");

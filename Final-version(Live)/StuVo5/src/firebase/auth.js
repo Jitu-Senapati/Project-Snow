@@ -34,7 +34,7 @@ export const registerUserWithEmailAndPassword = async (email, password, username
       roll: roll || "",
       branch,
       year,
-      admin: false,  // ← add this line
+      admin: false,
       createdAt: serverTimestamp(),
     });
 
@@ -63,7 +63,6 @@ export const createRecaptchaVerifier = (elementId) => {
       size: "invisible",
     });
   } else {
-    // Reuse existing verifier, just reset the widget
     window.recaptchaVerifier.render().then((widgetId) => {
       window.grecaptcha?.reset(widgetId);
     });
@@ -95,7 +94,6 @@ export const loginWithGoogle = async () => {
   provider.setCustomParameters({ prompt: 'select_account' });
   const result = await signInWithPopup(auth, provider);
 
-  // Get email from providerData if not on main user object
   if (!result.user.email && result.user.providerData.length > 0) {
     result.user.email = result.user.providerData[0].email;
   }
@@ -132,7 +130,7 @@ export const linkEmailPasswordToPhoneAccount = async (email, password, username,
     fullName,
     role,
     photoURL,
-    admin: false,  // ← add this line
+    admin: false,
     createdAt: serverTimestamp(),
   };
 
@@ -145,9 +143,6 @@ export const linkEmailPasswordToPhoneAccount = async (email, password, username,
     userData.subject = facultyData.subject || "";
     userData.workingSince = facultyData.workingSince;
   }
-
-console.log("Writing to Firestore:", userData);
-await setDoc(doc(db, "users", user.uid), userData);
 
   await setDoc(doc(db, "users", user.uid), userData);
   return user;
@@ -176,7 +171,7 @@ export const linkGoogleAfterRegistration = async () => {
   const idToken = sessionStorage.getItem('googleIdToken');
   const accessToken = sessionStorage.getItem('googleAccessToken');
 
-  if (!idToken && !accessToken) return; // No Google credential — normal registration, skip
+  if (!idToken && !accessToken) return;
 
   const googleCredential = GoogleAuthProvider.credential(idToken, accessToken);
   await linkWithCredential(auth.currentUser, googleCredential);
@@ -188,14 +183,8 @@ export const linkGoogleAfterRegistration = async () => {
 export const uploadProfilePhoto = async (uid, file) => {
   const storageRef = ref(storage, `profilePhotos/${uid}`);
   await uploadBytes(storageRef, file);
-  const downloadURL = await getDownloadURL(storageRef);
-  return downloadURL;
+  return await getDownloadURL(storageRef);
 };
-
-// --------------------------------------------------------------------------------------------------------------------
-// 
-// profile 
-
 
 export const updateUserProfile = async (uid, data) => {
   await updateDoc(doc(db, "users", uid), data);

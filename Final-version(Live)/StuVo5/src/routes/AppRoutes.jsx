@@ -10,17 +10,16 @@ export const ProtectedRoute = ({ children }) => {
 };
 
 export const UserOnlyRoute = ({ children }) => {
-  const { currentUser, isAdmin, loading, userProfile } = useAuth();
-  if (loading || (currentUser && !userProfile)) return <FullScreenLoader />;
+  const { currentUser, isAdmin, loading } = useAuth();
+  if (loading) return <FullScreenLoader />;
   if (!currentUser) return <Navigate to="/login" replace />;
   if (isAdmin) return <Navigate to="/admin-explore" replace />;
   return children;
 };
 
 export const AdminRoute = ({ children }) => {
-  const { currentUser, isAdmin, loading, userProfile } = useAuth();
-  console.log("AdminRoute check → loading:", loading, "isAdmin:", isAdmin, "userProfile:", userProfile);
-  if (loading || (currentUser && !userProfile)) return <FullScreenLoader />;
+  const { currentUser, isAdmin, loading } = useAuth();
+  if (loading) return <FullScreenLoader />;
   if (!currentUser) return <Navigate to="/login" replace />;
   if (!isAdmin) return <Navigate to="/explore" replace />;
   return children;
