@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Placement Component – CMS Dashboard</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <!-- Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+
+  <link rel="stylesheet" href="placement-component.css" />
+</head>
+<body>
+
+  <!--
+    ╔══════════════════════════════════════════╗
+    ║  DASHBOARD SHELL (simulates your layout) ║
+    ╚══════════════════════════════════════════╝
+    In your real project, just drop everything
+    inside <section class="placement-widget">
+    into your existing dashboard HTML.
+  -->
+  <div class="demo-shell">
+
+    <!-- ════════════════════════════════════════════
+         PLACEMENT WIDGET — drop this into your page
+         ════════════════════════════════════════════ -->
+    <section class="placement-widget" id="placementWidget">
+
+      <!-- ── Widget Header ───────────────────────── -->
+      <div class="pw-header">
+        <div class="pw-title-group">
+          <span class="pw-icon-wrap"><i class="ri-building-2-fill"></i></span>
+          <div>
+            <h2 class="pw-title">Placement Cell</h2>
+            <p class="pw-subtitle">Active drives &amp; opportunities</p>
+          </div>
+        </div>
+
+        <div class="pw-header-right">
+          <!-- Live search -->
+          <div class="pw-search">
+            <i class="ri-search-line"></i>
+            <input type="text" id="pwSearch" placeholder="Search…" autocomplete="off" />
+          </div>
+          <!-- Stats pills -->
+          <div class="pw-stats-row" id="pwStatsRow">
+            <span class="pw-stat green" id="pwStatOngoing">
+              <i class="ri-checkbox-circle-fill"></i><span>0</span>
+            </span>
+            <span class="pw-stat blue" id="pwStatUpcoming">
+              <i class="ri-time-fill"></i><span>0</span>
+            </span>
+            <span class="pw-stat gray" id="pwStatFinished">
+              <i class="ri-flag-fill"></i><span>0</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Tab Navigation ──────────────────────── -->
+      <div class="pw-tabs" role="tablist" aria-label="Placement Categories">
+
+        <button class="pw-tab active" data-tab="ongoing"
+                role="tab" aria-selected="true" aria-controls="pw-panel-ongoing">
+          <span class="pw-tab-indicator pulsing green"></span>
+          <i class="ri-checkbox-circle-line"></i>
+          <span class="pw-tab-label">Ongoing</span>
+          <span class="pw-tab-count" id="cnt-ongoing">0</span>
+        </button>
+
+        <button class="pw-tab" data-tab="upcoming"
+                role="tab" aria-selected="false" aria-controls="pw-panel-upcoming">
+          <span class="pw-tab-indicator blinking blue"></span>
+          <i class="ri-time-line"></i>
+          <span class="pw-tab-label">Upcoming</span>
+          <span class="pw-tab-count" id="cnt-upcoming">0</span>
+          <!-- Animated arrows — highlight new opportunities -->
+          <span class="pw-arrows" aria-hidden="true">
+            <i class="ri-arrow-right-line"></i>
+            <i class="ri-arrow-right-line"></i>
+            <i class="ri-arrow-right-line"></i>
+          </span>
+        </button>
+
+        <button class="pw-tab" data-tab="finished"
+                role="tab" aria-selected="false" aria-controls="pw-panel-finished">
+          <span class="pw-tab-indicator gray"></span>
+          <i class="ri-flag-line"></i>
+          <span class="pw-tab-label">Finished</span>
+          <span class="pw-tab-count" id="cnt-finished">0</span>
+        </button>
+
+        <!-- Sliding active underline -->
+        <span class="pw-tab-slider" id="pwTabSlider"></span>
+      </div>
+
+      <!-- ── Upcoming Alert Banner ───────────────── -->
+      <div class="pw-alert" id="pwAlert">
+        <span class="pw-alert-dot"></span>
+        <i class="ri-rocket-2-line pw-alert-icon"></i>
+        <span class="pw-alert-text">
+          <b>New drives arriving soon</b> — polish your resume and stay ready!
+        </span>
+        <button class="pw-alert-close" id="pwAlertClose" title="Dismiss"><i class="ri-close-line"></i></button>
+      </div>
+
+      <!-- ── Tab Panels ──────────────────────────── -->
+      <div class="pw-panels">
+
+        <!-- ONGOING -->
+        <div class="pw-panel active" id="pw-panel-ongoing" role="tabpanel">
+          <div class="pw-grid" id="pw-grid-ongoing"></div>
+          <div class="pw-empty hidden" id="pw-empty-ongoing">
+            <i class="ri-building-2-line"></i>
+            <p>No ongoing drives right now</p>
+          </div>
+        </div>
+
+        <!-- UPCOMING -->
+        <div class="pw-panel" id="pw-panel-upcoming" role="tabpanel">
+          <div class="pw-grid" id="pw-grid-upcoming"></div>
+          <div class="pw-empty hidden" id="pw-empty-upcoming">
+            <i class="ri-calendar-todo-line"></i>
+            <p>No upcoming companies yet</p>
+          </div>
+        </div>
+
+        <!-- FINISHED -->
+        <div class="pw-panel" id="pw-panel-finished" role="tabpanel">
+          <div class="pw-grid" id="pw-grid-finished"></div>
+          <div class="pw-empty hidden" id="pw-empty-finished">
+            <i class="ri-flag-line"></i>
+            <p>No finished drives yet</p>
+          </div>
+        </div>
+
+      </div>
+      <!-- end pw-panels -->
+
+    </section>
+    <!-- ═══════════ END PLACEMENT WIDGET ═══════════ -->
+
+  </div><!-- end demo-shell -->
+
+  <script src="placement-component.js"></script>
+</body>
+</html>
