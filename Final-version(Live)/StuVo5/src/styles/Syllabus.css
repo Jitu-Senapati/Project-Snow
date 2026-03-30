@@ -1,0 +1,506 @@
+/* ═══════════════════════════════════════════════════════════
+   SYLLABUS PAGE
+═══════════════════════════════════════════════════════════ */
+
+.syl-wrapper {
+  padding: 0 0 40px;
+  min-height: 100%;
+}
+
+/* ── Header ── */
+.syl-header {
+  padding: 20px 16px 16px;
+}
+
+.syl-header-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.syl-back-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  color: #aaa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 20px;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.syl-back-btn:hover {
+  background: #222;
+  color: #fff;
+  border-color: #444;
+}
+
+.syl-header-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: rgba(167, 139, 250, 0.12);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.syl-header-icon i {
+  font-size: 22px;
+  color: #a78bfa;
+}
+
+.syl-header-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.syl-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.3px;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.syl-subtitle {
+  font-size: 11px;
+  color: #555;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Section ── */
+.syl-section {
+  padding: 0 16px;
+}
+.syl-section-hint {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #444;
+  margin-bottom: 12px;
+  padding: 0 2px;
+}
+
+/* ── Branch Grid ── */
+.syl-branch-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.syl-branch-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #111;
+  border: 1px solid #1e1e1e;
+  border-radius: 14px;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.syl-branch-card:hover {
+  background: #161616;
+  border-color: #a78bfa;
+}
+.syl-branch-card:active {
+  transform: scale(0.99);
+}
+.syl-branch-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: rgba(167, 139, 250, 0.1);
+  border: 1px solid rgba(167, 139, 250, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.syl-branch-icon i {
+  font-size: 22px;
+  color: #a78bfa;
+}
+.syl-branch-label {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.5px;
+  min-width: 46px;
+}
+.syl-branch-full {
+  flex: 1;
+  font-size: 12px;
+  color: #555;
+  line-height: 1.4;
+}
+.syl-branch-arrow {
+  font-size: 20px;
+  color: #333;
+  flex-shrink: 0;
+}
+
+/* ── Semester Grid ── */
+.syl-sem-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.syl-sem-card {
+  background: #111;
+  border: 1px solid #1e1e1e;
+  border-radius: 14px;
+  padding: 20px 16px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+}
+.syl-sem-card:hover {
+  background: #161616;
+  border-color: #a78bfa;
+}
+.syl-sem-card:active {
+  transform: scale(0.97);
+}
+.syl-sem-num {
+  font-size: 36px;
+  font-weight: 900;
+  color: #a78bfa;
+  line-height: 1;
+}
+.syl-sem-label {
+  font-size: 11px;
+  color: #555;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+.syl-sem-tag {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #444;
+  background: #1a1a1a;
+  border: 1px solid #282828;
+  border-radius: 6px;
+  padding: 2px 6px;
+}
+
+/* ── Tabs ── */
+.syl-tabs {
+  display: flex;
+  background: #111;
+  border: 1px solid #1e1e1e;
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 14px;
+  gap: 4px;
+}
+.syl-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  background: transparent;
+  border: none;
+  color: #555;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  padding: 10px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.syl-tab i {
+  font-size: 16px;
+}
+.syl-tab.active {
+  background: #1e1e1e;
+  color: #a78bfa;
+  border: 1px solid #2a2a2a;
+}
+
+/* ── Subject Cards ── */
+.syl-subjects-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.syl-subject-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #111;
+  border: 1px solid #1e1e1e;
+  border-radius: 14px;
+  padding: 16px;
+  transition: background 0.15s;
+}
+.syl-subject-card:hover {
+  background: #141414;
+}
+.syl-subject-left {
+  flex: 1;
+  min-width: 0;
+}
+.syl-subject-code {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #555;
+  display: block;
+  margin-bottom: 4px;
+}
+.syl-subject-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+.syl-subject-type-tag {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+
+/* Type tag colours — all in CSS, zero inline styles */
+.type-theory {
+  background: rgba(167, 139, 250, 0.1);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  color: #a78bfa;
+}
+.type-practical {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #22c55e;
+}
+.type-project {
+  background: rgba(251, 146, 60, 0.1);
+  border: 1px solid rgba(251, 146, 60, 0.3);
+  color: #fb923c;
+}
+.type-elective {
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #38bdf8;
+}
+
+.syl-subject-credits {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.syl-credit-num {
+  font-size: 22px;
+  font-weight: 800;
+  color: #a78bfa;
+  line-height: 1;
+}
+.syl-credit-label {
+  font-size: 9px;
+  color: #555;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* ── Empty State ── */
+.syl-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+.syl-empty i {
+  font-size: 48px;
+  color: #2a2a2a;
+  margin-bottom: 16px;
+}
+.syl-empty p {
+  font-size: 16px;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 6px;
+}
+.syl-empty span {
+  font-size: 12px;
+  color: #333;
+  line-height: 1.5;
+}
+.syl-empty code {
+  background: #1e1e1e;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 11px;
+  color: #a78bfa;
+}
+
+/* ── Timetable Image ── */
+.syl-timetable {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.syl-timetable-tap-hint {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: #555;
+  padding: 0 2px;
+}
+.syl-timetable-tap-hint i {
+  font-size: 16px;
+  color: #a78bfa;
+}
+.syl-tt-img-wrap {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #1e1e1e;
+  cursor: pointer;
+  background: #111;
+}
+.syl-tt-img-wrap:hover .syl-tt-img-overlay {
+  opacity: 1;
+}
+.syl-tt-img {
+  width: 100%;
+  display: block;
+  border-radius: 14px;
+  transition: transform 0.3s ease;
+}
+.syl-tt-img-wrap:hover .syl-tt-img {
+  transform: scale(1.01);
+}
+.syl-tt-img-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  border-radius: 14px;
+}
+.syl-tt-img-overlay i {
+  font-size: 40px;
+  color: #fff;
+}
+
+/* ── Lightbox ── */
+.syl-lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  animation: sylLbFadeIn 0.2s ease;
+}
+@keyframes sylLbFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.syl-lightbox-toolbar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px;
+  background: rgba(0, 0, 0, 0.6);
+  border-bottom: 1px solid #1e1e1e;
+  justify-content: flex-end;
+}
+.syl-lb-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #1e1e1e;
+  border: 1px solid #2a2a2a;
+  color: #ccc;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.syl-lb-btn:hover {
+  background: #2a2a2a;
+  color: #fff;
+}
+.syl-lb-close {
+  margin-left: 8px;
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+.syl-lb-close:hover {
+  background: rgba(239, 68, 68, 0.25);
+  color: #ef4444;
+}
+.syl-lb-zoom-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #888;
+  min-width: 40px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.syl-lightbox-scroll {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  -webkit-overflow-scrolling: touch;
+}
+.syl-lb-img {
+  max-width: 100%;
+  border-radius: 10px;
+  transform-origin: center center;
+  transition: transform 0.2s ease;
+  user-select: none;
+  -webkit-user-drag: none;
+}

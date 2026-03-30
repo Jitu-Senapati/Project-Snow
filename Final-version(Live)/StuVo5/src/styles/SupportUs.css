@@ -1,0 +1,409 @@
+/* ═══════════════════════════════════════════════════════════
+   SUPPORT US PAGE
+═══════════════════════════════════════════════════════════ */
+
+.su-wrapper {
+  padding: 0 0 40px;
+  min-height: 100%;
+}
+
+/* ── Header ── */
+.su-header {
+  padding: 32px 20px 24px;
+  text-align: center;
+}
+.su-header-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  background: rgba(167, 139, 250, 0.12);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+.su-header-icon i {
+  font-size: 32px;
+  color: #a78bfa;
+}
+.su-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+.su-subtitle {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.6;
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+/* ── Cards ── */
+.su-card {
+  margin: 0 16px 16px;
+  background: #111;
+  border: 1px solid #1e1e1e;
+  border-radius: 18px;
+  padding: 20px;
+}
+
+.su-card-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.su-card-label i {
+  font-size: 18px;
+  color: #a78bfa;
+}
+.su-card-label span {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #555;
+}
+
+/* ── QR Card ── */
+.su-qr-box {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.su-qr-img {
+  width: 200px;
+  height: 200px;
+  border-radius: 12px;
+  object-fit: contain;
+  background: #fff;
+  padding: 8px;
+}
+
+/* QR Placeholder (decorative) */
+.su-qr-placeholder {
+  width: 200px;
+  height: 200px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.su-qr-grid {
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  gap: 2px;
+  width: 100%;
+  height: 100%;
+}
+.su-qr-cell {
+  background: #eee;
+  border-radius: 1px;
+}
+.su-qr-cell.filled {
+  background: #1a1a1a;
+}
+.su-qr-corners {
+  position: absolute;
+  inset: 16px;
+  pointer-events: none;
+}
+.su-qr-corner {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border: 3px solid #1a1a1a;
+}
+.su-qr-corner.tl {
+  top: 0;
+  left: 0;
+  border-right: none;
+  border-bottom: none;
+  border-radius: 4px 0 0 0;
+}
+.su-qr-corner.tr {
+  top: 0;
+  right: 0;
+  border-left: none;
+  border-bottom: none;
+  border-radius: 0 4px 0 0;
+}
+.su-qr-corner.bl {
+  bottom: 0;
+  left: 0;
+  border-right: none;
+  border-top: none;
+  border-radius: 0 0 0 4px;
+}
+.su-qr-hint {
+  position: absolute;
+  bottom: -22px;
+  left: 0;
+  right: 0;
+  font-size: 9px;
+  color: #444;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* UPI Row */
+.su-upi-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #181818;
+  border: 1px solid #242424;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-top: 8px;
+}
+.su-upi-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #444;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+.su-upi-id {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ccc;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.su-copy-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #242424;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: #aaa;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+.su-copy-btn i {
+  font-size: 14px;
+}
+.su-copy-btn:hover {
+  background: #2a2a2a;
+  color: #fff;
+  border-color: #444;
+}
+.su-copy-btn.copied {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #10b981;
+}
+
+/* ── Amount Card ── */
+.su-preset-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.su-preset-btn {
+  background: #181818;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  color: #888;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px 8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.su-preset-btn:hover {
+  background: #1e1e1e;
+  color: #ccc;
+  border-color: #444;
+}
+.su-preset-btn.active {
+  background: rgba(167, 139, 250, 0.12);
+  border-color: #a78bfa;
+  color: #a78bfa;
+}
+
+.su-custom-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #181818;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 0 14px;
+  margin-bottom: 16px;
+  transition: border-color 0.2s;
+}
+.su-custom-row:focus-within {
+  border-color: #a78bfa;
+}
+.su-rupee-symbol {
+  font-size: 16px;
+  color: #555;
+  font-weight: 600;
+}
+.su-custom-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 14px;
+  font-family: inherit;
+  padding: 13px 0;
+}
+.su-custom-input::placeholder {
+  color: #444;
+}
+.su-custom-input::-webkit-inner-spin-button,
+.su-custom-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+.su-donate-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #1e1e1e;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  color: #555;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 14px;
+  cursor: not-allowed;
+  font-family: inherit;
+  transition: all 0.25s ease;
+}
+.su-donate-btn i {
+  font-size: 18px;
+}
+.su-donate-btn.ready {
+  background: #a78bfa;
+  border-color: #a78bfa;
+  color: #000;
+  cursor: pointer;
+}
+.su-donate-btn.ready:hover {
+  background: #9370f0;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(167, 139, 250, 0.35);
+}
+.su-donate-btn.ready:active {
+  transform: translateY(0);
+}
+
+/* ── Why Card ── */
+.su-why-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.su-why-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.su-why-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(167, 139, 250, 0.08);
+  border: 1px solid rgba(167, 139, 250, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.su-why-icon i {
+  font-size: 18px;
+  color: #a78bfa;
+}
+.su-why-item span {
+  font-size: 13px;
+  color: #888;
+  line-height: 1.4;
+}
+
+/* ── Toast ── */
+.su-toast {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(167, 139, 250, 0.15);
+  border: 1px solid rgba(167, 139, 250, 0.4);
+  backdrop-filter: blur(10px);
+  padding: 12px 20px;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 9999;
+  white-space: nowrap;
+  animation: suFadeIn 0.3s ease;
+}
+.su-toast i {
+  color: #a78bfa;
+  font-size: 20px;
+}
+
+@keyframes suFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+.su-header {
+  position: relative; /* add this to existing rule */
+}
+.su-back-btn {
+  position: absolute;
+  top: 32px;
+  left: 20px;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  color: #aaa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 20px;
+  transition: all 0.2s;
+}
+.su-back-btn:hover {
+  background: #222;
+  color: #fff;
+  border-color: #444;
+}

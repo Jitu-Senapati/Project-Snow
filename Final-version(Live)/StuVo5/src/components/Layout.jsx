@@ -3,6 +3,8 @@ import { useNavigate, useLocation, Outlet } from "react-router-dom";
 import "boxicons/css/boxicons.min.css";
 import "../styles/explore.css";
 import { signOutUser } from "../firebase/auth";
+import { useAuth } from "../context/AuthContext";
+import SearchExplore from "../pages/explore/Search";
 
 const NAV_ITEMS = [
   { id: "explorer", icon: "bx-compass", label: "Explorer", path: "/explore", isMore: false },
@@ -13,22 +15,25 @@ const NAV_ITEMS = [
 ];
 
 const BROWSE_ITEMS = [
-  { icon: "bx-calendar-event", label: "Events" },
-  { icon: "bx-book-open", label: "Courses" },
-  { icon: "bx-trophy", label: "Sports" },
-  { icon: "bx-group", label: "Clubs" },
-  { icon: "bx-briefcase", label: "Placements" },
-  { icon: "bx-building", label: "Facilities" },
-  { icon: "bx-bus", label: "Transport" },
-  { icon: "bx-food-menu", label: "Cafeteria" },
-  { icon: "bx-library", label: "Library" },
+  { icon: "bx-donate-heart", label: "Support Us", path: "/support-us", name: "Support Us" },
+  { icon: "bx-book-open", label: "Syllabus", path: "/syllabus", name: "Syllabus" },
+  { icon: "bx-message-error", label: "Raise Complaint", path: "/complaint", name: "Raise Complaint" },
+  { icon: "bx-group", label: "Clubs", path: "/clubs", name: "Clubs" },
+  { icon: "bx-briefcase", label: "Placements", path: "/placements", name: "Placements" },
+  { icon: "bx-building", label: "Facilities", path: "/facilities", name: "Facilities" },
+  { icon: "bx-bus", label: "Transport", path: "/transport", name: "Transport" },
+  { icon: "bx-food-menu", label: "Cafeteria", path: "/cafeteria", name: "Cafeteria" },
+  { icon: "bx-library", label: "Library", path: "/library", name: "Library" },
 ];
 
 export default function Layout() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { isAdmin } = useAuth();
+
   const [openPanel, setOpenPanel] = useState(null);
   const [explorerOpen, setExplorerOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [bannerVisible, setBannerVisible] = useState(false);
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
   const [logoutToast, setLogoutToast] = useState(false);
@@ -58,15 +63,37 @@ export default function Layout() {
     }
   }, [openPanel]);
 
-  const togglePanel = (name, e) => { e.stopPropagation(); setOpenPanel((p) => (p === name ? null : name)); };
-  const handleNavClick = (item) => { if (item.isMore) setExplorerOpen(true); else navigate(item.path); };
+  // Close search overlay on route change
+  useEffect(() => {
+    setSearchOpen(false);
+  }, [location.pathname]);
+
+  const togglePanel = (name, e) => {
+    e.stopPropagation();
+    setOpenPanel((p) => (p === name ? null : name));
+  };
+
+  const handleNavClick = (item) => {
+    if (item.isMore) {
+      setExplorerOpen((prev) => !prev);
+    } else {
+      setExplorerOpen(false);
+      navigate(item.path);
+    }
+  };
+
+  const handleBrowseCardClick = (item) => {
+    setExplorerOpen(false);
+    if (item.path) navigate(item.path, { state: { name: item.name } });
+  };
+
   const handleLogoutClick = () => { setOpenPanel(null); setLogoutConfirmOpen(true); };
 
   const handleLogoutConfirm = async () => {
     setLogoutConfirmOpen(false);
     setLogoutToast(true);
     setTimeout(async () => {
-      sessionStorage.removeItem("installBannerShown"); // ← add this
+      sessionStorage.removeItem("installBannerShown");
       await signOutUser();
       setLogoutToast(false);
       navigate("/login");
@@ -75,17 +102,58 @@ export default function Layout() {
 
   const handleLogoutCancel = () => setLogoutConfirmOpen(false);
 
+  const isNavActive = (item) => {
+    if (explorerOpen) return item.isMore;
+    if (item.isMore) return false;
+    return location.pathname === item.path;
+  };
+
+  const isNotifOpen = openPanel === "notif";
+  const isMenuOpen = openPanel === "menu";
+
   return (
     <div className="main-app">
       {/* HEADER */}
       <div className="app-header">
-        <div className="app-logo">STUVO5</div>
-        <div className="header-icons">
-          <i className="bx bx-bell" onClick={(e) => togglePanel("notif", e)} />
-          <i ref={menuButtonRef} className="bx bx-menu" onClick={(e) => togglePanel("menu", e)} />
+        <div className="app-logo">
+          STUVO5
+          {isAdmin && location.pathname === "/admin-explore" && (
+            <span className="admin-badge">Admin</span>
+          )}
         </div>
 
-        <div className={`notification-panel${openPanel === "notif" ? " active" : ""}`} onClick={(e) => e.stopPropagation()}>
+        <div className="header-icons">
+          {/* Search */}
+          <span
+            className={`hdr-icon-wrap${searchOpen ? " hdr-icon-wrap--open" : ""}`}
+            onClick={() => { setSearchOpen((p) => !p); setOpenPanel(null); }}
+          >
+            <i className="bx bx-search hdr-icon hdr-icon--default" />
+            <i className="bx bx-x hdr-icon hdr-icon--close" />
+          </span>
+
+          {/* Bell */}
+          <span
+            className={`hdr-icon-wrap${isNotifOpen ? " hdr-icon-wrap--open" : ""}`}
+            onClick={(e) => togglePanel("notif", e)}
+          >
+            <i className="bx bx-bell hdr-icon hdr-icon--default" />
+            <i className="bx bx-x hdr-icon hdr-icon--close" />
+          </span>
+
+          {/* Menu */}
+          <span
+            ref={menuButtonRef}
+            className={`hdr-icon-wrap${isMenuOpen ? " hdr-icon-wrap--open" : ""}`}
+            onClick={(e) => togglePanel("menu", e)}
+          >
+            <i className="bx bx-menu hdr-icon hdr-icon--default" />
+            <i className="bx bx-x hdr-icon hdr-icon--close" />
+          </span>
+        </div>
+
+        {/* Notification panel */}
+        <div className={`notification-panel${isNotifOpen ? " active" : ""}`} onClick={(e) => e.stopPropagation()}>
           {[
             { icon: "bx-bus", title: "Bus #101", body: "Arriving in 5 minutes" },
             { icon: "bx-calendar", title: "New Event", body: "Tech Fest starts tomorrow" },
@@ -99,18 +167,18 @@ export default function Layout() {
           <div className="notification-footer">View all notifications</div>
         </div>
 
+        {/* Menu panel */}
         <div
-          className={`menu-panel${openPanel === "menu" ? " active" : ""}`}
+          className={`menu-panel${isMenuOpen ? " active" : ""}`}
           onClick={(e) => e.stopPropagation()}
           style={window.innerWidth <= 480 ? { position: "fixed", top: `${menuPosition.top}px`, right: `${menuPosition.right}px`, left: "auto", width: "180px" } : {}}
         >
-          {[
-            { icon: "bx-cog", label: "Settings" },
-            { icon: "bx-message-dots", label: "Feedback" },
-            { icon: "bx-help-circle", label: "Help" },
-          ].map((m, i) => (
-            <div className="menu-item" key={i}><i className={`bx ${m.icon}`} /><span>{m.label}</span></div>
-          ))}
+          <div className="menu-item" onClick={() => { setOpenPanel(null); navigate("/settings"); }}>
+            <i className="bx bx-cog" /><span>Settings</span>
+          </div>
+          <div className="menu-item">
+            <i className="bx bx-help-circle" /><span>Help</span>
+          </div>
           <div className="menu-item logout" onClick={handleLogoutClick}>
             <i className="bx bx-log-out" /><span>Logout</span>
           </div>
@@ -118,7 +186,7 @@ export default function Layout() {
       </div>
 
       {/* PAGE CONTENT */}
-      <div className="page-content active">
+      <div className={`page-content active${explorerOpen || searchOpen ? " content-blurred" : ""}`}>
         <Outlet />
       </div>
 
@@ -126,7 +194,7 @@ export default function Layout() {
       {bannerVisible && (
         <div className="install-banner-wrap">
           <span className="install-text">Install this site as an app</span>
-          <button className="install-btn" onClick={() => { alert("To install STUVO5:\n\n• Chrome/Edge: click ⊕ in address bar\n• Chrome Android: tap ⋮ → Add to Home Screen\n• Safari iPhone: tap Share ↑ → Add to Home Screen"); setBannerVisible(false); }}>Install</button>
+          <button className="install-btn" onClick={() => { alert("To install STUVO5:\n\n• Chrome/Edge: click \u2295 in address bar\n• Chrome Android: tap \u22EE \u2192 Add to Home Screen\n• Safari iPhone: tap Share \u2191 \u2192 Add to Home Screen"); setBannerVisible(false); }}>Install</button>
           <button className="install-close" onClick={() => setBannerVisible(false)}><i className="bx bx-x" /></button>
         </div>
       )}
@@ -134,12 +202,22 @@ export default function Layout() {
       {/* BOTTOM NAV */}
       <div className="bottom-nav">
         {NAV_ITEMS.map((item) => (
-          <div key={item.id}
-            className={`nav-item${item.isMore ? explorerOpen ? " active" : "" : location.pathname === item.path ? " active" : ""}`}
+          <div
+            key={item.id}
+            className={`nav-item${isNavActive(item) ? " active" : ""}`}
             onClick={() => handleNavClick(item)}
           >
-            <div className="nav-icon-wrap"><i className={`bx ${item.icon}`} /></div>
-            <span>{item.label}</span>
+            <div className="nav-icon-wrap">
+              {item.isMore ? (
+                <i
+                  className={`bx ${explorerOpen ? "bx-x" : "bx-dots-horizontal-rounded"}`}
+                  style={{ display: "inline-block", transition: "transform 0.25s ease", transform: explorerOpen ? "rotate(90deg)" : "rotate(0deg)" }}
+                />
+              ) : (
+                <i className={`bx ${item.icon}`} />
+              )}
+            </div>
+            <span>{item.isMore ? (explorerOpen ? "Close" : "More") : item.label}</span>
           </div>
         ))}
       </div>
@@ -149,13 +227,24 @@ export default function Layout() {
         <div className="explorer-sheet">
           <div className="explorer-sheet-header">
             <h2 className="browse-title">BROWSE BY</h2>
-            <i className="bx bx-x explorer-close" onClick={() => setExplorerOpen(false)} />
           </div>
           <div className="browse-grid">
             {BROWSE_ITEMS.map((item, i) => (
-              <div className="browse-card" key={i}><i className={`bx ${item.icon}`} /><span>{item.label}</span></div>
+              <div className="browse-card" key={i} onClick={() => handleBrowseCardClick(item)}>
+                <i className={`bx ${item.icon}`} /><span>{item.label}</span>
+              </div>
             ))}
           </div>
+        </div>
+      </div>
+
+      {/* SEARCH OVERLAY */}
+      <div
+        className={`search-overlay${searchOpen ? " search-overlay--open" : ""}`}
+        onClick={() => setSearchOpen(false)}
+      >
+        <div className="search-overlay-box" onClick={(e) => e.stopPropagation()}>
+          <SearchExplore onClose={() => setSearchOpen(false)} />
         </div>
       </div>
 
