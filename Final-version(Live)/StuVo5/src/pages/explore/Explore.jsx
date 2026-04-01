@@ -226,7 +226,8 @@ function ExplorerContent({ events, notices, userBookmarks, uid }) {
                               ({new Date(ev.dateRaw).getFullYear()})
                             </span>
                           )}
-                        </div>                        <h3 className="event-title">{ev.title}</h3>
+                        </div>
+                        <h3 className="event-title">{ev.title}</h3>
                         <div className="event-location">
                           <i className="bx bx-map" />
                           <span>{ev.location}</span>
@@ -277,7 +278,12 @@ function ExplorerContent({ events, notices, userBookmarks, uid }) {
                 <div className="notice-content">
                   <h4>{n.title}</h4>
                   <p>{n.body}</p>
-                  <span className="notice-time">{timeAgo(n.createdAt)}</span>
+                  <span className="notice-time">
+                    {n.updatedAt
+                      ? `${timeAgo(n.createdAt)} (Updated ${timeAgo(n.updatedAt)})`
+                      : timeAgo(n.createdAt)
+                    }
+                  </span>
                 </div>
               </div>
             ))}

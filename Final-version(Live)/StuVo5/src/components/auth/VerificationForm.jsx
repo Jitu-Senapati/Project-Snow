@@ -334,19 +334,27 @@ const VerificationForm = ({ registeredData, onBackToLogin, initialProfileData, o
                     <div className={`error-message ${rollError ? "show" : ""}`}>{rollError}</div>
                   </div>
                   <div className="input-box">
-                    <label>Branch</label>
+                    <label>Program</label>
                     <div className="input-wrapper">
                       <i className="bx bx-book"></i>
                       <select value={branch} onChange={(e) => { setBranch(e.target.value); setBranchError(""); }} className={branchError ? "error" : ""}>
-                        <option value="">Select Branch</option>
-                        <option value="CSE">Computer Science Engineering</option>
-                        <option value="ECE">Electronics & Communication</option>
-                        <option value="EEE">Electrical & Electronics</option>
-                        <option value="MECH">Mechanical Engineering</option>
-                        <option value="CIVIL">Civil Engineering</option>
-                        <option value="IT">Information Technology</option>
-                        <option value="AI-ML">AI & Machine Learning</option>
-                        <option value="DS">Data Science</option>
+                        <option value="">Select Program</option>
+                        <option value="BCA">BCA - Bachelor in Computer Application</option>
+                        <option value="BBA">BBA - Bachelor in Business Administration</option>
+                        <option value="BSC-BIOTECH">B.Sc. Biotechnology (Hons)</option>
+                        <option value="BSC-FOODTECH">B.Sc. Food Technology</option>
+                        <option value="BSC-AGRI">B.Sc. Agriculture</option>
+                        <option value="MSC-BIOTECH">M.Sc. Biotechnology</option>
+                        <option value="MSC-MICRO">M.Sc. Microbiology</option>
+                        <option value="MSC-INDBIO">M.Sc. Industrial Biotech</option>
+                        <option value="MSC-CS">M.Sc. Computer Science</option>
+                        <option value="MTECH-CS">M.Tech Computer Science (CS)</option>
+                        <option value="BTECH-BT">B.Tech - Biotechnology</option>
+                        <option value="BTECH-CE">B.Tech - Civil Engineering</option>
+                        <option value="BTECH-CSE">B.Tech - Computer Science &amp; Engineering</option>
+                        <option value="BTECH-EE">B.Tech - Electrical Engineering</option>
+                        <option value="BTECH-BS">B.Tech - Basic Science</option>
+                        <option value="BTECH-ME">B.Tech - Mechanical Engineering</option>
                       </select>
                     </div>
                     <div className={`error-message ${branchError ? "show" : ""}`}>{branchError}</div>
@@ -358,10 +366,10 @@ const VerificationForm = ({ registeredData, onBackToLogin, initialProfileData, o
                     <i className="bx bx-calendar"></i>
                     <select value={year} onChange={(e) => { setYear(e.target.value); setYearError(""); }} className={yearError ? "error" : ""}>
                       <option value="">Select Year</option>
-                      <option value="1">1st Year</option>
-                      <option value="2">2nd Year</option>
-                      <option value="3">3rd Year</option>
-                      <option value="4">4th Year</option>
+                      <option value="1st year">1st Year</option>
+                      <option value="2nd year">2nd Year</option>
+                      <option value="3rd year">3rd Year</option>
+                      <option value="4th year">4th Year</option>
                     </select>
                   </div>
                   <div className={`error-message ${yearError ? "show" : ""}`}>{yearError}</div>
@@ -378,18 +386,16 @@ const VerificationForm = ({ registeredData, onBackToLogin, initialProfileData, o
                     <i className="bx bx-building"></i>
                     <select value={department} onChange={(e) => { setDepartment(e.target.value); setDepartmentError(""); }} className={departmentError ? "error" : ""}>
                       <option value="">Select Department</option>
-                      <option value="CSE">Computer Science Engineering</option>
-                      <option value="ECE">Electronics & Communication</option>
-                      <option value="EEE">Electrical & Electronics</option>
-                      <option value="MECH">Mechanical Engineering</option>
-                      <option value="CIVIL">Civil Engineering</option>
-                      <option value="IT">Information Technology</option>
-                      <option value="AI-ML">AI & Machine Learning</option>
-                      <option value="DS">Data Science</option>
-                      <option value="MATH">Mathematics</option>
-                      <option value="PHY">Physics</option>
-                      <option value="CHEM">Chemistry</option>
-                      <option value="MBA">Management Studies</option>
+                      <option value="DEPT-BSH">Basic Science and Humanities</option>
+                      <option value="DEPT-BT">Biotechnology</option>
+                      <option value="DEPT-CE">Civil Engineering</option>
+                      <option value="DEPT-CSE">Computer Science &amp; Engineering</option>
+                      <option value="DEPT-CA">Computer Application</option>
+                      <option value="DEPT-EE">Electrical Engineering</option>
+                      <option value="DEPT-ME">Mechanical Engineering</option>
+                      <option value="DEPT-AGRI">Agriculture Science</option>
+                      <option value="DEPT-BFT">Biotech and Food Tech</option>
+                      <option value="DEPT-BBA">BBA and BSH</option>
                     </select>
                   </div>
                   <div className={`error-message ${departmentError ? "show" : ""}`}>{departmentError}</div>
