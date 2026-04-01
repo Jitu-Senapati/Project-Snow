@@ -1,25 +1,19 @@
-.loader-overlay {
+.top-progress-bar {
   position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(6px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: rgba(124, 58, 237, 0.15);
+  z-index: 99999;
+  overflow: hidden;
 }
 
-.spinner {
-  width: 50px;
-  height: 50px;
-  border: 5px solid #ffffff40;
-  border-top: 5px solid #ffffff;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  100% {
-    transform: rotate(360deg);
-  }
+.top-progress-bar-inner {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #7c3aed, #a855f7);
+  border-radius: 0 2px 2px 0;
+  transition: width 0.4s ease;
+  box-shadow: 0 0 8px rgba(124, 58, 237, 0.5);
 }

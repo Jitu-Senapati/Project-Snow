@@ -10,18 +10,24 @@ export const AuthProvider = ({ children }) => {
   const [userProfile, setUserProfile] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [loadProgress, setLoadProgress] = useState(10);
 
   useEffect(() => {
     let unsubscribeProfile = null;
 
+    // Start at 10% — Firebase SDK initializing
+    setLoadProgress(10);
+
     // Safety net — if Firebase hangs for > 5s, unblock the app
     const safetyTimeout = setTimeout(() => {
+      setLoadProgress(100);
       setLoading(false);
     }, 5000);
 
     const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
       clearTimeout(safetyTimeout); // Firebase responded — cancel the timeout
       setCurrentUser(user);
+      setLoadProgress(40); // Auth resolved
 
       if (unsubscribeProfile) {
         unsubscribeProfile();
@@ -29,6 +35,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       if (user) {
+        setLoadProgress(60); // Fetching profile
         unsubscribeProfile = onSnapshot(
           doc(db, "users", user.uid),
           (snap) => {
@@ -40,17 +47,20 @@ export const AuthProvider = ({ children }) => {
               setUserProfile(null);
               setIsAdmin(false);
             }
+            setLoadProgress(100);
             setLoading(false);
           },
           (error) => {
             console.error("Profile listener error:", error);
             setIsAdmin(false);
+            setLoadProgress(100);
             setLoading(false);
           }
         );
       } else {
         setUserProfile(null);
         setIsAdmin(false);
+        setLoadProgress(100);
         setLoading(false);
       }
     });
@@ -64,7 +74,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     // ✅ Always render children — route guards handle loading per-page
-    <AuthContext.Provider value={{ currentUser, userProfile, isAdmin, loading }}>
+    <AuthContext.Provider value={{ currentUser, userProfile, isAdmin, loading, loadProgress }}>
       {children}
     </AuthContext.Provider>
   );

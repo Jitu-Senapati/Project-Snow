@@ -1,7 +1,14 @@
+import { useAuth } from "../context/AuthContext";
+
 export default function FullScreenLoader() {
+  const { loadProgress } = useAuth();
+
   return (
-    <div className="loader-overlay">
-      <div className="spinner"></div>
+    <div className="top-progress-bar">
+      <div
+        className="top-progress-bar-inner"
+        style={{ width: `${loadProgress}%` }}
+      />
     </div>
   );
 }
