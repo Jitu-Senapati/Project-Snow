@@ -117,8 +117,6 @@ export default function LinkAccount() {
   const inputRef = useRef(null);
 
   useEffect(() => {
-    console.log("location.state:", location.state);
-    console.log("email:", email);
     if (!email) {
       navigate("/login", { replace: true });
     }

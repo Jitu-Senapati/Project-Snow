@@ -69,9 +69,7 @@ export const createRecaptchaVerifier = (elementId) => {
   return window.recaptchaVerifier;
 };
 
-export const loginWithPhone = async (phoneNumber, recaptchaVerifier, rememberMe = false) => {
-  const persistence = rememberMe ? browserLocalPersistence : browserSessionPersistence;
-  await setPersistence(auth, persistence);
+export const loginWithPhone = async (phoneNumber, recaptchaVerifier) => {
   return signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifier);
 };
 

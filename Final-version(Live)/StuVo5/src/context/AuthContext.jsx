@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, onSnapshot } from "firebase/firestore";
 import { auth, db } from "../firebase/config";
+import { useProgress } from "./ProgressContext";
 
 const AuthContext = createContext(null);
 
@@ -10,24 +11,23 @@ export const AuthProvider = ({ children }) => {
   const [userProfile, setUserProfile] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [loadProgress, setLoadProgress] = useState(10);
+  const { startProgress, updateProgress, completeProgress } = useProgress();
 
   useEffect(() => {
     let unsubscribeProfile = null;
 
-    // Start at 10% — Firebase SDK initializing
-    setLoadProgress(10);
+    startProgress(10);
 
     // Safety net — if Firebase hangs for > 5s, unblock the app
     const safetyTimeout = setTimeout(() => {
-      setLoadProgress(100);
+      completeProgress();
       setLoading(false);
     }, 5000);
 
     const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
-      clearTimeout(safetyTimeout); // Firebase responded — cancel the timeout
+      clearTimeout(safetyTimeout);
       setCurrentUser(user);
-      setLoadProgress(40); // Auth resolved
+      updateProgress(40);
 
       if (unsubscribeProfile) {
         unsubscribeProfile();
@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       if (user) {
-        setLoadProgress(60); // Fetching profile
+        updateProgress(60);
         unsubscribeProfile = onSnapshot(
           doc(db, "users", user.uid),
           (snap) => {
@@ -47,20 +47,20 @@ export const AuthProvider = ({ children }) => {
               setUserProfile(null);
               setIsAdmin(false);
             }
-            setLoadProgress(100);
+            completeProgress();
             setLoading(false);
           },
           (error) => {
             console.error("Profile listener error:", error);
             setIsAdmin(false);
-            setLoadProgress(100);
+            completeProgress();
             setLoading(false);
           }
         );
       } else {
         setUserProfile(null);
         setIsAdmin(false);
-        setLoadProgress(100);
+        completeProgress();
         setLoading(false);
       }
     });
@@ -73,8 +73,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    // ✅ Always render children — route guards handle loading per-page
-    <AuthContext.Provider value={{ currentUser, userProfile, isAdmin, loading, loadProgress }}>
+    <AuthContext.Provider value={{ currentUser, userProfile, isAdmin, loading }}>
       {children}
     </AuthContext.Provider>
   );

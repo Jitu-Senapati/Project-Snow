@@ -9,9 +9,7 @@ const ForgotPasswordForm = ({ onBackToLogin }) => {
   const [countdown, setCountdown] = useState(3);
 
   const validateEmail = (v) =>
-    /^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|outlook\.com|hotmail\.com)$/.test(
-      v,
-    );
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
   /* ── Auto-redirect countdown ── */
   useEffect(() => {
@@ -43,7 +41,7 @@ const ForgotPasswordForm = ({ onBackToLogin }) => {
     }
 
     if (!validateEmail(input)) {
-      setEmailError("Please enter a valid email address (Gmail, Yahoo, Outlook, or Hotmail)");
+      setEmailError("Please enter a valid email address");
       return;
     }
 

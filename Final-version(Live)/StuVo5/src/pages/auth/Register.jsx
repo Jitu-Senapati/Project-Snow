@@ -9,10 +9,13 @@ import logo from "../../assets/logo192px.png";
 import { useAuth } from "../../context/AuthContext";
 import { auth } from "../../firebase/config";
 import { createRecaptchaVerifier, sendPhoneOtp, createIncompleteProfile } from "../../firebase/auth";
+import { useProgress } from "../../context/ProgressContext";
+
 const Register = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { currentUser, userProfile } = useAuth();
+  const { startProgress, updateProgress, completeProgress } = useProgress();
   const [registrationInProgress, setRegistrationInProgress] = useState(false);
 
   useEffect(() => {
@@ -69,15 +72,19 @@ const Register = () => {
 
   if (type === "phone") {
     setSendingOtp(true);
+    startProgress(20);
     try {
       const verifier = createRecaptchaVerifier("recaptcha-container");
+      updateProgress(50);
       const result = await sendPhoneOtp("+91" + value, verifier);
       setConfirmationResult(result);
       setSendingOtp(false);
+      completeProgress();
       setShowVerifyModal(true);
       return true;
     } catch (err) {
       setSendingOtp(false);
+      completeProgress();
       alert(err.message);
       return false;
     }
@@ -87,20 +94,24 @@ const Register = () => {
   const handleCloseVerifyModal = () => setShowVerifyModal(false);
 
 const handleVerifyCode = async (code) => {
+  startProgress(30);
   try {
+    updateProgress(50);
     const result = await confirmationResult.confirm(code);
+    updateProgress(70);
     // OTP is valid — user is now signed in
     try {
       await createIncompleteProfile(result.user.uid, verifyTarget);
     } catch (profileErr) {
       console.error("Profile creation failed (OTP was valid):", profileErr);
-      // Profile creation failed but OTP was valid — still proceed
     }
+    completeProgress();
     setPhoneVerified(true);
     setShowVerifyModal(false);
     return true;
   } catch (err) {
     console.error("OTP verification failed:", err);
+    completeProgress();
     return false;
   }
 };

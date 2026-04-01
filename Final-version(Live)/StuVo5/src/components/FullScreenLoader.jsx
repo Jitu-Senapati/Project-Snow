@@ -1,14 +1,13 @@
-import { useAuth } from "../context/AuthContext";
+import { useEffect } from "react";
+import { useProgress } from "../context/ProgressContext";
 
 export default function FullScreenLoader() {
-  const { loadProgress } = useAuth();
+  const { startProgress, completeProgress } = useProgress();
 
-  return (
-    <div className="top-progress-bar">
-      <div
-        className="top-progress-bar-inner"
-        style={{ width: `${loadProgress}%` }}
-      />
-    </div>
-  );
+  useEffect(() => {
+    startProgress(60);
+    return () => completeProgress();
+  }, []);
+
+  return null; // progress bar is rendered globally by ProgressProvider
 }

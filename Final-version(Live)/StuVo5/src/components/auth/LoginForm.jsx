@@ -100,7 +100,7 @@ const LoginForm = forwardRef(
       }
 
       if (valid) {
-        const success = await onVerifyOtp(otp);
+        const success = await onVerifyOtp(otp, rememberMe);
         if (!success) {
           setOtpError("Invalid OTP. Please try again.");
         }

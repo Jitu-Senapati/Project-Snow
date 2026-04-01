@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import logo from "../../assets/logo192px.png";
 import { auth, db } from "../../firebase/config";
 import { doc, updateDoc } from "firebase/firestore";
+import { useProgress } from "../../context/ProgressContext";
 
 /* ═══════════════════════════════════════════════════════════
    CROP MODAL
@@ -136,6 +137,7 @@ function CropModal({ isOpen, onClose, onApply, imageUrl }) {
 ═══════════════════════════════════════════════════════════ */
 const VerificationForm = ({ registeredData, onBackToLogin, initialProfileData, onProfileChange }) => {
   const navigate = useNavigate();
+  const { startProgress, updateProgress, completeProgress } = useProgress();
 
   const [activeTab, setActiveTab] = useState("student");
   const [fullName, setFullName] = useState(initialProfileData?.fullName || "");
@@ -221,10 +223,12 @@ const VerificationForm = ({ registeredData, onBackToLogin, initialProfileData, o
     if (!isValid) return;
 
     setSubmitting(true);
+    startProgress(10);
     try {
       const studentData = { roll, branch, year };
       const facultyData = { department, subject, workingSince };
 
+      updateProgress(30);
       await linkEmailPasswordToPhoneAccount(
         registeredData.email,
         registeredData.password,
@@ -239,14 +243,18 @@ const VerificationForm = ({ registeredData, onBackToLogin, initialProfileData, o
 
       // Upload photo if selected
       if (photoFile) {
+        updateProgress(60);
         const photoURL = await uploadProfilePhoto(auth.currentUser.uid, photoFile);
         await updateDoc(doc(db, "users", auth.currentUser.uid), { photoURL });
       }
 
+      updateProgress(80);
       await linkGoogleAfterRegistration();
+      completeProgress();
       alert("✅ Registration Successful!");
       navigate("/explore");
     } catch (err) {
+      completeProgress();
       alert(err.message);
     } finally {
       setSubmitting(false);
