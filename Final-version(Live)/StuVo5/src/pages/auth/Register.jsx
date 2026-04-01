@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { createRecaptchaVerifier, sendPhoneOtp } from "../../firebase/auth";
 import RegisterForm from "../../components/auth/RegisterForm";
 import TermsModal from "../../components/auth/TermsModal";
 import VerificationModal from "../../components/auth/VerificationModal";
@@ -8,18 +7,20 @@ import VerificationForm from "../../components/auth/VerificationForm";
 import "../../styles/auth.css";
 import logo from "../../assets/logo192px.png";
 import { useAuth } from "../../context/AuthContext";
-
+import { auth } from "../../firebase/config";
+import { createRecaptchaVerifier, sendPhoneOtp, createIncompleteProfile } from "../../firebase/auth";
 const Register = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { currentUser } = useAuth();
+  const { currentUser, userProfile } = useAuth();
   const [registrationInProgress, setRegistrationInProgress] = useState(false);
 
   useEffect(() => {
-    if (currentUser && !registrationInProgress) {
+    // Only redirect to /explore if user has a COMPLETE profile
+    if (currentUser && !registrationInProgress && userProfile?.regComplete === true) {
       navigate("/explore", { replace: true });
     }
-  }, [currentUser]);
+  }, [currentUser, userProfile]);
 
   const googleEmail = location.state?.email || "";
   const googleDisplayName = location.state?.displayName || "";
@@ -49,44 +50,60 @@ const Register = () => {
     setTermsAccepted(true);
   };
 
-  const handleOpenVerifyModal = async (type, value) => {
-    setVerifyType(type);
-    setVerifyTarget(value);
-    setOtpSent(true);
-    setRegistrationInProgress(true);
-
-    if (type === "phone") {
-      setSendingOtp(true);
-      try {
-        const verifier = createRecaptchaVerifier("recaptcha-container");
-        verifier.render().then(() => setSendingOtp(false));
-        const result = await sendPhoneOtp("+91" + value, verifier);
-        setConfirmationResult(result);
-        setShowVerifyModal(true);
-        setOtpSent(true);
-        return true;
-      } catch (err) {
-        setSendingOtp(false);
-        alert(err.message);
-        return false;
-      } finally {
-        setSendingOtp(false);
+  const handleBackToLogin = async () => {
+    try {
+      if (phoneVerified && auth.currentUser) {
+        await auth.currentUser.delete();
       }
+    } catch (err) {
+      // ignore
     }
+    navigate("/login");
   };
+
+ const handleOpenVerifyModal = async (type, value) => {
+  setVerifyType(type);
+  setVerifyTarget(value);
+  setOtpSent(true);
+  setRegistrationInProgress(true);
+
+  if (type === "phone") {
+    setSendingOtp(true);
+    try {
+      const verifier = createRecaptchaVerifier("recaptcha-container");
+      const result = await sendPhoneOtp("+91" + value, verifier);
+      setConfirmationResult(result);
+      setSendingOtp(false);
+      setShowVerifyModal(true);
+      return true;
+    } catch (err) {
+      setSendingOtp(false);
+      alert(err.message);
+      return false;
+    }
+  }
+};
 
   const handleCloseVerifyModal = () => setShowVerifyModal(false);
 
-  const handleVerifyCode = async (code) => {
+const handleVerifyCode = async (code) => {
+  try {
+    const result = await confirmationResult.confirm(code);
+    // OTP is valid — user is now signed in
     try {
-      await confirmationResult.confirm(code);
-      setPhoneVerified(true);
-      setShowVerifyModal(false);
-      return true;
-    } catch (err) {
-      return false;
+      await createIncompleteProfile(result.user.uid, verifyTarget);
+    } catch (profileErr) {
+      console.error("Profile creation failed (OTP was valid):", profileErr);
+      // Profile creation failed but OTP was valid — still proceed
     }
-  };
+    setPhoneVerified(true);
+    setShowVerifyModal(false);
+    return true;
+  } catch (err) {
+    console.error("OTP verification failed:", err);
+    return false;
+  }
+};
 
   const handleRegisterSuccess = (data) => {
     setFormData(data);
@@ -125,7 +142,7 @@ const Register = () => {
           sendingOtp={sendingOtp}
           otpSent={otpSent}
           onPhoneChange={() => setOtpSent(false)}
-          onSwitchToLogin={() => navigate("/login")}
+          onSwitchToLogin={handleBackToLogin}
           onShowTerms={handleShowTerms}
           onOpenVerifyModal={handleOpenVerifyModal}
           phoneVerified={phoneVerified}

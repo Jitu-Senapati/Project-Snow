@@ -56,17 +56,16 @@ export const sendPasswordReset = async (email) => {
 };
 
 export const createRecaptchaVerifier = (elementId) => {
-  if (!window.recaptchaVerifier) {
-    const element = document.getElementById(elementId);
-    if (element) element.innerHTML = "";
-    window.recaptchaVerifier = new RecaptchaVerifier(auth, elementId, {
-      size: "invisible",
-    });
-  } else {
-    window.recaptchaVerifier.render().then((widgetId) => {
-      window.grecaptcha?.reset(widgetId);
-    });
+  // Always destroy old verifier and create fresh — prevents stale session bugs on retry
+  if (window.recaptchaVerifier) {
+    try { window.recaptchaVerifier.clear(); } catch (e) { /* ignore */ }
+    window.recaptchaVerifier = null;
   }
+  const element = document.getElementById(elementId);
+  if (element) element.innerHTML = "";
+  window.recaptchaVerifier = new RecaptchaVerifier(auth, elementId, {
+    size: "invisible",
+  });
   return window.recaptchaVerifier;
 };
 
@@ -144,7 +143,10 @@ export const linkEmailPasswordToPhoneAccount = async (email, password, username,
     userData.workingSince = facultyData.workingSince;
   }
 
-  await setDoc(doc(db, "users", user.uid), userData);
+  await setDoc(doc(db, "users", user.uid), {
+    ...userData,
+    regComplete: true,
+  });
   return user;
 };
 
@@ -194,4 +196,13 @@ export const uploadCoverPhoto = async (uid, file) => {
   const storageRef = ref(storage, `coverPhotos/${uid}`);
   await uploadBytes(storageRef, file);
   return await getDownloadURL(storageRef);
+};
+
+export const createIncompleteProfile = async (uid, phone) => {
+  await setDoc(doc(db, "users", uid), {
+    uid,
+    phone,
+    regComplete: false,
+    createdAt: serverTimestamp(),
+  });
 };

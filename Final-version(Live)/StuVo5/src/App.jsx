@@ -40,7 +40,8 @@ function App() {
         <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
           <Route path="/profile"    element={<Profile />} />
           <Route path="/bus"        element={<Bus />} />
-          <Route path="/chat"       element={<Chat />} />
+          <Route path="/chat"           element={<Chat />} />
+          <Route path="/chat/:userId"   element={<Chat />} />
           <Route path="/settings"   element={<Settings />} />
           <Route path="/support-us" element={<SupportUs />} />
           <Route path="/syllabus"   element={<Syllabus />} />

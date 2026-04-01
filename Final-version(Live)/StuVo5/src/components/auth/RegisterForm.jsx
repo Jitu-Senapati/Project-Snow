@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../firebase/config";
+import { collection, query, where, getDocs, doc, deleteDoc } from "firebase/firestore";
+import { auth } from "../../firebase/config";
 
 const RegisterForm = ({
   initialData,
@@ -105,21 +106,32 @@ const RegisterForm = ({
     onRegisterSuccess({ email, password, username, phone, termsChecked: true });
   };
 
-  const handlePhoneVerify = async () => {
-    const cleanPhone = phone.replace(/\D/g, "");
-    if (cleanPhone.length !== 10) {
-      setPhoneError("Please enter a valid 10-digit phone number first");
-      return;
-    }
+const handlePhoneVerify = async () => {
+  const cleanPhone = phone.replace(/\D/g, "");
+  if (cleanPhone.length !== 10) {
+    setPhoneError("Please enter a valid 10-digit phone number first");
+    return;
+  }
 
-    const phoneSnap = await getDocs(query(collection(db, "users"), where("phone", "==", cleanPhone)));
-    if (!phoneSnap.empty) {
+  const phoneSnap = await getDocs(query(collection(db, "users"), where("phone", "==", cleanPhone)));
+
+  if (!phoneSnap.empty) {
+    const userData = phoneSnap.docs[0].data();
+    if (userData.regComplete === true) {
       setPhoneError("This phone number already exists in our database");
       return;
+    } else {
+      // Incomplete registration — just delete the Firestore doc
+      try {
+        await deleteDoc(doc(db, "users", userData.uid));
+      } catch (err) {
+        // ignore
+      }
     }
+  }
 
-    onOpenVerifyModal("phone", cleanPhone);
-  };
+  onOpenVerifyModal("phone", cleanPhone);
+};
 
   return (
     <div>

@@ -310,11 +310,19 @@
 .se-chip {
   display: inline-flex;
   align-items: center;
-  padding: 2px 9px;
-  border-radius: 20px;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 500;
   white-space: nowrap;
+  color: #777;
+  background: none !important;
+  border: none !important;
+  padding: 0;
+}
+
+.se-chip::before {
+  content: "•";
+  margin-right: 4px;
+  color: #444;
 }
 
 /* ─── Buttons ────────────────────────────────────────────────────────────── */
@@ -520,3 +528,122 @@
     letter-spacing: 3px;
   }
 }
+
+/* ── Real profile photo in avatar ── */
+.se-avatar--photo {
+  object-fit: cover;
+  background: none;
+}
+
+/* ── Clickable card ── */
+.se-card--clickable {
+  cursor: pointer;
+}
+.se-card--clickable:hover {
+  border-color: #3a3a3a;
+  background: #181818;
+}
+
+/* ── Real profile photo avatar ── */
+.se-avatar--photo {
+  object-fit: cover;
+  background: none;
+}
+
+/* ── Unfollow confirm modal ── */
+.se-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: seFadeIn 0.2s ease;
+}
+
+@keyframes seFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.se-modal {
+  background: #161616;
+  border: 1px solid #2a2a2a;
+  border-radius: 20px;
+  padding: 28px 24px 22px;
+  width: 100%;
+  max-width: 300px;
+  text-align: center;
+  animation: seSlideUp 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes seSlideUp {
+  from { opacity: 0; transform: scale(0.9) translateY(16px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.se-modal-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(167, 139, 250, 0.1);
+  border: 1.5px solid rgba(167, 139, 250, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+  font-size: 26px;
+  color: #a78bfa;
+}
+
+.se-modal h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.se-modal p {
+  font-size: 13px;
+  color: #777;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.se-modal-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.se-modal-cancel {
+  flex: 1;
+  padding: 11px;
+  background: #222;
+  border: 1px solid #333;
+  border-radius: 10px;
+  color: #aaa;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+.se-modal-cancel:hover { background: #2a2a2a; color: #fff; }
+
+.se-modal-confirm {
+  flex: 1;
+  padding: 11px;
+  background: #ef4444;
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+.se-modal-confirm:hover { background: #dc2626; }

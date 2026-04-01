@@ -1,11 +1,26 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import FullScreenLoader from "../components/FullScreenLoader";
+import { signOutUser } from "../firebase/auth";
 
 export const ProtectedRoute = ({ children }) => {
-  const { currentUser, loading } = useAuth();
-  if (loading) return <FullScreenLoader />;
+  const { currentUser, userProfile, loading } = useAuth();
+
+  if (loading) return null;
   if (!currentUser) return <Navigate to="/login" replace />;
+
+  // Orphaned or incomplete account — sign out and redirect to register
+  if (currentUser && userProfile !== null && userProfile.regComplete === false) {
+    signOutUser().then(() => {});
+    return <Navigate to="/register" replace />;
+  }
+
+  // No profile at all — sign out and redirect to login
+  if (currentUser && userProfile === null) {
+    currentUser.delete().catch(() => {});
+    return <Navigate to="/login" replace />;
+  }
+
   return children;
 };
 
