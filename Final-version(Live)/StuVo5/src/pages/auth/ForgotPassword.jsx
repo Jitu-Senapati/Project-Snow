@@ -15,7 +15,7 @@ const ForgotPassword = () => {
       <div className="video-overlay"></div>
 
       <div className="logo">
-        <img src={logo} alt="STUVO" className="logo-icon" />
+        <img src={logo} alt="STUVO" className="auth-logo-icon" />
         <h1>STUVO5</h1>
       </div>
 

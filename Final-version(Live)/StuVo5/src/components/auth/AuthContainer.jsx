@@ -93,7 +93,7 @@ const AuthContainer = ({ initialView = "login" }) => {
       <div className="video-overlay"></div>
 
       <div className="logo">
-        <img src={Logo} alt="STRUVO" className="logo-icon" />
+        <img src={Logo} alt="STRUVO" className="auth-logo-icon" />
         <h1>STUVO5</h1>
       </div>
 

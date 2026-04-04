@@ -103,7 +103,7 @@ body {
   gap: 15px;
 }
 
-.logo-icon {
+.auth-logo-icon {
   width: 45px;
   height: 45px;
   object-fit: contain;
@@ -750,35 +750,6 @@ form {
 /* ============================================================
    13. FOOTER — fixed bottom bar with Terms / Privacy / Contact
 ============================================================ */
-
-.site-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: rgba(5, 5, 10, 0.88);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 28px;
-  padding: 13px 20px;
-  z-index: 500;
-}
-
-.site-footer a {
-  color: rgba(255, 255, 255, 0.45);
-  text-decoration: none;
-  font-size: 12.5px;
-  font-weight: 500;
-  transition: color 0.25s ease;
-  white-space: nowrap;
-}
-.site-footer a:hover {
-  color: rgba(255, 255, 255, 0.9);
-}
 
 .site-footer span {
   color: rgba(255, 255, 255, 0.3);
@@ -1690,7 +1661,7 @@ form {
 @media (max-width: 768px) {
   .login-box { width: 92%; padding: 30px 22px; }
   .logo h1 { font-size: 36px; letter-spacing: 5px; }
-  .logo-icon { width: 36px; height: 36px; }
+  .auth-logo-icon { width: 36px; height: 36px; }
   .verification-section { padding: 20px 12px 30px; gap: 16px; justify-content: flex-start; }
   .verification-box { padding: 24px 18px; border-radius: 22px; }
   .box-head-verify h1 { font-size: 21px; }
@@ -1699,7 +1670,6 @@ form {
   .verification-box .input-box select { height: 44px; font-size: 13px; padding: 10px 14px 10px 40px; }
   .verification-box .input-wrapper i { font-size: 16px; left: 12px; }
   .verify-button button { height: 48px; font-size: 14px; }
-  .site-footer { gap: 16px; padding: 10px 15px; }
   .contact-content { width: 96%; max-height: 88vh; border-radius: 16px; margin: auto; }
   .contact-body { padding: 16px 14px; }
   .topic-grid { grid-template-columns: 1fr; gap: 8px; }
@@ -1737,7 +1707,6 @@ form {
   .box-head h1 { font-size: 26px; margin-bottom: 14px; }
   .box-head-2 h1 { font-size: 26px; margin-bottom: 0; }
   .input-box input { font-size: 14px; height: 42px; }
-  .site-footer { flex-direction: column; gap: 5px; padding: 8px 14px; }
   .site-footer a, .site-footer span { font-size: 11px; }
   .terms-header h2 { font-size: 14px; }
 }

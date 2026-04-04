@@ -310,7 +310,7 @@ function EditEventsPage({ events, onSave, onBack }) {
 
   const sheetOpen = updating !== null || addingNew;
 
-  return (
+  return createPortal(
     <div className="edit-overlay">
       <div className="edit-page">
         {confirmId !== null && <ConfirmDialog message="Are you sure you want to delete this event? This cannot be undone." onConfirm={confirmDelete} onCancel={() => setConfirmId(null)} />}
@@ -399,7 +399,8 @@ function EditEventsPage({ events, onSave, onBack }) {
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
@@ -455,7 +456,7 @@ function EditNoticesPage({ notices, onSave, onBack }) {
 
   const sheetOpen = updating !== null || addingNew;
 
-  return (
+  return createPortal(
     <div className="edit-overlay">
       <div className="edit-page">
         {confirmId !== null && <ConfirmDialog message="Are you sure you want to delete this notice? This cannot be undone." onConfirm={confirmDelete} onCancel={() => setConfirmId(null)} />}
@@ -530,7 +531,8 @@ function EditNoticesPage({ notices, onSave, onBack }) {
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
@@ -634,11 +636,13 @@ export default function AdminExplorer() {
 
       {/* SPOTLIGHT */}
       <div className="spotlight-section">
-        <div className="section-header">
+        <div className="section-header admin-section-header">
           <div className="header-line" />
           <h2 className="section-title">In The Spotlight</h2>
-          <div className="header-line" />
-          <button className="edit-corner-btn" onClick={() => setPage("editEvents")}><i className="bx bx-edit" /><span>Edit</span></button>
+          <div className="admin-header-right">
+            <div className="header-line" />
+            <button className="edit-corner-btn" onClick={() => setPage("editEvents")}><i className="bx bx-edit" /><span>Edit</span></button>
+          </div>
         </div>
         {loadingEvents ? (
           <div style={{ textAlign: "center", padding: "40px", color: "#888" }}>Loading events…</div>
@@ -702,11 +706,13 @@ export default function AdminExplorer() {
 
       {/* NOTICES */}
       <div className="notices-section">
-        <div className="section-header">
+        <div className="section-header admin-section-header">
           <div className="header-line" />
           <h2 className="section-title">Notices</h2>
-          <div className="header-line" />
-          <button className="edit-corner-btn" onClick={() => setPage("editNotices")}><i className="bx bx-edit" /><span>Edit</span></button>
+          <div className="admin-header-right">
+            <div className="header-line" />
+            <button className="edit-corner-btn" onClick={() => setPage("editNotices")}><i className="bx bx-edit" /><span>Edit</span></button>
+          </div>
         </div>
         {loadingNotices ? (
           <div style={{ textAlign: "center", padding: "20px", color: "#888" }}>Loading notices…</div>

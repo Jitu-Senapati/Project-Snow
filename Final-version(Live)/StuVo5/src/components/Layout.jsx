@@ -70,6 +70,7 @@ export default function Layout() {
 
   const togglePanel = (name, e) => {
     e.stopPropagation();
+    setSearchOpen(false);
     setOpenPanel((p) => (p === name ? null : name));
   };
 
@@ -105,6 +106,10 @@ export default function Layout() {
   const isNavActive = (item) => {
     if (explorerOpen) return item.isMore;
     if (item.isMore) return false;
+    // Explorer nav glows on both /explore and /admin-explore
+    if (item.id === "explorer") {
+      return location.pathname === "/explore" || location.pathname === "/admin-explore";
+    }
     return location.pathname === item.path;
   };
 

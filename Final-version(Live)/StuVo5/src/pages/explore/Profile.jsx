@@ -738,7 +738,7 @@ export default function Profile() {
 
       {/* SOCIAL LINKS */}
       <div className="info-section">
-        <h3 className="section-title">Connect With Me</h3>
+        <h3 className="profile-section-title">Connect With Me</h3>
         <div className="social-links-card">
           {socialMeta.map(({ key, label, iconClass, wrapClass }) => (
             <div className="social-link-item" key={key}>

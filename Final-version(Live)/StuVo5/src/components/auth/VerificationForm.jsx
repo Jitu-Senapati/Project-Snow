@@ -272,7 +272,7 @@ const VerificationForm = ({ registeredData, onBackToLogin, initialProfileData, o
         <div className="video-overlay"></div>
 
         <div className="logo">
-          <img src={logo} alt="STUVO5" className="logo-icon" />
+          <img src={logo} alt="STUVO5" className="auth-logo-icon" />
           <h1>STUVO5</h1>
         </div>
 

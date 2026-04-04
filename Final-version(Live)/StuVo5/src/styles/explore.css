@@ -44,7 +44,7 @@ body {
   align-items: center;
   border-bottom: 1px solid #1a1a1a;
   position: relative;
-  z-index: 200;
+  z-index: 600;        /* above all overlays (search z-index:550, more z-index:500) */
 }
 
 .app-logo {
@@ -68,6 +68,7 @@ body {
   display: flex;
   gap: 20px;
   font-size: 24px;
+  align-items: center;
 }
 
 .header-icons i {
@@ -88,7 +89,7 @@ body {
   background: #161616;
   border: 1px solid #2a2a2a;
   border-radius: 14px;
-  z-index: 300;
+  z-index: 650;        /* above header (600) and all overlays */
   opacity: 0;
   visibility: hidden;
   transform: translateY(-8px);
@@ -326,7 +327,9 @@ body {
   opacity: 1;
   filter: brightness(1);
   border-color: #a78bfa;
-  box-shadow: 0 12px 48px rgba(167, 139, 250, 0.2);
+  box-shadow:
+    0 12px 48px rgba(167, 139, 250, 0.35),
+    0 0 0 1px rgba(167, 139, 250, 0.4);
 }
 
 .event-image {
@@ -731,38 +734,36 @@ body {
 ═══════════════════════════════════════════════════════════ */
 .explorer-overlay {
   position: fixed;
-  top: 0;
+  top: 56px;             /* starts below header — header stays visible & interactive */
   left: 0;
   right: 0;
-  bottom: 72px;
+  bottom: 60px;          /* stops above nav — nav stays visible */
   z-index: 500;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
   background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
 .explorer-overlay.active {
   opacity: 1;
-  visibility: visible;
+  pointer-events: all;
 }
 
 .explorer-sheet {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
   background: #111;
-  border-radius: 22px 22px 0 0;
-  padding: 20px 20px 40px;
   border-top: 1px solid #2a2a2a;
+  border-radius: 20px 20px 0 0;
+  padding: 20px 16px 24px;
+  max-height: 90%;
+  overflow-y: auto;
   transform: translateY(100%);
   transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
-  max-height: 85vh;
-  overflow-y: auto;
 }
 
 .explorer-overlay.active .explorer-sheet {
@@ -771,16 +772,16 @@ body {
 
 .explorer-sheet-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .browse-title {
-  font-size: 15px;
+  font-size: 11px;
   font-weight: 700;
-  color: #fff;
-  letter-spacing: 1px;
+  letter-spacing: 3px;
+  color: #444;
+  text-transform: uppercase;
 }
 
 .explorer-close {
@@ -804,20 +805,23 @@ body {
   background: #181818;
   border: 1px solid #242424;
   border-radius: 12px;
-  padding: 18px 10px;
+  padding: 18px 8px 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
-.browse-card:hover,
-.browse-card:active {
+.browse-card:hover {
   background: #222;
   border-color: #a78bfa;
+}
+
+.browse-card:active {
+  transform: scale(0.97);
 }
 
 .browse-card i {
@@ -827,8 +831,9 @@ body {
 
 .browse-card span {
   font-size: 11px;
-  color: #777;
+  color: #888;
   font-weight: 500;
+  text-align: center;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -839,8 +844,8 @@ body {
   top: 56px;
   left: 0;
   right: 0;
-  bottom: 65px;
-  z-index: 500;
+  bottom: 60px;
+  z-index: 550;        /* above more overlay (500), below header (600) */
   display: flex;
   align-items: flex-start;
   justify-content: center;

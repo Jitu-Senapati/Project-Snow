@@ -1,58 +1,3 @@
-/* Core Styling */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
-body {
-  background: #0a0a0a;
-  color: #fff;
-  overflow-x: hidden;
-}
-
-/* Main App Layout */
-.app-header {
-  background: #000;
-  padding: 15px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #222;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-.app-logo {
-  font-size: 24px;
-  font-weight: bold;
-  background: white;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: 3px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.header-logo-icon {
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
-  filter: brightness(0) invert(1);
-}
-.header-icons {
-  display: flex;
-  gap: 20px;
-  font-size: 24px;
-}
-.header-icons i {
-  cursor: pointer;
-  transition: 0.3s;
-}
-.header-icons i:hover {
-  color: #a78bfa;
-}
-
 /* Notification bell wrapper with dot */
 .bell-wrapper {
   position: relative;
@@ -85,14 +30,6 @@ body {
   }
 }
 
-.page-content {
-  display: none;
-  padding-bottom: 90px;
-}
-.page-content.active {
-  display: block;
-  animation: slideIn 0.3s ease;
-}
 @keyframes slideIn {
   from {
     opacity: 0;
@@ -104,97 +41,9 @@ body {
   }
 }
 
-/* Navigation */
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background: #000;
-  display: flex;
-  justify-content: space-around;
-  padding: 10px 0;
-  border-top: 1px solid #222;
-  z-index: 100;
-}
-.nav-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #666;
-  cursor: pointer;
-}
-.nav-item.active {
-  color: #a78bfa;
-}
 
-/* Header Dropdown Menu */
-.menu-panel {
-  position: fixed;
-  top: 65px;
-  right: 15px;
-  width: 200px;
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 12px;
-  z-index: 999;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-10px);
-  transition: all 0.25s ease;
-}
-.menu-panel.active {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-.menu-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 15px;
-  font-size: 14px;
-  cursor: pointer;
-  border-bottom: 1px solid #2a2a2a;
-  color: #ddd;
-}
-.menu-item i {
-  font-size: 18px;
-}
-.menu-item:hover {
-  background: #2a2a2a;
-}
-.menu-item.logout {
-  color: #ef4444;
-  border-bottom: none;
-}
 
 /* Notification Dropdown */
-.notification-panel {
-  position: fixed;
-  top: 65px;
-  right: 70px;
-  width: 300px;
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 14px;
-  z-index: 998;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-12px);
-  transition: all 0.25s ease;
-  max-height: 420px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-.notification-panel.active {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-.notification-panel.expanded {
-  max-height: 80vh;
-}
 .notif-panel-header {
   display: flex;
   justify-content: space-between;
@@ -235,18 +84,6 @@ body {
   background: #333;
   border-radius: 4px;
 }
-.notification-item {
-  display: flex;
-  gap: 12px;
-  padding: 14px;
-  border-bottom: 1px solid #2a2a2a;
-  cursor: pointer;
-}
-.notification-item i {
-  font-size: 22px;
-  color: #a78bfa;
-  margin-top: 2px;
-}
 .notification-text strong {
   font-size: 14px;
   color: #fff;
@@ -255,19 +92,6 @@ body {
   font-size: 12px;
   color: #aaa;
   margin-top: 3px;
-}
-.notification-item:hover {
-  background: #2a2a2a;
-}
-.notification-footer {
-  padding: 12px;
-  text-align: center;
-  font-size: 13px;
-  color: #a78bfa;
-  cursor: pointer;
-}
-.notification-footer:hover {
-  background: #252525;
 }
 
 /* Friend request inside notification panel */
@@ -619,7 +443,7 @@ body {
   max-width: 1200px;
   margin: 0 auto;
 }
-.section-title {
+.profile-section-title {
   font-size: 18px;
   color: #a78bfa;
   margin-bottom: 16px;
@@ -1442,17 +1266,7 @@ body {
    MOBILE RESPONSIVE
 ================================ */
 @media (max-width: 768px) {
-  .header-icons {
-    gap: 14px;
-    font-size: 22px;
-  }
   .menu-panel,
-  .notification-panel {
-    width: calc(100% - 30px);
-    right: 15px;
-    left: 15px;
-    border-radius: 16px;
-  }
   .cover-photo-container {
     height: 160px;
   }
@@ -1613,14 +1427,6 @@ body {
 }
 
 /* More dropdown styles */
-.more-dropdown {
-  background: #161616;
-  border: 1px solid #2a2a2a;
-  border-radius: 12px;
-  padding: 6px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
-  animation: dropdownFadeIn 0.15s ease;
-}
 
 @keyframes dropdownFadeIn {
   from {
@@ -1633,41 +1439,12 @@ body {
   }
 }
 
-.more-dropdown-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 13px;
-  color: #ccc;
-  transition: background 0.15s;
-}
 
-.more-dropdown-item:hover {
-  background: #1e1e1e;
-}
 
-.more-dropdown-item i {
-  font-size: 16px;
-}
 
-.more-dropdown-item.block-item {
-  color: #ef4444;
-}
 
-.more-dropdown-item.block-item i {
-  color: #ef4444;
-}
 
-.more-dropdown-item.report-item {
-  color: #f59e0b;
-}
 
-.more-dropdown-item.report-item i {
-  color: #f59e0b;
-}
 /* ===============================
    ACTION MODALS (Block / Report)
 ================================ */
@@ -2218,7 +1995,7 @@ body {
   color: #a78bfa !important;
   margin-bottom: 8px !important;
 }
-.section-title {
+.profile-section-title {
   font-size: 16px !important;
   letter-spacing: 0.5px;
   text-transform: uppercase;
