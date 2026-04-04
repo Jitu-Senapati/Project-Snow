@@ -244,8 +244,8 @@ body {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 26px 20px 0;
-  margin-bottom: 20px;
+  padding: 14px 20px 0;
+  margin-bottom: 6px;
 }
 
 .header-line {
@@ -256,7 +256,7 @@ body {
 
 .section-title {
   flex-shrink: 0;
-  font-size: 13px;
+  font-size: 17px;
   font-weight: 800;
   letter-spacing: 4px;
   color: #a78bfa;
@@ -277,13 +277,15 @@ body {
    SPOTLIGHT / CAROUSEL
 ═══════════════════════════════════════════════════════════ */
 .spotlight-section {
-  margin-bottom: 32px;
+  margin-bottom: 8px;
 }
 
 .events-carousel {
   width: 100%;
-  overflow: hidden;
-  padding: 14px 0 10px;
+  overflow: visible;
+  padding: 14px 0 20px;
+  /* clip only horizontally so side cards are hidden but vertical glow shows */
+  clip-path: inset(0 0 -40px 0);
 }
 
 .events-track {
@@ -467,7 +469,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 14px;
-  padding: 14px 20px 0;
+  padding: 10px 20px 0;
 }
 
 .carousel-arrow {
@@ -524,9 +526,14 @@ body {
 /* ═══════════════════════════════════════════════════════════
    NOTICES
 ═══════════════════════════════════════════════════════════ */
+/* Notices section header — extra bottom padding on both /explore and /admin-explore */
+.notices-header,
+.admin-notices-header {
+  padding-bottom: 10px;
+}
+
 .notices-section {
-  padding: 0 20px;
-  margin-bottom: 32px;
+  margin-bottom: 14px;
 }
 
 .notices-list {
@@ -534,6 +541,7 @@ body {
   border: 1px solid #1e1e1e;
   border-radius: 14px;
   overflow: hidden;
+  margin: 0 20px;
 }
 
 .notice-item {

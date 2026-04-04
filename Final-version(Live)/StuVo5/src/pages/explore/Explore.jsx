@@ -174,7 +174,7 @@ function ExplorerContent({ events, notices, userBookmarks, uid }) {
       <div className="spotlight-section">
         <div className="section-header">
           <div className="header-line" />
-          <h2 className="section-title">In The Spotlight</h2>
+          <h2 className="section-title">Events</h2>
           <div className="header-line" />
         </div>
 
@@ -264,7 +264,7 @@ function ExplorerContent({ events, notices, userBookmarks, uid }) {
 
       {/* NOTICES */}
       <div className="notices-section">
-        <div className="section-header">
+        <div className="section-header notices-header">
           <div className="header-line" />
           <h2 className="section-title">Notices</h2>
           <div className="header-line" />

@@ -638,7 +638,7 @@ export default function AdminExplorer() {
       <div className="spotlight-section">
         <div className="section-header admin-section-header">
           <div className="header-line" />
-          <h2 className="section-title">In The Spotlight</h2>
+          <h2 className="section-title">Events</h2>
           <div className="admin-header-right">
             <div className="header-line" />
             <button className="edit-corner-btn" onClick={() => setPage("editEvents")}><i className="bx bx-edit" /><span>Edit</span></button>
@@ -706,7 +706,7 @@ export default function AdminExplorer() {
 
       {/* NOTICES */}
       <div className="notices-section">
-        <div className="section-header admin-section-header">
+        <div className="section-header admin-section-header admin-notices-header">
           <div className="header-line" />
           <h2 className="section-title">Notices</h2>
           <div className="admin-header-right">

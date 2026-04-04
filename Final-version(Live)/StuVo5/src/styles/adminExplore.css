@@ -230,42 +230,51 @@
 .add-new-btn i { font-size: 18px; }
 
 /* ═══════════════════════════════════════════════════════════
-   ADMIN SECTION HEADER
-   Title is truly centered on the page. Edit button is
-   absolutely positioned so it never pushes the title off axis.
-   Both header-lines flex: 1 equally. The right line gets
-   padding-right so its gradient doesn't slide under the button.
+   ADMIN SECTION HEADER — CSS Grid layout
+   3 columns: [1fr left-line] [auto title] [1fr right-side]
+   Left line fills col 1. Title sits in col 2, always centered.
+   Right side col 3 = line + edit button, button fixed to right.
 ═══════════════════════════════════════════════════════════ */
 .admin-section-header {
-  display: flex;
+  display: grid !important;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 10px;
-  padding: 26px 20px 0;
-  margin-bottom: 20px;
+  padding: 14px 20px 0;
+  margin-bottom: 6px;
 }
 
-/* Left line — grows freely to fill left half */
-.admin-section-header .header-line:first-child {
-  flex: 1;
+/* Notices section header gets extra bottom padding */
+.admin-notices-header {
+  padding-bottom: 10px;
 }
 
-/* Right side wrapper — same flex weight as left line.
-   Contains the decorative line + edit button in a row. */
+/* Col 1: left decorative line — fills full left half */
+.admin-section-header > .header-line {
+  width: 100%;
+}
+
+/* Col 2: title — naturally centered by grid */
+.admin-section-header > .section-title {
+  /* no extra styles needed, grid centers it */
+}
+
+/* Col 3: right side — flex row: [short line] [edit button] */
 .admin-header-right {
-  flex: 1;
   display: flex;
   align-items: center;
   gap: 10px;
+  justify-content: flex-end;
   min-width: 0;
 }
 
-/* Decorative line inside the right wrapper */
-.admin-header-right .header-line {
+/* Short line inside col 3 — grows to fill space before edit button */
+.admin-header-right > .header-line {
   flex: 1;
-  min-width: 0;
+  min-width: 8px;
 }
 
-/* Edit button — in-flow inside .admin-header-right, not absolute */
+/* Edit button — always flush to the right edge of col 3 (= page right padding) */
 .admin-section-header .edit-corner-btn {
   flex-shrink: 0;
   position: static;
