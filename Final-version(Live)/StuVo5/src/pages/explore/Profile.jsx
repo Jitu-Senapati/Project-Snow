@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import "boxicons/css/boxicons.min.css";
 import "../../styles/profile.css";
 import { useAuth } from "../../context/AuthContext";
 import { auth, db, storage } from "../../firebase/config";
 import { doc, updateDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getUserProfiles } from "../../firebase/db";
 
 /* ═══════════════════════════════════════════════════════════
    PROFILE SKELETON
@@ -479,6 +481,65 @@ function MoreDropdown({ isOpen, onBlock, onReport, buttonRef }) {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   FOLLOW LIST MODAL (Followers / Following)
+═══════════════════════════════════════════════════════════ */
+function FollowListModal({ type, uids, onClose }) {
+  const [profiles, setProfiles] = useState([]);
+  const [loading, setLoading]   = useState(true);
+
+  useEffect(() => {
+    if (!uids || uids.length === 0) { setLoading(false); return; }
+    getUserProfiles(uids).then((data) => {
+      setProfiles(data);
+      setLoading(false);
+    });
+  }, [uids]);
+
+  return createPortal(
+    <div className="follow-modal-overlay" onClick={onClose}>
+      <div className="follow-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="follow-modal-header">
+          <h3>{type === "followers" ? "Followers" : "Following"}</h3>
+          <i className="bx bx-x" onClick={onClose} />
+        </div>
+        <div className="follow-modal-list">
+          {loading && (
+            <div className="follow-modal-loading">
+              <i className="bx bx-loader-alt bx-spin" />
+            </div>
+          )}
+          {!loading && profiles.length === 0 && (
+            <div className="follow-modal-empty">
+              <i className="bx bx-user-x" />
+              <p>No {type === "followers" ? "followers" : "following"} yet</p>
+            </div>
+          )}
+          {!loading && profiles.map((p) => {
+            const initials = (p.fullName || "?")
+              .split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
+            return (
+              <div key={p.uid} className="follow-modal-item">
+                <div className="follow-modal-avatar">
+                  {p.photoURL
+                    ? <img src={p.photoURL} alt={p.fullName} />
+                    : <span>{initials}</span>
+                  }
+                </div>
+                <div className="follow-modal-info">
+                  <span className="follow-modal-name">{p.fullName}</span>
+                  <span className="follow-modal-username">@{p.username}</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
    MAIN PROFILE COMPONENT
 ═══════════════════════════════════════════════════════════ */
 export default function Profile() {
@@ -504,6 +565,7 @@ export default function Profile() {
   const [hasReported, setHasReported] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
   const [toast, setToast] = useState(null);
+  const [followListModal, setFollowListModal] = useState(null); // "followers" | "following"
 
   const coverFileRef = useRef(null);
   const avatarFileRef = useRef(null);
@@ -660,15 +722,30 @@ export default function Profile() {
             </button>
           </div>
         </div>
+        {/* Avatar — exactly like friend's version */}
         <div className="profile-avatar-wrapper">
           <div className="profile-avatar-ring" onClick={() => setPhotoViewerOpen(true)}>
             {!avatarUrl && <div className="profile-avatar-inner">{initials}</div>}
             {avatarUrl && <img src={avatarUrl} alt="Profile" className="profile-avatar-photo" />}
           </div>
-          <div className="status-dot" title="Online" />
           <div className="avatar-edit-btn" onClick={(e) => { e.stopPropagation(); avatarFileRef.current.click(); }} title="Change profile photo">
             <i className="bx bx-camera" />
           </div>
+        </div>
+        {/* Stats block — floats to the right of avatar */}
+        <div className="profile-stats-block">
+          <div className="profile-stat">
+            <span className="profile-stat-count">{(userProfile?.posts || []).length || 0}</span>
+            <span className="profile-stat-label">posts</span>
+          </div>
+          <button className="profile-stat profile-stat--btn" onClick={() => setFollowListModal("followers")}>
+            <span className="profile-stat-count">{(userProfile?.followers || []).length}</span>
+            <span className="profile-stat-label">followers</span>
+          </button>
+          <button className="profile-stat profile-stat--btn" onClick={() => setFollowListModal("following")}>
+            <span className="profile-stat-count">{(userProfile?.following || []).length}</span>
+            <span className="profile-stat-label">following</span>
+          </button>
         </div>
       </div>
 
@@ -677,8 +754,6 @@ export default function Profile() {
         <div className="profile-info">
           <h2 className="profile-name-main">{profile.name}</h2>
           <p className="profile-username">{profile.username}</p>
-
-          {/* Role + Branch/Year chips */}
           <div className="profile-chips">
             {/* Role badge */}
             <span className={`profile-chip profile-chip--role ${isStudent ? "chip-student" : "chip-faculty"}`}>
@@ -789,6 +864,16 @@ export default function Profile() {
       )}
 
       {toast && <Toast key={toast.key} message={toast.msg} onDone={() => setToast(null)} />}
+
+      {followListModal && (
+        <FollowListModal
+          type={followListModal}
+          uids={followListModal === "followers"
+            ? (userProfile?.followers || [])
+            : (userProfile?.following || [])}
+          onClose={() => setFollowListModal(null)}
+        />
+      )}
     </div>
   );
 }

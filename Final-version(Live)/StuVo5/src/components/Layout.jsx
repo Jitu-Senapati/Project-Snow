@@ -10,7 +10,7 @@ const NAV_ITEMS = [
   { id: "explorer", icon: "bx-compass", label: "Explorer", path: "/explore", isMore: false },
   { id: "bus", icon: "bx-bus", label: "Bus", path: "/bus", isMore: false },
   { id: "more", icon: "bx-dots-horizontal-rounded", label: "More", isMore: true },
-  { id: "chat", icon: "bx-message-rounded-dots", label: "Chat", path: "/chat", isMore: false },
+  { id: "chat", icon: "bx-message-rounded-dots", label: "Chat", path: "/chats", isMore: false },
   { id: "profile", icon: "bx-user-circle", label: "Profile", path: "/profile", isMore: false },
 ];
 
@@ -106,9 +106,11 @@ export default function Layout() {
   const isNavActive = (item) => {
     if (explorerOpen) return item.isMore;
     if (item.isMore) return false;
-    // Explorer nav glows on both /explore and /admin-explore
     if (item.id === "explorer") {
       return location.pathname === "/explore" || location.pathname === "/admin-explore";
+    }
+    if (item.id === "chat") {
+      return location.pathname.startsWith("/chat");
     }
     return location.pathname === item.path;
   };

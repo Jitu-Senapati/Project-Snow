@@ -16,6 +16,8 @@ const AdminExplore   = lazy(() => import("./pages/explore/AdminExplore"));
 const Profile        = lazy(() => import("./pages/explore/Profile"));
 const Bus            = lazy(() => import("./pages/explore/Bus"));
 const Chat           = lazy(() => import("./pages/explore/Chat"));
+const Chats          = lazy(() => import("./pages/explore/Chats"));
+const ChatWindow     = lazy(() => import("./pages/explore/ChatWindow"));
 
 // New pages from friend's version
 const Settings       = lazy(() => import("./pages/explore/Settings"));
@@ -41,7 +43,8 @@ function App() {
           <Route path="/profile"    element={<Profile />} />
           <Route path="/bus"        element={<Bus />} />
           <Route path="/chat"           element={<Chat />} />
-          <Route path="/chat/:userId"   element={<Chat />} />
+          <Route path="/chat/:chatId"   element={<ChatWindow />} />
+          <Route path="/chats"          element={<Chats />} />
           <Route path="/settings"   element={<Settings />} />
           <Route path="/support-us" element={<SupportUs />} />
           <Route path="/syllabus"   element={<Syllabus />} />

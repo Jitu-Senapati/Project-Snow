@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import {
   collection, query as firestoreQuery, where, getDocs,
@@ -6,6 +7,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase/config";
 import { useAuth } from "../../context/AuthContext";
+import UserProfileOverlay from "../../components/UserProfileOverlay";
 import "../../styles/searchpage.css";
 
 const TABS = [
@@ -105,7 +107,7 @@ function FollowBtn({ isFollowing, color, onFollow, onUnfollowRequest, loading })
 
 /* ── Unfollow Confirm Modal ── */
 function UnfollowModal({ username, onConfirm, onCancel }) {
-  return (
+  return createPortal(
     <div className="se-modal-overlay" onClick={onCancel}>
       <div className="se-modal" onClick={(e) => e.stopPropagation()}>
         <div className="se-modal-icon">
@@ -118,7 +120,8 @@ function UnfollowModal({ username, onConfirm, onCancel }) {
           <button className="se-modal-confirm" onClick={onConfirm}>Unfollow</button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
@@ -293,6 +296,7 @@ export default function SearchExplore() {
 
   // Set of UIDs the current user follows
   const [following, setFollowing] = useState(new Set());
+  const [overlayUid, setOverlayUid] = useState(null); // UserProfileOverlay
 
   const debounceRef = useRef(null);
 
@@ -345,8 +349,8 @@ export default function SearchExplore() {
 
   /* ── Navigate to chat with user ── */
   const handleCardClick = useCallback((targetUid) => {
-    navigate(`/chat/${targetUid}`);
-  }, [navigate]);
+    setOverlayUid(targetUid);
+  }, []);
 
   /* ── Fetch data per tab ── */
   const fetchTab = useCallback(async (tab) => {
@@ -434,14 +438,24 @@ export default function SearchExplore() {
   /* ── Filter ── */
   const q = query.trim().toLowerCase();
   const results = q
-    ? allItems.filter((item) => {
-        if (item.type !== activeTab) return false;
-        const fields = [
-          item.name, item.username, item.branch, item.year,
-          item.department, item.subject, item.tag, item.desc, item.dept,
-        ].filter(Boolean);
-        return fields.some((f) => f.toLowerCase().includes(q));
-      })
+    ? allItems
+        .filter((item) => {
+          if (item.type !== activeTab) return false;
+          const fields = [
+            item.name, item.username, item.branch, item.year,
+            item.department, item.subject, item.tag, item.desc, item.dept,
+          ].filter(Boolean);
+          return fields.some((f) => f.toLowerCase().includes(q));
+        })
+        .sort((a, b) => {
+          // Followed users first for student/faculty tabs
+          if (a.type === "student" || a.type === "faculty") {
+            const aFollowed = following.has(a.id) ? 0 : 1;
+            const bFollowed = following.has(b.id) ? 0 : 1;
+            return aFollowed - bFollowed;
+          }
+          return 0;
+        })
     : [];
 
   const color = TYPE_COLOR[activeTab];
@@ -537,6 +551,14 @@ export default function SearchExplore() {
           )}
         </div>
       </div>
+
+      {/* User Profile Overlay — opens when a card is tapped */}
+      {overlayUid && (
+        <UserProfileOverlay
+          uid={overlayUid}
+          onClose={() => setOverlayUid(null)}
+        />
+      )}
     </div>
   );
 }

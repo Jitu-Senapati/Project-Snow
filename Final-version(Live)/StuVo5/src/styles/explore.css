@@ -675,7 +675,7 @@ body {
   align-items: center;
   padding: 8px 12px calc(10px + env(safe-area-inset-bottom, 0px));
   position: relative;
-  z-index: 9999 !important;
+  z-index: 200;
   transform: translateZ(0);
   will-change: transform;
 }

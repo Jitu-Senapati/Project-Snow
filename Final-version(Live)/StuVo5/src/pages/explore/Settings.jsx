@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "boxicons/css/boxicons.min.css";
 import "../../styles/Settings.css";
+import { useAuth } from "../../context/AuthContext";
+import { updateUserSettings } from "../../firebase/db";
 
 // ─── Sub-pages ───────────────────────────────────────────
 function AccountCenter({ onBack }) {
@@ -582,6 +584,95 @@ function FeedbackPage({ onBack }) {
   );
 }
 
+function PrivacySettings({ onBack }) {
+  const { currentUser, userProfile } = useAuth();
+  const [isPrivate, setIsPrivate] = useState(userProfile?.isPrivate || false);
+  const [saving, setSaving] = useState(false);
+  const [toast, setToast] = useState(null);
+
+  const showToast = (msg) => {
+    setToast(msg);
+    setTimeout(() => setToast(null), 2500);
+  };
+
+  const handleToggle = async () => {
+    if (!currentUser || saving) return;
+    setSaving(true);
+    const next = !isPrivate;
+    try {
+      await updateUserSettings(currentUser.uid, { isPrivate: next });
+      setIsPrivate(next);
+      showToast(next ? "Account set to Private" : "Account set to Public");
+    } catch (e) {
+      showToast("Failed to update. Try again.");
+    }
+    setSaving(false);
+  };
+
+  return (
+    <div className="st-subpage">
+      <div className="st-subpage-header">
+        <button className="st-back-btn" onClick={onBack}>
+          <i className="bx bx-arrow-back" />
+        </button>
+        <div className="st-subpage-icon" style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.3)" }}>
+          <i className="bx bx-lock-alt" style={{ color: "#a78bfa" }} />
+        </div>
+        <div>
+          <h2 className="st-subpage-title">Privacy</h2>
+          <p className="st-subpage-sub">Control who can see your profile</p>
+        </div>
+      </div>
+
+      <div className="st-section">
+        <p className="st-section-label">ACCOUNT VISIBILITY</p>
+        <div className="st-card st-card-list">
+          <div className="st-toggle-row" onClick={handleToggle}>
+            <div className="st-toggle-icon">
+              <i className={`bx ${isPrivate ? "bx-lock-alt" : "bx-globe"}`} />
+            </div>
+            <div className="st-toggle-text">
+              <span className="st-toggle-label">Private Account</span>
+              <span className="st-toggle-desc">
+                {isPrivate
+                  ? "Only approved followers can see your profile and posts"
+                  : "Anyone can see your profile and follow you"}
+              </span>
+            </div>
+            {saving ? (
+              <i className="bx bx-loader-alt bx-spin" style={{ color: "#a78bfa", fontSize: 20 }} />
+            ) : (
+              <div className={`st-switch${isPrivate ? " st-switch--on" : ""}`}>
+                <div className="st-switch-knob" />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="st-section">
+        <div className="st-card">
+          <div className="st-info-row">
+            <i className="bx bx-info-circle" style={{ color: "#a78bfa" }} />
+            <div>
+              <p className="st-info-title">What does private mean?</p>
+              <p className="st-info-desc">
+                When your account is private, people must send a follow request before they can see your profile. Existing followers are not affected.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {toast && (
+        <div style={{ position: "fixed", bottom: 90, left: "50%", transform: "translateX(-50%)", background: "#1a1a1a", border: "1px solid #333", borderRadius: 10, padding: "10px 18px", color: "#a78bfa", fontSize: 13, zIndex: 999, whiteSpace: "nowrap" }}>
+          {toast}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Main Settings page ───────────────────────────────────
 const SETTINGS_MENU = [
   {
@@ -589,6 +680,12 @@ const SETTINGS_MENU = [
     icon: "bx-user-circle",
     label: "Account Center",
     desc: "Email, phone, password & account deletion",
+  },
+  {
+    id: "privacy",
+    icon: "bx-lock-alt",
+    label: "Privacy",
+    desc: "Control who can see your profile and posts",
   },
   {
     id: "notifications",
@@ -622,6 +719,8 @@ export default function Settings() {
 
   if (active === "account")
     return <AccountCenter onBack={() => setActive(null)} />;
+  if (active === "privacy")
+    return <PrivacySettings onBack={() => setActive(null)} />;
   if (active === "notifications")
     return <NotificationSettings onBack={() => setActive(null)} />;
   if (active === "blocked")

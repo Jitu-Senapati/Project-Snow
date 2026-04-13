@@ -202,5 +202,5 @@ export const createIncompleteProfile = async (uid, phone) => {
     phone,
     regComplete: false,
     createdAt: serverTimestamp(),
-  });
+  }, { merge: true });
 };

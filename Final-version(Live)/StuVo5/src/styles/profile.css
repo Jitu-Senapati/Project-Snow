@@ -344,7 +344,7 @@
    PROFILE INFO SECTION
 ================================ */
 .profile-header-section {
-  padding: 10px 20px 15px;
+  padding: 0 20px 15px;
   border-bottom: 1px solid #222;
 }
 .profile-info {
@@ -2190,3 +2190,266 @@
 .chip-faculty i {
   color: #10b981;
 }
+/* ── Posts / Followers / Following stats row (Instagram style) ── */
+.profile-stats-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  margin: 12px 0 10px;
+  border-top: 1px solid #1e1e1e;
+  border-bottom: 1px solid #1e1e1e;
+  padding: 10px 0;
+}
+.profile-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: none;
+  border: none;
+  font-family: inherit;
+  cursor: default;
+  padding: 4px 0;
+}
+.profile-stat--btn {
+  cursor: pointer;
+}
+.profile-stat--btn:hover .profile-stat-count {
+  color: #a78bfa;
+}
+.profile-stat-count {
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.2;
+  transition: color 0.2s;
+}
+.profile-stat-label {
+  font-size: 12px;
+  color: #888;
+  font-weight: 400;
+}
+
+/* ── Follow list modal ── */
+.follow-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: followFadeIn 0.2s ease;
+}
+@keyframes followFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.follow-modal {
+  background: #161616;
+  border-radius: 20px 20px 0 0;
+  border: 1px solid #2a2a2a;
+  width: 100%;
+  max-width: 480px;
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  animation: followSlideUp 0.25s cubic-bezier(0.32, 0.72, 0, 1);
+}
+@keyframes followSlideUp {
+  from { transform: translateY(40px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.follow-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid #2a2a2a;
+  flex-shrink: 0;
+}
+.follow-modal-header h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #f0eaff;
+}
+.follow-modal-header i {
+  font-size: 22px;
+  color: #666;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.follow-modal-header i:hover { color: #fff; }
+
+.follow-modal-list {
+  overflow-y: auto;
+  flex: 1;
+  padding: 8px 0 20px;
+}
+.follow-modal-loading,
+.follow-modal-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  gap: 12px;
+  color: #555;
+  font-size: 13px;
+}
+.follow-modal-loading i,
+.follow-modal-empty i {
+  font-size: 2rem;
+  color: #444;
+}
+
+.follow-modal-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  transition: background 0.15s;
+  cursor: pointer;
+}
+.follow-modal-item:hover { background: #1e1e1e; }
+
+.follow-modal-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-weight: 700;
+  font-size: 15px;
+  color: #fff;
+}
+.follow-modal-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.follow-modal-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.follow-modal-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f0eaff;
+}
+.follow-modal-username {
+  font-size: 12px;
+  color: #a78bfa;
+}
+
+/* ── Avatar + stats row (avatar left, stats right, same level) ── */
+.profile-avatar-stats-row {
+  display: flex;
+  align-items: flex-end;
+  padding: 0 16px;
+  margin-top: -44px; /* pull up to overlap cover bottom */
+  margin-bottom: 12px;
+}
+
+.profile-avatar-stats-row .profile-avatar-wrapper {
+  position: relative;
+  bottom: auto;
+  left: auto;
+  flex-shrink: 0;
+  width: 100px;
+  height: 100px;
+}
+
+.profile-ig-stats {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding-bottom: 6px;
+  margin-left: 8px;
+}
+
+/* Override cover-photo-section margin since stats are now inside it */
+.cover-photo-section {
+  margin-bottom: 0 !important;
+}
+
+/* ── Restore original avatar positioning (friend's exact CSS) ── */
+.cover-photo-section {
+  position: relative;
+  margin-bottom: 60px !important;
+}
+.profile-avatar-wrapper {
+  position: absolute;
+  bottom: -55px;
+  left: 20px;
+}
+.profile-avatar-ring {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 4px solid #000;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-weight: bold;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  flex-shrink: 0;
+}
+.avatar-edit-btn {
+  position: absolute;
+  bottom: 2px;
+  right: -4px;
+  width: 28px;
+  height: 28px;
+  background: #a78bfa;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 2px solid #000;
+  transition: background 0.2s;
+}
+.avatar-edit-btn i {
+  font-size: 14px;
+  color: white;
+}
+
+@media (min-width: 600px) {
+  .profile-avatar-ring { width: 120px; height: 120px; font-size: 44px; }
+  .profile-avatar-wrapper { bottom: -65px; left: 28px; }
+  .cover-photo-section { margin-bottom: 75px !important; }
+}
+@media (min-width: 900px) {
+  .profile-avatar-ring { width: 140px; height: 140px; font-size: 52px; }
+  .profile-avatar-wrapper { bottom: -75px; left: 36px; }
+  .cover-photo-section { margin-bottom: 90px !important; }
+}
+
+/* ── Stats block — to the right of avatar, same vertical level ── */
+.profile-stats-block {
+  position: absolute;
+  bottom: -54px;
+  left: 130px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+/* Remove old avatar-stats-row and ig-stats if present */
+.profile-avatar-stats-row { display: none !important; }
+.profile-ig-stats { display: none !important; }
