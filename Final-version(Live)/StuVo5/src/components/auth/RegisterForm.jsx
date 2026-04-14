@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../../firebase/config";
-import { collection, query, where, getDocs, doc, deleteDoc } from "firebase/firestore";
-import { auth } from "../../firebase/config";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 const RegisterForm = ({
   initialData,
@@ -120,14 +119,8 @@ const handlePhoneVerify = async () => {
     if (userData.regComplete === true) {
       setPhoneError("This phone number already exists in our database");
       return;
-    } else {
-      // Incomplete registration — just delete the Firestore doc
-      try {
-        await deleteDoc(doc(db, "users", userData.uid));
-      } catch (err) {
-        // ignore
-      }
     }
+    // Incomplete registration — proceed to OTP, createIncompleteProfile will overwrite
   }
 
   onOpenVerifyModal("phone", cleanPhone);
