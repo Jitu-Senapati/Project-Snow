@@ -6,6 +6,9 @@ import { subscribeToEvents, subscribeToNotices, saveEvents, saveNotices, toggleB
 import { useAuth } from "../../context/AuthContext";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../../firebase/config";
+import CachedImage from "../../components/CachedImage";
+import { useSyncStatus } from "../../context/SyncContext";
+import { getBlobUrl } from "../../utils/appCache";
 
 /* ─── Time helpers ──────────────────────────────────────── */
 export function timeAgo(isoString) {
@@ -325,7 +328,7 @@ function EditEventsPage({ events, onSave, onBack }) {
         <div className="edit-page-content">
           {draft.map((ev) => (
             <div className="edit-event-row" key={ev.id}>
-              <div className="edit-event-thumb"><img src={ev.img} alt={ev.title} /></div>
+              <div className="edit-event-thumb"><CachedImage src={ev.img} alt={ev.title} /></div>
               <div className="edit-event-info">
                 <div className="edit-event-title">
                   {ev.serial && <span className="edit-serial">#{ev.serial}</span>} {ev.title}
@@ -577,6 +580,7 @@ function useCarousel(total) {
 ═══════════════════════════════════════════════════════════ */
 export default function AdminExplorer() {
   const { currentUser, userProfile } = useAuth();
+  const { online, markFetching, markUpdated } = useSyncStatus();
   const [events, setEvents] = useState([]);
   const [notices, setNotices] = useState([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
@@ -584,18 +588,40 @@ export default function AdminExplorer() {
   const [loadedImgs, setLoadedImgs] = useState({});
   const [pendingBookmark, setPendingBookmark] = useState(null);
   const [page, setPage] = useState(null);
+  const [offlineToast, setOfflineToast] = useState(false);
+  const [offlineToastClosing, setOfflineToastClosing] = useState(false);
+
+  const handleEditClick = (target) => {
+    if (!online) {
+      setOfflineToastClosing(false);
+      setOfflineToast(true);
+      // Start exit animation at 2.7s, fully remove at 3s
+      setTimeout(() => setOfflineToastClosing(true), 2700);
+      setTimeout(() => { setOfflineToast(false); setOfflineToastClosing(false); }, 3000);
+      return;
+    }
+    setPage(target);
+  };
 
   const userBookmarks = userProfile?.bookmarkedEvents || [];
 
   useEffect(() => {
-    const unsub = subscribeToEvents((data) => { setEvents(data); setLoadingEvents(false); });
-    return unsub;
-  }, []);
+    markFetching();
+    let evtDone = false, ntcDone = false;
+    const tryMarkUpdated = () => { if (evtDone && ntcDone) markUpdated(); };
 
-  useEffect(() => {
-    const unsub = subscribeToNotices((data) => { setNotices(data); setLoadingNotices(false); });
-    return unsub;
-  }, []);
+    const unsubEvt = subscribeToEvents(async (data) => {
+      // Pre-fetch all event image blobs before rendering so CachedImage hits memory sync
+      await Promise.all(data.filter((ev) => ev.img).map((ev) => getBlobUrl(ev.img).catch(() => null)));
+      setEvents(data); setLoadingEvents(false);
+      if (!evtDone) { evtDone = true; tryMarkUpdated(); }
+    });
+    const unsubNtc = subscribeToNotices((data) => {
+      setNotices(data); setLoadingNotices(false);
+      if (!ntcDone) { ntcDone = true; tryMarkUpdated(); }
+    });
+    return () => { unsubEvt(); unsubNtc(); };
+  }, []); // eslint-disable-line
 
   const total = events.length;
   const { current, tx, dragging, goTo, carouselRef, trackRef, onDragStart, onDragMove, onDragEnd, dragDelta } = useCarousel(total);
@@ -641,7 +667,7 @@ export default function AdminExplorer() {
           <h2 className="section-title">Events</h2>
           <div className="admin-header-right">
             <div className="header-line" />
-            <button className="edit-corner-btn" onClick={() => setPage("editEvents")}><i className="bx bx-edit" /><span>Edit</span></button>
+            <button className="edit-corner-btn" onClick={() => handleEditClick("editEvents")}><i className="bx bx-edit" /><span>Edit</span></button>
           </div>
         </div>
         {loadingEvents ? (
@@ -662,7 +688,7 @@ export default function AdminExplorer() {
                 {events.map((ev, i) => (
                   <div key={ev.id} className={`event-card${i === current ? " active" : ""}`}>
                     <div className="event-image">
-                      <img src={ev.img} alt={ev.title} className={loadedImgs[ev.id] ? "loaded" : ""} onLoad={() => handleImgLoad(ev.id)} onError={() => handleImgLoad(ev.id)} draggable={false} />
+                      <CachedImage src={ev.img} alt={ev.title} className={loadedImgs[ev.id] ? "loaded" : ""} onLoad={() => handleImgLoad(ev.id)} onError={() => handleImgLoad(ev.id)} draggable={false} />
                       <div className="event-overlay" />
                       {ev.badge && <div className={`event-badge${ev.badgeType === "promo" ? " promo" : ""}`}>{ev.badge}</div>}
                     </div>
@@ -711,7 +737,7 @@ export default function AdminExplorer() {
           <h2 className="section-title">Notices</h2>
           <div className="admin-header-right">
             <div className="header-line" />
-            <button className="edit-corner-btn" onClick={() => setPage("editNotices")}><i className="bx bx-edit" /><span>Edit</span></button>
+            <button className="edit-corner-btn" onClick={() => handleEditClick("editNotices")}><i className="bx bx-edit" /><span>Edit</span></button>
           </div>
         </div>
         {loadingNotices ? (
@@ -744,6 +770,45 @@ export default function AdminExplorer() {
         <h3 style={{ color: "#a78bfa", marginBottom: 10 }}>Admin Panel 👋</h3>
         <p style={{ color: "#aaa" }}>Manage events, notices, and college content from here.</p>
       </div>
+
+      {/* Offline edit-blocked toast */}
+      {offlineToast && (
+        <div style={{
+          position: "fixed",
+          top: 14,
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 99999,
+          background: "#3a1a1a",
+          color: "#fca5a5",
+          borderRadius: 24,
+          padding: "8px 18px",
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          fontSize: 13,
+          fontWeight: 600,
+          boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
+          pointerEvents: "none",
+          whiteSpace: "nowrap",
+          animation: offlineToastClosing
+            ? "stuvoOfflineToastOut 0.3s ease forwards"
+            : "stuvoOfflineToastIn 0.2s ease",
+        }}>
+          <i className="bx bx-wifi-off" style={{ fontSize: 16 }} />
+          Internet connection required for editing
+          <style>{`
+            @keyframes stuvoOfflineToastIn {
+              from { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+              to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+            }
+            @keyframes stuvoOfflineToastOut {
+              from { opacity: 1; transform: translateX(-50%) translateY(0); }
+              to   { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+            }
+          `}</style>
+        </div>
+      )}
     </>
   );
 }

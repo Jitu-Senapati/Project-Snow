@@ -4,11 +4,24 @@ import "boxicons/css/boxicons.min.css";
 import "../../styles/chats.css";
 import { useAuth } from "../../context/AuthContext";
 import { subscribeToChats, getUserProfiles, getChatId, deleteChat, clearChatPreview } from "../../firebase/db";
+import { useSyncStatus } from "../../context/SyncContext";
+import { getCachedChats, setCachedChats, precacheMedia, getBlobUrl } from "../../utils/appCache";
+import CachedImage from "../../components/CachedImage";
 import { createPortal } from "react-dom";
 
 function formatTime(timestamp) {
   if (!timestamp) return "";
-  const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+  let date;
+  if (timestamp.toDate && typeof timestamp.toDate === "function") {
+    // Live Firestore Timestamp
+    date = timestamp.toDate();
+  } else if (typeof timestamp === "object" && timestamp.seconds !== undefined) {
+    // Serialized Firestore Timestamp (from IndexedDB cache) — plain {seconds, nanoseconds}
+    date = new Date(timestamp.seconds * 1000 + (timestamp.nanoseconds || 0) / 1e6);
+  } else {
+    date = new Date(timestamp);
+  }
+  if (isNaN(date.getTime())) return "";
   const now = new Date();
   const diff = now - date;
   if (diff < 60000) return "now";
@@ -25,7 +38,7 @@ function getInitials(name = "") {
 function ChatAvatar({ photoURL, name, size = 48 }) {
   const initials = getInitials(name);
   if (photoURL) {
-    return <img src={photoURL} alt={name} style={{ width: size, height: size, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />;
+    return <CachedImage src={photoURL} alt={name} style={{ width: size, height: size, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />;
   }
   return (
     <div className="co-avatar av-purple" style={{ width: size, height: size, fontSize: size * 0.3 }}>
@@ -128,16 +141,49 @@ export default function Chats() {
 
   const longPressTimer = useRef(null);
 
-  /* ── Subscribe to existing chats ── */
+  const { online, markFetching, markUpdated } = useSyncStatus();
+
+  /* ── Subscribe to existing chats — cache first ── */
   useEffect(() => {
     if (!currentUser) return;
-    setLoadingChats(true);
-    const unsub = subscribeToChats(currentUser.uid, (data) => {
+    const uid = currentUser.uid;
+
+    // 1. Show cached chats for THIS user immediately
+    getCachedChats().then(async (cached) => {
+      const mine = cached.filter((c) =>
+        Array.isArray(c.participants) ? c.participants.includes(uid) : c.id?.includes(uid)
+      );
+      if (mine.length > 0) {
+        // Pre-fetch participant photos before rendering
+        await Promise.all(mine.map((chat) => {
+          const otherId = chat.participants?.find((p) => p !== uid);
+          const photoURL = chat.participantInfo?.[otherId]?.photoURL;
+          return photoURL ? getBlobUrl(photoURL).catch(() => null) : null;
+        }));
+        setChats(mine);
+        setLoadingChats(false);
+      }
+    });
+
+    if (!online) return;
+
+    // 2. Live subscription — always replaces cache state entirely
+    markFetching();
+    let first = true;
+    const unsub = subscribeToChats(uid, async (data) => {
+      // Pre-fetch all participant photo blobs before rendering
+      await Promise.all(data.map((chat) => {
+        const otherId = chat.participants?.find((p) => p !== uid);
+        const photoURL = chat.participantInfo?.[otherId]?.photoURL;
+        return photoURL ? getBlobUrl(photoURL).catch(() => null) : null;
+      }));
       setChats(data);
       setLoadingChats(false);
+      setCachedChats(data);
+      if (first) { markUpdated(); first = false; }
     });
     return unsub;
-  }, [currentUser]);
+  }, [currentUser?.uid, online]); // eslint-disable-line
 
   /* ── Load followers ── */
   useEffect(() => {

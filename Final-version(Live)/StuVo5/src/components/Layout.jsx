@@ -35,20 +35,70 @@ export default function Layout() {
   const [explorerOpen, setExplorerOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [bannerVisible, setBannerVisible] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
   const [logoutToast, setLogoutToast] = useState(false);
   const menuButtonRef = useRef(null);
   const [menuPosition, setMenuPosition] = useState({ top: 0, right: 0 });
 
+  // Install prompt — show banner after delay + use globally captured prompt
   useEffect(() => {
-    const alreadyShown = sessionStorage.getItem("installBannerShown");
-    if (alreadyShown) return;
-    const t = setTimeout(() => {
-      setBannerVisible(true);
-      sessionStorage.setItem("installBannerShown", "true");
-    }, 600);
-    return () => clearTimeout(t);
+    // Hide forever if already running as installed PWA
+    if (window.matchMedia?.("(display-mode: standalone)").matches || window.navigator.standalone) {
+      return;
+    }
+
+    // Respect 7-day dismissal
+    const dismissedAt = parseInt(localStorage.getItem("stuvo5_install_dismissed_at") || "0", 10);
+    const daysSince = (Date.now() - dismissedAt) / (1000 * 60 * 60 * 24);
+    const isDismissed = dismissedAt && daysSince < 7;
+
+    if (!isDismissed) {
+      // Pick up any prompt already captured by main.jsx
+      if (window.__stuvo5InstallPrompt) setDeferredPrompt(window.__stuvo5InstallPrompt);
+
+      const t = setTimeout(() => setBannerVisible(true), 600);
+
+      // If the install event fires AFTER mount, update state
+      const onAvailable = () => setDeferredPrompt(window.__stuvo5InstallPrompt);
+      const onInstalled = () => {
+        setBannerVisible(false);
+        setDeferredPrompt(null);
+        localStorage.removeItem("stuvo5_install_dismissed_at");
+      };
+
+      window.addEventListener("stuvo5:installAvailable", onAvailable);
+      window.addEventListener("stuvo5:installed", onInstalled);
+      return () => {
+        clearTimeout(t);
+        window.removeEventListener("stuvo5:installAvailable", onAvailable);
+        window.removeEventListener("stuvo5:installed", onInstalled);
+      };
+    }
   }, []);
+
+  const handleInstallClick = async () => {
+    // Best case — browser supports native install prompt (Chrome/Edge desktop + Android)
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      setDeferredPrompt(null);
+      setBannerVisible(false);
+      if (outcome !== "accepted") {
+        localStorage.setItem("stuvo5_install_dismissed_at", String(Date.now()));
+      }
+      return;
+    }
+    // Fallback for iOS Safari, Firefox, and others that don't fire beforeinstallprompt
+    alert("To install STUVO5:\n\n• Chrome/Edge: click ⊕ in address bar\n• Chrome Android: tap ⋮ → Add to Home Screen\n• Safari iPhone: tap Share ↑ → Add to Home Screen");
+    setBannerVisible(false);
+    localStorage.setItem("stuvo5_install_dismissed_at", String(Date.now()));
+  };
+
+  const handleInstallDismiss = () => {
+    localStorage.setItem("stuvo5_install_dismissed_at", String(Date.now()));
+    setBannerVisible(false);
+  };
 
   useEffect(() => {
     const handler = () => setOpenPanel(null);
@@ -94,7 +144,6 @@ export default function Layout() {
     setLogoutConfirmOpen(false);
     setLogoutToast(true);
     setTimeout(async () => {
-      sessionStorage.removeItem("installBannerShown");
       await signOutUser();
       setLogoutToast(false);
       navigate("/login");
@@ -201,8 +250,8 @@ export default function Layout() {
       {bannerVisible && (
         <div className="install-banner-wrap">
           <span className="install-text">Install this site as an app</span>
-          <button className="install-btn" onClick={() => { alert("To install STUVO5:\n\n• Chrome/Edge: click \u2295 in address bar\n• Chrome Android: tap \u22EE \u2192 Add to Home Screen\n• Safari iPhone: tap Share \u2191 \u2192 Add to Home Screen"); setBannerVisible(false); }}>Install</button>
-          <button className="install-close" onClick={() => setBannerVisible(false)}><i className="bx bx-x" /></button>
+          <button className="install-btn" onClick={handleInstallClick}>Install</button>
+          <button className="install-close" onClick={handleInstallDismiss}><i className="bx bx-x" /></button>
         </div>
       )}
 

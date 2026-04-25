@@ -9,6 +9,8 @@ import {
   subscribeToMessages, sendMessage, markChatRead, getUserProfile, getChatId,
   reactToMessage, markAudioPlayed, subscribeToUserPresence, setUserOnline, setUserOffline, deleteMessage, blockUser, unblockUser, clearChatPreview
 } from "../../firebase/db";
+import { precacheMedia, getBlobUrl } from "../../utils/appCache";
+import CachedImage from "../../components/CachedImage";
 import "boxicons/css/boxicons.min.css";
 import "../../styles/chats.css";
 import UserProfileOverlay from "../../components/UserProfileOverlay";
@@ -17,14 +19,27 @@ import UserProfileOverlay from "../../components/UserProfileOverlay";
 function getInitials(name = "") {
   return name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase() || "?";
 }
+// Safely convert any timestamp format to a Date:
+//  • Live Firestore Timestamp (has .toDate)
+//  • Serialized Timestamp from IndexedDB ({seconds, nanoseconds})
+//  • Plain date/number/string
+function tsToDate(ts) {
+  if (!ts) return null;
+  if (ts.toDate && typeof ts.toDate === "function") return ts.toDate();
+  if (typeof ts === "object" && ts.seconds !== undefined) {
+    return new Date(ts.seconds * 1000 + (ts.nanoseconds || 0) / 1e6);
+  }
+  const d = new Date(ts);
+  return isNaN(d.getTime()) ? null : d;
+}
 function formatTime(ts) {
-  if (!ts) return "";
-  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  const d = tsToDate(ts);
+  if (!d) return "";
   return d.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
 }
 function formatLastSeen(ts) {
-  if (!ts) return "";
-  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  const d = tsToDate(ts);
+  if (!d) return "";
   const now = new Date();
   const diff = now - d;
   const mins = Math.floor(diff / 60000);
@@ -37,8 +52,8 @@ function formatLastSeen(ts) {
   return `last seen ${d.toLocaleDateString("en-US", { day: "numeric", month: "short" })} at ${formatTime(ts)}`;
 }
 function getDateLabel(ts) {
-  if (!ts) return "";
-  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  const d = tsToDate(ts);
+  if (!d) return "";
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const mDay = new Date(d); mDay.setHours(0, 0, 0, 0);
   const diff = Math.round((today - mDay) / 86400000);
@@ -58,7 +73,7 @@ const QUICK_EMOJIS = ["👍", "❤️", "😂", "😮", "😢", "🙏"];
 /* ── Avatar ── */
 function ChatAvatar({ photoURL, name, size = 38 }) {
   const initials = getInitials(name);
-  if (photoURL) return <img src={photoURL} alt={name} style={{ width: size, height: size, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />;
+  if (photoURL) return <CachedImage src={photoURL} alt={name} style={{ width: size, height: size, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />;
   return <div className="co-avatar av-purple" style={{ width: size, height: size, fontSize: size * 0.32 }}>{initials}</div>;
 }
 
@@ -208,7 +223,15 @@ export default function ChatWindow() {
   useEffect(() => {
     if (!currentUser) return;
     import("../../firebase/db").then(({ subscribeToChats }) => {
-      const unsub = subscribeToChats(currentUser.uid, setChats);
+      const unsub = subscribeToChats(currentUser.uid, async (data) => {
+        // Pre-warm participant photos so forward modal avatars render instantly
+        await Promise.all(data.map((chat) => {
+          const otherId = chat.participants?.find((p) => p !== currentUser.uid);
+          const photoURL = chat.participantInfo?.[otherId]?.photoURL;
+          return photoURL ? getBlobUrl(photoURL).catch(() => null) : null;
+        }));
+        setChats(data);
+      });
       return unsub;
     });
   }, [currentUser]);
@@ -222,18 +245,24 @@ export default function ChatWindow() {
   /* ── Load other user — handles both uid1_uid2 and legacy random chat IDs ── */
   useEffect(() => {
     if (!chatId || !currentUser) return;
-    // Try to derive otherUid from chatId (uid1_uid2 format)
     const parts = chatId.split("_");
     const derivedUid = parts.length === 2 ? parts.find((p) => p !== currentUser.uid) : null;
+
+    const applyOtherUser = async (p) => {
+      if (!p) return;
+      // Pre-fetch profile photo blob before rendering header avatar
+      if (p.photoURL) await getBlobUrl(p.photoURL).catch(() => null);
+      setOtherUser(p);
+    };
+
     if (derivedUid) {
-      getUserProfile(derivedUid).then((p) => { if (p) setOtherUser(p); });
+      getUserProfile(derivedUid).then(applyOtherUser);
     } else {
-      // Legacy random chat ID — read participants from chat doc
       getDoc(doc(db, "chats", chatId)).then((snap) => {
         if (!snap.exists()) return;
         const otherId = snap.data().participants?.find((p) => p !== currentUser.uid);
         if (!otherId) return;
-        getUserProfile(otherId).then((p) => { if (p) setOtherUser(p); });
+        getUserProfile(otherId).then(applyOtherUser);
       });
     }
   }, [chatId, currentUser]);
@@ -274,7 +303,10 @@ export default function ChatWindow() {
         setChatData(snap.data());
         markChatRead(chatId, currentUser.uid);
       }
-      unsub = subscribeToMessages(chatId, (msgs) => {
+      unsub = subscribeToMessages(chatId, async (msgs) => {
+        // Pre-fetch all media blobs before rendering so CachedImage hits memory sync
+        const mediaUrls = msgs.filter((m) => m.fileURL?.startsWith("http")).map((m) => m.fileURL);
+        await Promise.all(mediaUrls.map((url) => getBlobUrl(url).catch(() => null)));
         setAllMessages(msgs);
         // Clean up any stale messages that were written with blob: URLs (from old system)
         msgs.forEach(async (m) => {
@@ -961,7 +993,7 @@ export default function ChatWindow() {
       {lightbox && createPortal(
         <div className="cw-lightbox" onClick={() => setLightbox(null)}>
           <button className="cw-lightbox-close" onClick={() => setLightbox(null)}><i className="bx bx-x" /></button>
-          <img src={lightbox} alt="Preview" onClick={(e) => e.stopPropagation()} />
+          <CachedImage src={lightbox} alt="Preview" onClick={(e) => e.stopPropagation()} />
         </div>,
         document.body
       )}
@@ -1066,7 +1098,7 @@ export default function ChatWindow() {
                   >
                     <div className="co-fwd-check">{fwdSel.has(chat.id) && <i className="bx bx-check" />}</div>
                     {photoURL
-                      ? <img src={photoURL} alt={name} style={{ width: 38, height: 38, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
+                      ? <CachedImage src={photoURL} alt={name} style={{ width: 38, height: 38, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
                       : <div className="co-avatar av-purple" style={{ width: 38, height: 38, fontSize: 13, flexShrink: 0 }}>{initials}</div>
                     }
                     <span>{name}</span>
@@ -1134,7 +1166,7 @@ export default function ChatWindow() {
                   >
                     <div className="co-fwd-check">{fwdSel.has(chat.id) && <i className="bx bx-check" />}</div>
                     {photoURL
-                      ? <img src={photoURL} alt={name} style={{ width: 38, height: 38, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
+                      ? <CachedImage src={photoURL} alt={name} style={{ width: 38, height: 38, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
                       : <div className="co-avatar av-purple" style={{ width: 38, height: 38, fontSize: 13, flexShrink: 0 }}>{initials}</div>
                     }
                     <span>{name}</span>
@@ -1260,7 +1292,7 @@ function ReactionsSheet({ msg, chatId, myUid, myName, myPhoto, otherUser, onClos
             return (
               <div key={uid} className="mv-sheet-row">
                 {info.photo
-                  ? <img src={info.photo} alt={info.name} className="mv-sheet-avatar" />
+                  ? <CachedImage src={info.photo} alt={info.name} className="mv-sheet-avatar" />
                   : <div className="mv-sheet-avatar mv-sheet-initials">{initials}</div>
                 }
                 <span className="mv-sheet-name">{uid === myUid ? "You" : info.name}</span>
@@ -1728,9 +1760,18 @@ const AudioPlayer = memo(function AudioPlayer({ src, isMine, waveform, timestamp
   const [playing, setPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   const [current, setCurrent] = useState(0);
-  // Sender: blue only when receiver played (from Firestore isPlayed)
-  // Receiver: blue once they press play themselves
   const [played, setPlayed] = useState(isPlayed || false);
+  const [resolvedSrc, setResolvedSrc] = useState(null);
+
+  // Resolve blob URL (cached) for the audio source
+  useEffect(() => {
+    if (!src) { setResolvedSrc(null); return; }
+    let cancelled = false;
+    import("../../utils/appCache").then(({ getBlobUrl }) => {
+      getBlobUrl(src).then((url) => { if (!cancelled) setResolvedSrc(url || src); });
+    });
+    return () => { cancelled = true; };
+  }, [src]);
 
   const bars = useRef(
     waveform && waveform.length > 0
@@ -1908,7 +1949,7 @@ const AudioPlayer = memo(function AudioPlayer({ src, isMine, waveform, timestamp
     <div className={`ca-player ${isMine ? "ca-sent" : "ca-received"}`}>
       <audio
         ref={audioRef}
-        src={src}
+        src={resolvedSrc || src}
         onLoadedMetadata={(e) => { setDuration(e.target.duration); drawFrame(0); }}
         onEnded={() => {
           stopRaf();
@@ -1979,10 +2020,39 @@ function MediaViewer({ items, startIndex, onClose, otherName, chatId, myUid, myN
   const [duration, setDuration] = useState(0);
   const [speed, setSpeed] = useState(1);
   const [controlsVisible, setControlsVisible] = useState(true);
+  const [resolvedUrl, setResolvedUrl] = useState(null);
   const videoRef = useRef(null);
   const controlsTimer = useRef(null);
   const touchStartX = useRef(0);
   const item = items[index] || items[0];
+
+  // Push a history entry so the browser back gesture closes the viewer
+  // instead of navigating away from the chat
+  useEffect(() => {
+    window.history.pushState({ mediaViewer: true }, "");
+    const onPopState = (e) => {
+      // Back gesture fired — close viewer, stay on chat page
+      onClose();
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => {
+      window.removeEventListener("popstate", onPopState);
+      // If viewer is closed programmatically (not via back), clean up the history entry
+      if (window.history.state?.mediaViewer) {
+        window.history.back();
+      }
+    };
+  }, [onClose]);
+
+  // Resolve blob URL for current item
+  useEffect(() => {
+    if (!item?.url) { setResolvedUrl(null); return; }
+    let cancelled = false;
+    import("../../utils/appCache").then(({ getBlobUrl }) => {
+      getBlobUrl(item.url).then((url) => { if (!cancelled) setResolvedUrl(url || item.url); });
+    });
+    return () => { cancelled = true; };
+  }, [item?.url]);
 
   // Reset state when item changes
   useEffect(() => {
@@ -2097,9 +2167,10 @@ function MediaViewer({ items, startIndex, onClose, otherName, chatId, myUid, myN
         </button>
         <div className="mv-title">
           <span className="mv-name">{otherName}</span>
-          <span className="mv-date">{item.timestamp?.toDate
-            ? item.timestamp.toDate().toLocaleString("en-US", { weekday: "short", hour: "2-digit", minute: "2-digit" })
-            : ""}
+          <span className="mv-date">{(() => {
+            const d = tsToDate(item.timestamp);
+            return d ? d.toLocaleString("en-US", { weekday: "short", hour: "2-digit", minute: "2-digit" }) : "";
+          })()}
           </span>
         </div>
         <div className="mv-top-actions">
@@ -2115,7 +2186,7 @@ function MediaViewer({ items, startIndex, onClose, otherName, chatId, myUid, myN
           <>
             <video
               ref={videoRef}
-              src={item.url}
+              src={resolvedUrl || item.url}
               className="mv-media"
               onLoadedMetadata={(e) => setDuration(e.target.duration)}
               onTimeUpdate={(e) => setCurrent(e.target.currentTime)}
@@ -2131,7 +2202,7 @@ function MediaViewer({ items, startIndex, onClose, otherName, chatId, myUid, myN
             </div>
           </>
         ) : (
-          <img src={item.url} alt="media" className="mv-media" onClick={(e) => e.stopPropagation()} />
+          <img src={resolvedUrl || item.url} alt="media" className="mv-media" onClick={(e) => e.stopPropagation()} />
         )}
 
         {/* Prev/Next arrows — desktop */}
@@ -2188,7 +2259,7 @@ function MediaViewer({ items, startIndex, onClose, otherName, chatId, myUid, myN
             <div className="mv-reply-preview-bar" />
             {item.isVideo
               ? <div style={{ width: 40, height: 40, background: "#111", borderRadius: 6, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", color: "#555", fontSize: 18 }}><i className="bx bx-video" /></div>
-              : <img src={item.url} alt="" className="mv-reply-preview-thumb" />
+              : <CachedImage src={item.url} alt="" className="mv-reply-preview-thumb" />
             }
             <div className="mv-reply-preview-info">
               <div className="mv-reply-preview-label">{otherName || "You"}</div>
@@ -2297,7 +2368,7 @@ function MediaViewer({ items, startIndex, onClose, otherName, chatId, myUid, myN
                   return (
                     <div key={uid} className="mv-sheet-row">
                       {info.photo
-                        ? <img src={info.photo} alt={info.name} className="mv-sheet-avatar" />
+                        ? <CachedImage src={info.photo} alt={info.name} className="mv-sheet-avatar" />
                         : <div className="mv-sheet-avatar mv-sheet-initials">{initials}</div>
                       }
                       <span className="mv-sheet-name">{uid === myUid ? "You" : info.name}</span>
@@ -2339,11 +2410,22 @@ function VideoThumb({ src, timestamp, onOpen, isMine, msgStatus }) {
   const canvasRef = useRef(null);
   const [duration, setDuration] = useState("");
   const [thumbReady, setThumbReady] = useState(false);
+  const [resolvedSrc, setResolvedSrc] = useState(null);
+
+  // Resolve blob URL (cached) for the video source
+  useEffect(() => {
+    if (!src) { setResolvedSrc(null); return; }
+    let cancelled = false;
+    import("../../utils/appCache").then(({ getBlobUrl }) => {
+      getBlobUrl(src).then((url) => { if (!cancelled) setResolvedSrc(url || src); });
+    });
+    return () => { cancelled = true; };
+  }, [src]);
 
   useEffect(() => {
     const vid = vidRef.current;
-    if (!vid) return;
-    vid.src = src;
+    if (!vid || !resolvedSrc) return;
+    vid.src = resolvedSrc;
     vid.muted = true;
     vid.preload = "metadata";
     vid.currentTime = 0.1;
@@ -2370,7 +2452,7 @@ function VideoThumb({ src, timestamp, onOpen, isMine, msgStatus }) {
       vid.removeEventListener("loadedmetadata", onMeta);
       vid.removeEventListener("seeked", onSeeked);
     };
-  }, [src]);
+  }, [resolvedSrc]);
 
   return (
     <div
@@ -2518,7 +2600,7 @@ const MsgBubble = memo(function MsgBubble({ msg, isMine, reaction, msgStatus, up
                 />
               ) : (
                 <div className="co-img-msg" onClick={(e) => { e.stopPropagation(); if (uploadProgress == null && !uploadFailed) onImageClick(msg.fileURL); }}>
-                  <img src={msg.fileURL} alt={msg.fileName || "attachment"} />
+                  <CachedImage src={msg.fileURL} alt={msg.fileName || "attachment"} />
                   {/* Uploading state — progress circle + cancel */}
                   {uploadProgress != null && !uploadFailed && (
                     <div className="co-upload-overlay">

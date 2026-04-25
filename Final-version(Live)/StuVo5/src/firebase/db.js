@@ -23,6 +23,16 @@ export const subscribeToNotices = (callback) =>
     callback(snap.exists() ? (snap.data().items ?? []) : [])
   );
 
+// ─── Get lastChanged timestamp only (cheap single-field read) ───
+export const getLastChanged = async (type) => {
+  // type: "events" | "notices"
+  const ref = type === "notices" ? noticesRef() : eventsActiveRef();
+  const snap = await getDoc(ref);
+  if (!snap.exists()) return null;
+  const ts = snap.data().lastChanged;
+  return ts ? ts.toMillis() : null;
+};
+
 // ─── Save events ──────────────────────────────────────────
 export const saveEvents = async (draft, originalEvents) => {
   const originalIds = new Set((originalEvents || []).map((e) => e.id));
@@ -56,8 +66,8 @@ export const saveEvents = async (draft, originalEvents) => {
     if (newEvents.length > 0) {
       transaction.set(metaRef(), { eventSerial: nextSerial }, { merge: true });
     }
-    transaction.set(eventsActiveRef(), { items: enrichedDraft });
-    transaction.set(eventsAllRef(),    { items: updatedAll });
+    transaction.set(eventsActiveRef(), { items: enrichedDraft, lastChanged: serverTimestamp() });
+    transaction.set(eventsAllRef(),    { items: updatedAll, lastChanged: serverTimestamp() });
   });
 };
 
@@ -83,7 +93,7 @@ export const saveNotices = async (draft, originalNotices) => {
     if (newNotices.length > 0) {
       transaction.set(metaRef(), { noticeSerial: nextSerial }, { merge: true });
     }
-    transaction.set(noticesRef(), { items: enrichedDraft });
+    transaction.set(noticesRef(), { items: enrichedDraft, lastChanged: serverTimestamp() });
   });
 };
 

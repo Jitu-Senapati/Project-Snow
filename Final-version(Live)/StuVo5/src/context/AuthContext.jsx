@@ -36,6 +36,15 @@ export const AuthProvider = ({ children }) => {
 
       if (user) {
         updateProgress(60);
+        // Background pre-warm: cache all data after login (fire and forget)
+        setTimeout(async () => {
+          try {
+            const { prewarmCache } = await import("./SyncContext");
+            const { subscribeToChats, subscribeToEvents, subscribeToNotices } = await import("../firebase/db");
+            await prewarmCache(user.uid, { subscribeToChats, subscribeToEvents, subscribeToNotices });
+          } catch {}
+        }, 2000); // wait 2s for app to settle first
+
         unsubscribeProfile = onSnapshot(
           doc(db, "users", user.uid),
           (snap) => {

@@ -1,9 +1,17 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import "boxicons/css/boxicons.min.css";
 import "../../styles/explore.css";
-import { subscribeToEvents, subscribeToNotices, toggleBookmark } from "../../firebase/db";
+import { subscribeToEvents, subscribeToNotices, toggleBookmark, getLastChanged } from "../../firebase/db";
 import { useAuth } from "../../context/AuthContext";
 import { timeAgo } from "./AdminExplore";
+import { useSyncStatus } from "../../context/SyncContext";
+import {
+  getCachedEvents, setCachedEvents,
+  getCachedNotices, setCachedNotices,
+  getCachedLastChanged, setCachedLastChanged,
+  precacheMedia, getBlobUrl,
+} from "../../utils/appCache";
+import CachedImage from "../../components/CachedImage";
 
 /* ─── Skeleton ───────────────────────────────────────────── */
 function ExplorerSkeleton() {
@@ -203,7 +211,7 @@ function ExplorerContent({ events, notices, userBookmarks, uid }) {
                   return (
                     <div key={ev.id} className={`event-card${i === current ? " active" : ""}`}>
                       <div className="event-image">
-                        <img
+                        <CachedImage
                           src={ev.img}
                           alt={ev.title}
                           className={loadedImgs[ev.id] ? "loaded" : ""}
@@ -304,27 +312,112 @@ function ExplorerContent({ events, notices, userBookmarks, uid }) {
 /* ─── Main Export ────────────────────────────────────────── */
 export default function Explorer() {
   const { currentUser, userProfile } = useAuth();
+  const { online, markFetching, markUpdated } = useSyncStatus();
   const [events, setEvents] = useState(null);
   const [notices, setNotices] = useState(null);
+  // Ref so event listeners always see latest online value (avoids stale closure)
+  const onlineRef = useRef(online);
+  useEffect(() => { onlineRef.current = online; }, [online]);
 
   useEffect(() => {
-    const unsubEvents = subscribeToEvents((data) => setEvents(data));
-    const unsubNotices = subscribeToNotices((data) => setNotices(data));
-    return () => { unsubEvents(); unsubNotices(); };
-  }, []);
+    let unsubEvents = () => {};
+    let unsubNotices = () => {};
 
-  // Show skeleton until both Firestore data and userProfile are loaded
-  if (events === null || notices === null || !userProfile) return <ExplorerSkeleton />;
+    async function syncData() {
+      // 1. Show cached data immediately
+      const [cachedEvts, cachedNtcs] = await Promise.all([
+        getCachedEvents(), getCachedNotices()
+      ]);
 
-  const userBookmarks = userProfile.bookmarkedEvents || [];
+      if (cachedEvts.length > 0) {
+        // Pre-resolve blob URLs FIRST so CachedImage finds them synchronously on mount
+        await Promise.all(
+          cachedEvts
+            .filter((ev) => ev.img)
+            .map((ev) => getBlobUrl(ev.img).catch(() => null))
+        );
+        setEvents(cachedEvts);
+      }
+      if (cachedNtcs.length > 0) setNotices(cachedNtcs);
+
+      if (!onlineRef.current) return;
+
+      markFetching();
+
+      // 2. Check lastChanged for both — one lightweight read each
+      const [
+        cachedEvtTs, cachedNtcTs,
+        remoteEvtTs, remoteNtcTs,
+      ] = await Promise.all([
+        getCachedLastChanged("events"),
+        getCachedLastChanged("notices"),
+        getLastChanged("events").catch(() => null),
+        getLastChanged("notices").catch(() => null),
+      ]);
+
+      const eventsStale  = !remoteEvtTs || remoteEvtTs !== cachedEvtTs;
+      const noticesStale = !remoteNtcTs || remoteNtcTs !== cachedNtcTs;
+
+      const bothUpdated = { evt: !eventsStale, ntc: !noticesStale };
+      const markIfDone = () => { if (bothUpdated.evt && bothUpdated.ntc) markUpdated(); };
+
+      // If already cached and up to date — show immediately, no subscription needed
+      if (!eventsStale && cachedEvts.length > 0) {
+        bothUpdated.evt = true;
+        markIfDone();
+      }
+      if (!noticesStale && cachedNtcs.length > 0) {
+        bothUpdated.ntc = true;
+        markIfDone();
+      }
+
+      // 3. Subscribe only for stale/missing data
+      if (eventsStale || cachedEvts.length === 0) {
+        let first = true;
+        unsubEvents = subscribeToEvents((data) => {
+          setEvents(data);
+          setCachedEvents(data);
+          data.forEach((ev) => { if (ev.img) precacheMedia(ev.img); });
+          if (remoteEvtTs) setCachedLastChanged("events", remoteEvtTs);
+          if (first) { bothUpdated.evt = true; markIfDone(); first = false; }
+        });
+      }
+
+      if (noticesStale || cachedNtcs.length === 0) {
+        let first = true;
+        unsubNotices = subscribeToNotices((data) => {
+          setNotices(data);
+          setCachedNotices(data);
+          if (remoteNtcTs) setCachedLastChanged("notices", remoteNtcTs);
+          if (first) { bothUpdated.ntc = true; markIfDone(); first = false; }
+        });
+      }
+    }
+
+    syncData();
+
+    // When coming back online, re-sync with a small delay for Firebase to reconnect
+    const handleBackOnline = () => setTimeout(syncData, 1000);
+    window.addEventListener("stuvo5:online", handleBackOnline);
+
+    return () => {
+      unsubEvents();
+      unsubNotices();
+      window.removeEventListener("stuvo5:online", handleBackOnline);
+    };
+  }, [online]); // eslint-disable-line
+
+  // Show skeleton only if nothing loaded yet (no cache, no live data)
+  if (events === null || notices === null) return <ExplorerSkeleton />;
+
+  const userBookmarks = userProfile?.bookmarkedEvents || [];
 
   return (
     <ExplorerContent
-      key={events.length}
       events={events}
       notices={notices}
       userBookmarks={userBookmarks}
-      uid={currentUser.uid}
+      uid={currentUser?.uid}
     />
   );
 }

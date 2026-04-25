@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, Component } from "react";
 import './App.css'
 import Landing from "./pages/auth/Landing";
 import FullScreenLoader from "./components/FullScreenLoader";
@@ -27,8 +27,29 @@ const SupportUs      = lazy(() => import("./pages/explore/SupportUs"));
 const Syllabus       = lazy(() => import("./pages/explore/Syllabus"));
 const RaiseComplaint = lazy(() => import("./pages/explore/RaiseComplaint"));
 
+// Error boundary for lazy-loaded pages that fail offline
+class LazyErrorBoundary extends Component {
+  constructor(props) { super(props); this.state = { failed: false }; }
+  static getDerivedStateFromError() { return { failed: true }; }
+  render() {
+    if (this.state.failed) {
+      return (
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "60vh", gap: 12, color: "#aaa" }}>
+          <i className="bx bx-wifi-off" style={{ fontSize: 48, color: "#555" }} />
+          <p style={{ fontSize: 15 }}>Page unavailable offline</p>
+          <button onClick={() => this.setState({ failed: false })} style={{ background: "#7c3aed", border: "none", color: "#fff", padding: "8px 20px", borderRadius: 20, cursor: "pointer", fontSize: 13 }}>
+            Try again
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 function App() {
   return (
+    <LazyErrorBoundary>
     <Suspense fallback={<FullScreenLoader />}>
       <Routes>
         {/* Public */}
@@ -69,6 +90,7 @@ function App() {
         </Route>
       </Routes>
     </Suspense>
+    </LazyErrorBoundary>
   );
 }
 

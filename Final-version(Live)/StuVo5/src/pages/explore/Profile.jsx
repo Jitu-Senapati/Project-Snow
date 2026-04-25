@@ -7,6 +7,13 @@ import { auth, db, storage } from "../../firebase/config";
 import { doc, updateDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getUserProfiles } from "../../firebase/db";
+import { useSyncStatus } from "../../context/SyncContext";
+import {
+  getCachedProfile, setCachedProfile,
+  cacheSetMany, cacheGetAll,
+  precacheMedia, getBlobUrl,
+} from "../../utils/appCache";
+import CachedImage from "../../components/CachedImage";
 
 /* ═══════════════════════════════════════════════════════════
    PROFILE SKELETON
@@ -442,7 +449,7 @@ function PhotoViewer({ isOpen, onClose, avatarUrl, initials }) {
       <div className="photo-viewer-close" onClick={onClose}><i className="bx bx-x" /></div>
       <div className="photo-viewer-content">
         {avatarUrl ? (
-          <img src={avatarUrl} alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%", border: "3px solid rgba(255,255,255,0.15)" }} />
+          <CachedImage src={avatarUrl} alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%", border: "3px solid rgba(255,255,255,0.15)" }} />
         ) : (
           <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "linear-gradient(135deg,#667eea 0%,#764ba2 100%)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 100, fontWeight: "bold", color: "white", border: "3px solid rgba(255,255,255,0.15)" }}>{initials}</div>
         )}
@@ -489,11 +496,26 @@ function FollowListModal({ type, uids, onClose }) {
 
   useEffect(() => {
     if (!uids || uids.length === 0) { setLoading(false); return; }
+
+    // Show cached profiles instantly
+    Promise.all(uids.map((uid) => getCachedProfile(uid))).then((cached) => {
+      const valid = cached.filter(Boolean);
+      if (valid.length > 0) {
+        setProfiles(valid);
+        setLoading(false);
+      }
+    });
+
+    // Fetch fresh and update cache
     getUserProfiles(uids).then((data) => {
       setProfiles(data);
       setLoading(false);
+      data.forEach((p) => {
+        setCachedProfile(p.uid, p);
+        if (p.photoURL) precacheMedia(p.photoURL);
+      });
     });
-  }, [uids]);
+  }, [uids]); // eslint-disable-line
 
   return createPortal(
     <div className="follow-modal-overlay" onClick={onClose}>
@@ -521,7 +543,7 @@ function FollowListModal({ type, uids, onClose }) {
               <div key={p.uid} className="follow-modal-item">
                 <div className="follow-modal-avatar">
                   {p.photoURL
-                    ? <img src={p.photoURL} alt={p.fullName} />
+                    ? <CachedImage src={p.photoURL} alt={p.fullName} />
                     : <span>{initials}</span>
                   }
                 </div>
@@ -544,6 +566,7 @@ function FollowListModal({ type, uids, onClose }) {
 ═══════════════════════════════════════════════════════════ */
 export default function Profile() {
   const { currentUser, userProfile } = useAuth();
+  const { online, markFetching, markUpdated } = useSyncStatus();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -572,38 +595,67 @@ export default function Profile() {
   const moreButtonRef = useRef(null);
   const toastKey = useRef(0);
 
-  // Load user data from Firestore via AuthContext (real-time onSnapshot)
+  // Helper to apply profile data to state
+  const applyProfile = (p) => {
+    const r = p.role || "student";
+    setRole(r);
+    setProfile({
+      name: p.fullName || "",
+      username: "@" + (p.username || ""),
+      bio: p.bio || "",
+      branch: p.branch || "",
+      year: p.year || "",
+      roll: p.roll || "",
+      department: p.department || "",
+      subject: p.subject || "",
+      workingSince: p.workingSince || "",
+    });
+    setAvatarUrl(p.photoURL || null);
+    setCoverUrl(p.coverPhotoURL || null);
+    setSocialValues({
+      instagram: p.social?.instagram || "",
+      linkedin: p.social?.linkedin || "",
+      github: p.social?.github || "",
+      email: p.social?.email || "",
+    });
+  };
+
+  // Load profile — cache first, then live from AuthContext
   useEffect(() => {
+    if (!currentUser) return;
+
+    // 1. Show cached profile instantly
+    getCachedProfile(currentUser.uid).then(async (cached) => {
+      if (cached && !userProfile) {
+        // Pre-fetch blobs before rendering
+        await Promise.all([
+          cached.coverPhotoURL ? getBlobUrl(cached.coverPhotoURL).catch(() => null) : null,
+          cached.photoURL ? getBlobUrl(cached.photoURL).catch(() => null) : null,
+        ]);
+        applyProfile(cached);
+        setLoading(false);
+        if (online) markFetching();
+      }
+    });
+
+    // 2. When live data arrives from AuthContext onSnapshot
     if (userProfile) {
-      const r = userProfile.role || "student";
-      setRole(r);
-      setProfile({
-        name: userProfile.fullName || "",
-        username: "@" + (userProfile.username || ""),
-        bio: userProfile.bio || "",
-        // student fields
-        branch: userProfile.branch || "",
-        year: userProfile.year || "",
-        roll: userProfile.roll || "",
-        // faculty fields
-        department: userProfile.department || "",
-        subject: userProfile.subject || "",
-        workingSince: userProfile.workingSince || "",
+      // Pre-fetch cover + avatar blobs before rendering so CachedImage hits memory sync
+      Promise.all([
+        userProfile.coverPhotoURL ? getBlobUrl(userProfile.coverPhotoURL).catch(() => null) : null,
+        userProfile.photoURL ? getBlobUrl(userProfile.photoURL).catch(() => null) : null,
+      ]).then(() => {
+        applyProfile(userProfile);
+        setLoading(false);
+        setCachedProfile(currentUser.uid, userProfile);
+        if (online) markUpdated();
       });
-      setAvatarUrl(userProfile.photoURL || null);
-      setCoverUrl(userProfile.coverPhotoURL || null); // ← coverPhotoURL
-      setSocialValues({
-        instagram: userProfile.social?.instagram || "",
-        linkedin: userProfile.social?.linkedin || "",
-        github: userProfile.social?.github || "",
-        email: userProfile.social?.email || "",
-      });
-      setLoading(false);
     } else if (currentUser && !userProfile) {
+      if (online) markFetching();
       const timeout = setTimeout(() => setLoading(false), 5000);
       return () => clearTimeout(timeout);
     }
-  }, [userProfile, currentUser]);
+  }, [userProfile, currentUser]); // eslint-disable-line
 
   useEffect(() => {
     if (!moreDropdownOpen) return;
@@ -714,7 +766,7 @@ export default function Profile() {
       <div className="cover-photo-section">
         <div className="cover-photo-container">
           {!coverUrl && (<div className="cover-photo-placeholder"><i className="bx bx-image-add" /><span>Add Cover Photo</span></div>)}
-          {coverUrl && <img src={coverUrl} alt="Cover" className="cover-photo-img" />}
+          {coverUrl && <CachedImage src={coverUrl} alt="Cover" className="cover-photo-img" />}
           <div className="cover-gradient-overlay" />
           <div className="cover-photo-overlay">
             <button className="cover-photo-btn" onClick={() => coverFileRef.current.click()}>
