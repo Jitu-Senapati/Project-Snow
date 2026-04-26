@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useHistoryBack } from "../../utils/useHistoryBack";
 import "boxicons/css/boxicons.min.css";
 import "../../styles/Settings.css";
 import { useAuth } from "../../context/AuthContext";
@@ -716,6 +717,9 @@ const SETTINGS_MENU = [
 export default function Settings() {
   const navigate = useNavigate();
   const [active, setActive] = useState(null);
+
+  // Intercept browser back gesture to close sub-pages instead of navigating away
+  useHistoryBack(!!active, () => setActive(null));
 
   if (active === "account")
     return <AccountCenter onBack={() => setActive(null)} />;

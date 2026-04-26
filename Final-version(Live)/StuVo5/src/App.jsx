@@ -14,6 +14,7 @@ const LinkAccount    = lazy(() => import("./pages/auth/LinkAccount"));
 const Explore        = lazy(() => import("./pages/explore/Explore"));
 const AdminExplore   = lazy(() => import("./pages/explore/AdminExplore"));
 const Profile        = lazy(() => import("./pages/explore/Profile"));
+const OthersProfile  = lazy(() => import("./pages/explore/OthersProfile"));
 const Bus            = lazy(() => import("./pages/explore/Bus"));
 const Chat           = lazy(() => import("./pages/explore/Chat"));
 const Chats          = lazy(() => import("./pages/explore/Chats"));
@@ -62,6 +63,7 @@ function App() {
         {/* Common protected routes — any logged-in user */}
         <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
           <Route path="/profile"    element={<Profile />} />
+          <Route path="/user/:uid"  element={<OthersProfile />} />
           <Route path="/bus"        element={<Bus />} />
           <Route path="/chat"           element={<Chat />} />
           <Route path="/chat/:chatId"   element={<ChatWindow />} />

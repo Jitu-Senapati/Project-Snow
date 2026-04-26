@@ -62,6 +62,7 @@ async function prefetchAllPageChunks(sw) {
     () => import("./pages/explore/Chats.jsx"),
     () => import("./pages/explore/ChatWindow.jsx"),
     () => import("./pages/explore/Profile.jsx"),
+    () => import("./pages/explore/OthersProfile.jsx"),
     () => import("./pages/explore/Settings.jsx"),
     () => import("./pages/explore/Search.jsx"),
     () => import("./pages/explore/Bus.jsx"),

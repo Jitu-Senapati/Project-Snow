@@ -11,9 +11,9 @@ import {
 } from "../../firebase/db";
 import { precacheMedia, getBlobUrl } from "../../utils/appCache";
 import CachedImage from "../../components/CachedImage";
+import { useHistoryBack } from "../../utils/useHistoryBack";
 import "boxicons/css/boxicons.min.css";
 import "../../styles/chats.css";
-import UserProfileOverlay from "../../components/UserProfileOverlay";
 
 /* ── Helpers ── */
 function getInitials(name = "") {
@@ -189,6 +189,12 @@ export default function ChatWindow() {
   const recordingChunks = useRef([]);
   const recordingTimer = useRef(null);
   const recordingStarted = useRef(false);
+
+  // Intercept browser back gesture for full-screen overlays
+  useHistoryBack(cameraOpen, () => setCameraOpen(false));
+  useHistoryBack(!!lightbox, () => setLightbox(null));
+  useHistoryBack(!!fwdData, () => { setFwdData(null); setFwdSel(new Set()); });
+  useHistoryBack(!!fwdDataMulti, () => { setFwdDataMulti(null); setFwdSel(new Set()); });
   const waveformSamples = useRef([]); // amplitude samples collected during recording
   const analyserRef = useRef(null);
   const analyserTimer = useRef(null);
@@ -198,7 +204,6 @@ export default function ChatWindow() {
   const inputRef = useRef(null);
   const messagesRef = useRef(null);
   const [showScrollBtn, setShowScrollBtn] = useState(false);
-  const [showProfileOverlay, setShowProfileOverlay] = useState(false);
   const [highlightId, setHighlightId] = useState(null);
 
   const scrollToMessage = useCallback((msgId) => {
@@ -623,13 +628,13 @@ export default function ChatWindow() {
         <button className="co-back-btn" onClick={() => navigate("/chats")}>
           <i className="bx bx-arrow-back" />
         </button>
-        <div style={{ cursor: "pointer" }} onClick={() => otherUid && setShowProfileOverlay(true)}>
+        <div style={{ cursor: "pointer" }} onClick={() => otherUid && navigate(`/user/${otherUid}`)}>
           <ChatAvatar photoURL={otherUser?.photoURL} name={otherUser?.fullName || otherUser?.name || "..."} size={38} />
         </div>
         <div
           className="co-header-info"
           style={{ cursor: "pointer" }}
-          onClick={() => otherUid && setShowProfileOverlay(true)}
+          onClick={() => otherUid && navigate(`/user/${otherUid}`)}
         >
           <div className="co-header-name">{otherUser?.fullName || otherUser?.name || "..."}</div>
           <div className="co-header-presence">
@@ -1212,12 +1217,7 @@ export default function ChatWindow() {
         </div>,
         document.body
       )}
-      {showProfileOverlay && otherUid && (
-        <UserProfileOverlay
-          uid={otherUid}
-          onClose={() => setShowProfileOverlay(false)}
-        />
-      )}
+
       {cameraOpen && createPortal(
         <CameraModal
           onCapture={(file, caption) => {
@@ -2027,22 +2027,7 @@ function MediaViewer({ items, startIndex, onClose, otherName, chatId, myUid, myN
   const item = items[index] || items[0];
 
   // Push a history entry so the browser back gesture closes the viewer
-  // instead of navigating away from the chat
-  useEffect(() => {
-    window.history.pushState({ mediaViewer: true }, "");
-    const onPopState = (e) => {
-      // Back gesture fired — close viewer, stay on chat page
-      onClose();
-    };
-    window.addEventListener("popstate", onPopState);
-    return () => {
-      window.removeEventListener("popstate", onPopState);
-      // If viewer is closed programmatically (not via back), clean up the history entry
-      if (window.history.state?.mediaViewer) {
-        window.history.back();
-      }
-    };
-  }, [onClose]);
+  useHistoryBack(true, onClose);
 
   // Resolve blob URL for current item
   useEffect(() => {

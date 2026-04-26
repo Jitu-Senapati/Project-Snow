@@ -14,6 +14,7 @@ import {
   precacheMedia, getBlobUrl,
 } from "../../utils/appCache";
 import CachedImage from "../../components/CachedImage";
+import { useHistoryBack } from "../../utils/useHistoryBack";
 
 /* ═══════════════════════════════════════════════════════════
    PROFILE SKELETON
@@ -497,22 +498,23 @@ function FollowListModal({ type, uids, onClose }) {
   useEffect(() => {
     if (!uids || uids.length === 0) { setLoading(false); return; }
 
-    // Show cached profiles instantly
-    Promise.all(uids.map((uid) => getCachedProfile(uid))).then((cached) => {
+    // Show cached profiles instantly — pre-warm blobs first
+    Promise.all(uids.map((uid) => getCachedProfile(uid))).then(async (cached) => {
       const valid = cached.filter(Boolean);
       if (valid.length > 0) {
+        await Promise.all(valid.map((p) => p.photoURL ? getBlobUrl(p.photoURL).catch(() => null) : null));
         setProfiles(valid);
         setLoading(false);
       }
     });
 
-    // Fetch fresh and update cache
-    getUserProfiles(uids).then((data) => {
+    // Fetch fresh and update cache — pre-warm blobs before rendering
+    getUserProfiles(uids).then(async (data) => {
+      await Promise.all(data.map((p) => p.photoURL ? getBlobUrl(p.photoURL).catch(() => null) : null));
       setProfiles(data);
       setLoading(false);
       data.forEach((p) => {
         setCachedProfile(p.uid, p);
-        if (p.photoURL) precacheMedia(p.photoURL);
       });
     });
   }, [uids]); // eslint-disable-line
@@ -593,6 +595,12 @@ export default function Profile() {
   const coverFileRef = useRef(null);
   const avatarFileRef = useRef(null);
   const moreButtonRef = useRef(null);
+
+  // Intercept browser back gesture for all full-screen overlays
+  useHistoryBack(cropModal.open, () => setCropModal({ open: false, type: null, imageUrl: null }));
+  useHistoryBack(photoViewerOpen, () => setPhotoViewerOpen(false));
+  useHistoryBack(editProfileOpen, () => setEditProfileOpen(false));
+  useHistoryBack(shareModalOpen, () => setShareModalOpen(false));
   const toastKey = useRef(0);
 
   // Helper to apply profile data to state

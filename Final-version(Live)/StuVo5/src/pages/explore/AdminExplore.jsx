@@ -8,6 +8,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../../firebase/config";
 import CachedImage from "../../components/CachedImage";
 import { useSyncStatus } from "../../context/SyncContext";
+import { useHistoryBack } from "../../utils/useHistoryBack";
 import { getBlobUrl } from "../../utils/appCache";
 
 /* ─── Time helpers ──────────────────────────────────────── */
@@ -543,20 +544,55 @@ function EditNoticesPage({ notices, onSave, onBack }) {
    CAROUSEL HOOK
 ═══════════════════════════════════════════════════════════ */
 function useCarousel(total) {
-  const [current, setCurrent] = useState(Math.floor(total / 2));
-  const [tx, setTx] = useState(0);
+  const getCardDims = () => {
+    const vw = window.innerWidth;
+    if (vw >= 1024) return { cw: 460, gap: 28 };
+    if (vw >= 768)  return { cw: 400, gap: 20 };
+    if (vw >= 481)  return { cw: 340, gap: 16 };
+    return { cw: 300, gap: 12 };
+  };
+
+  const initMid = total > 0 ? Math.floor(total / 2) : 0;
+  const [current, setCurrent] = useState(initMid);
+  const [tx, setTx] = useState(() => {
+    if (total <= 0) return 0;
+    const { cw, gap } = getCardDims();
+    const vw = window.innerWidth;
+    const step = cw + gap;
+    return vw / 2 - (initMid * step + cw / 2);
+  });
+  const [settled, setSettled] = useState(false);
   const [dragging, setDragging] = useState(false);
   const carouselRef = useRef(null);
   const trackRef = useRef(null);
   const dragRef = useRef({ startX: 0, delta: 0, baseTx: 0, t0: 0 });
+  const prevTotalRef = useRef(total);
 
-  const cardW = useCallback(() => { const c = trackRef.current?.querySelector(".event-card"); return c ? c.offsetWidth : 340; }, []);
-  const gapPx = useCallback(() => { if (!trackRef.current) return 16; return parseInt(getComputedStyle(trackRef.current).gap) || 16; }, []);
+  const cardW = useCallback(() => { const c = trackRef.current?.querySelector(".event-card"); return c ? c.offsetWidth : getCardDims().cw; }, []);
+  const gapPx = useCallback(() => { if (!trackRef.current) return getCardDims().gap; return parseInt(getComputedStyle(trackRef.current).gap) || 16; }, []);
   const calcTx = useCallback((i) => { const vw = carouselRef.current?.clientWidth || window.innerWidth; const cw = cardW(), step = cw + gapPx(); return vw / 2 - (i * step + cw / 2); }, [cardW, gapPx]);
   const goTo = useCallback((idx) => { if (idx < 0 || idx >= total) return; setCurrent(idx); setTx(calcTx(idx)); }, [total, calcTx]);
 
-  useEffect(() => { if (current >= total) setCurrent(Math.max(0, total - 1)); }, [total, current]);
-  useEffect(() => { const apply = () => setTx(calcTx(current)); requestAnimationFrame(() => requestAnimationFrame(apply)); window.addEventListener("resize", apply); return () => window.removeEventListener("resize", apply); }, [current, calcTx]);
+  // Re-center when total changes (events added/removed)
+  useEffect(() => {
+    if (total > 0 && total !== prevTotalRef.current) {
+      prevTotalRef.current = total;
+      const mid = Math.floor(total / 2);
+      setCurrent(mid);
+      setTx(calcTx(mid));
+    }
+  }, [total, calcTx]);
+
+  // Fine-tune position once DOM is measured + handle resize; mark settled after first measurement
+  useEffect(() => {
+    const apply = () => {
+      setTx(calcTx(current));
+      if (!settled) requestAnimationFrame(() => setSettled(true));
+    };
+    requestAnimationFrame(apply);
+    window.addEventListener("resize", apply);
+    return () => window.removeEventListener("resize", apply);
+  }, [current, calcTx]);
   useEffect(() => { const h = (e) => { if (e.key === "ArrowLeft") goTo(current - 1); if (e.key === "ArrowRight") goTo(current + 1); }; window.addEventListener("keydown", h); return () => window.removeEventListener("keydown", h); }, [current, goTo]);
 
   const onDragStart = useCallback((x) => { dragRef.current = { startX: x, delta: 0, baseTx: calcTx(current), t0: Date.now() }; setDragging(true); }, [calcTx, current]);
@@ -572,7 +608,7 @@ function useCarousel(total) {
   }, [dragging, current, total, cardW, goTo]);
   const dragDelta = useCallback(() => dragRef.current.delta, []);
 
-  return { current, tx, dragging, goTo, carouselRef, trackRef, onDragStart, onDragMove, onDragEnd, dragDelta };
+  return { current, tx, dragging, settled, goTo, carouselRef, trackRef, onDragStart, onDragMove, onDragEnd, dragDelta };
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -603,6 +639,9 @@ export default function AdminExplorer() {
     setPage(target);
   };
 
+  // Intercept browser back gesture to close edit pages
+  useHistoryBack(!!page, () => setPage(null));
+
   const userBookmarks = userProfile?.bookmarkedEvents || [];
 
   useEffect(() => {
@@ -624,7 +663,7 @@ export default function AdminExplorer() {
   }, []); // eslint-disable-line
 
   const total = events.length;
-  const { current, tx, dragging, goTo, carouselRef, trackRef, onDragStart, onDragMove, onDragEnd, dragDelta } = useCarousel(total);
+  const { current, tx, dragging, settled, goTo, carouselRef, trackRef, onDragStart, onDragMove, onDragEnd, dragDelta } = useCarousel(total);
 
   useEffect(() => {
     const move = (e) => onDragMove(e.clientX);
@@ -678,7 +717,7 @@ export default function AdminExplorer() {
           <>
             <div className="events-carousel" ref={carouselRef}>
               <div ref={trackRef} className={`events-track${dragging ? " is-dragging" : ""}`}
-                style={{ transform: `translateX(${tx}px)`, transition: dragging ? "none" : "transform 0.42s cubic-bezier(0.4,0,0.2,1)" }}
+                style={{ transform: `translateX(${tx}px)`, transition: (dragging || !settled) ? "none" : "transform 0.42s cubic-bezier(0.4,0,0.2,1)" }}
                 onMouseDown={(e) => { onDragStart(e.clientX); e.preventDefault(); }}
                 onTouchStart={(e) => onDragStart(e.touches[0].clientX)}
                 onTouchMove={(e) => onDragMove(e.touches[0].clientX)}
