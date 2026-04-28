@@ -276,9 +276,11 @@ export default function Chats() {
       <div className="co-search" style={{ margin: "10px 12px" }}>
         <i className="bx bx-search" />
         <input
+          type="search"
           placeholder="Search contacts…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          autoComplete="off"
         />
         {search && <i className="bx bx-x" style={{ cursor: "pointer", color: "#666" }} onClick={() => setSearch("")} />}
       </div>

@@ -41,6 +41,21 @@ export default function Layout() {
   const menuButtonRef = useRef(null);
   const [menuPosition, setMenuPosition] = useState({ top: 0, right: 0 });
 
+  // ── Suppress Android autofill bar on all text inputs globally ──
+  useEffect(() => {
+    const suppress = (e) => {
+      const el = e.target;
+      if (el.tagName === "INPUT" && !el.dataset.keepAutofill) {
+        const t = el.type;
+        if (t === "text" || t === "search" || t === "" || !t) {
+          el.setAttribute("autocomplete", "off");
+        }
+      }
+    };
+    document.addEventListener("focusin", suppress, true);
+    return () => document.removeEventListener("focusin", suppress, true);
+  }, []);
+
   // Install prompt — show banner after delay + use globally captured prompt
   useEffect(() => {
     // Hide forever if already running as installed PWA

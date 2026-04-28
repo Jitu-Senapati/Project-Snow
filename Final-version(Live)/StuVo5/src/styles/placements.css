@@ -1,0 +1,759 @@
+/* ================================================
+   Placements.css  —  STUVO5  |  Grey/Black theme
+   ================================================ */
+
+/* ── ROOT ── */
+.pl-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #0a0a0a;
+  color: #e2e8f0;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  padding-bottom: 80px;
+}
+
+/* ── HEADER ── */
+.pl-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 18px;
+  background: #0a0a0a;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.pl-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #f1f5f9;
+  letter-spacing: 0.2px;
+}
+
+/* Admin badge shown only on admin page header */
+.pl-admin-badge {
+  position: absolute;
+  right: 18px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  color: #f87171;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pl-admin-badge i {
+  font-size: 14px;
+}
+
+/* ── TABS ── */
+.pl-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.pl-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.pl-tab {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #1a1a1a;
+  color: #6b7280;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+}
+
+.pl-tab i {
+  font-size: 14px;
+}
+
+.pl-tab:hover {
+  background: #242424;
+  color: #cbd5e1;
+}
+
+.pl-tab--active {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #f1f5f9;
+}
+
+.pl-tab-arrow {
+  font-size: 16px;
+  color: #4ade80;
+  animation: pl-arrow 1s ease-in-out infinite alternate;
+  line-height: 1;
+}
+
+@keyframes pl-arrow {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(4px);
+  }
+}
+
+/* ── PULL HANDLE ── */
+.pl-pull-handle {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0;
+  background: #0a0a0a;
+}
+
+.pl-pull-handle span {
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ── LIST SECTION ── */
+.pl-list-section {
+  padding: 0 14px 16px;
+}
+
+.pl-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.pl-list-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.pl-count-badge {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #6b7280;
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 3px 10px;
+  border-radius: 8px;
+}
+
+/* ── EMPTY STATE ── */
+.pl-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 48px 16px;
+  color: #374151;
+}
+
+.pl-empty i {
+  font-size: 36px;
+}
+
+.pl-empty span {
+  font-size: 13px;
+}
+
+/* ── CARDS ── */
+.pl-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+/* ── CARD ── */
+.pl-card {
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 13px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.pl-card:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Company badge */
+.pl-company-badge {
+  flex-shrink: 0;
+  width: 52px;
+  height: 54px;
+  border-radius: 11px;
+  background: #1e1e1e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  color: #cbd5e1;
+}
+
+.pl-company-badge i {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.pl-company-badge span {
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: #9ca3af;
+}
+
+/* Card info */
+.pl-card-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pl-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.pl-card-left {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pl-card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.pl-company-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f1f5f9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pl-status {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.pl-card-role {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.pl-card-role i {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.pl-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  color: #6b7280;
+}
+
+.pl-card-meta i {
+  font-size: 12px;
+}
+
+/* Register link button — shown on normal user cards */
+.pl-register-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(74, 222, 128, 0.1);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  color: #4ade80;
+  font-size: 11.5px;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+  width: fit-content;
+}
+
+.pl-register-btn i {
+  font-size: 13px;
+}
+
+.pl-register-btn:hover {
+  background: rgba(74, 222, 128, 0.18);
+  border-color: rgba(74, 222, 128, 0.5);
+}
+
+/* Link display on admin cards */
+.pl-card-link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 2px;
+  font-size: 11px;
+  color: #4b5563;
+  overflow: hidden;
+}
+
+.pl-card-link i {
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.pl-link-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Admin action buttons on card */
+.pl-card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.pl-action-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #1a1a1a;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: 15px;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
+}
+
+.pl-action-btn--edit {
+  color: #94a3b8;
+}
+
+.pl-action-btn--edit:hover {
+  background: rgba(74, 222, 128, 0.1);
+  border-color: rgba(74, 222, 128, 0.3);
+  color: #4ade80;
+}
+
+.pl-action-btn--del {
+  color: #94a3b8;
+}
+
+.pl-action-btn--del:hover {
+  background: rgba(248, 113, 113, 0.1);
+  border-color: rgba(248, 113, 113, 0.3);
+  color: #f87171;
+}
+
+/* ── ADD BUTTON ── */
+.pl-add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px dashed rgba(74, 222, 128, 0.3);
+  background: rgba(74, 222, 128, 0.05);
+  color: #4ade80;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+
+.pl-add-btn i {
+  font-size: 18px;
+}
+
+.pl-add-btn:hover {
+  background: rgba(74, 222, 128, 0.1);
+  border-color: rgba(74, 222, 128, 0.5);
+}
+
+/* ── MODAL OVERLAY ── */
+/* TO */
+.pl-modal-overlay {
+  position: fixed;
+  inset: 0;
+  bottom: 65px; /* ← clips overlay above nav, no gap */
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1000;
+  animation: pl-fadeIn 0.2s ease;
+}
+
+.pl-modal {
+  width: 100%;
+  max-width: 480px;
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px 20px 0 0;
+  max-height: calc(100vh - 70px);
+  max-height: calc(100dvh - 70px);
+  display: flex;
+  flex-direction: column;
+  animation: pl-slideUp 0.25s ease;
+}
+
+/* desktop — restore normal behavior */
+@media (min-width: 640px) {
+  .pl-modal-overlay {
+    bottom: 0; /* ← no offset on desktop */
+    align-items: center;
+  }
+  .pl-modal {
+    border-radius: 20px;
+    max-width: 400px;
+    max-height: 80vh;
+  }
+}
+/* Fixed modal header — never scrolls */
+.pl-modal-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.pl-modal-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.pl-modal-close {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #9ca3af;
+  font-size: 18px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+
+.pl-modal-close:hover {
+  background: #242424;
+  color: #e2e8f0;
+}
+
+/* Scrollable body — ONLY this part scrolls */
+.pl-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+.pl-modal-body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.pl-modal-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.pl-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.pl-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #4b5563;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pl-input {
+  width: 100%;
+  background: #161616;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #e2e8f0;
+  outline: none;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+
+.pl-input::placeholder {
+  color: #374151;
+}
+
+.pl-input:focus {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.pl-select {
+  appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23374151' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 12px center;
+  padding-left: 30px;
+}
+
+/* Placeholder look when no value selected */
+.pl-select:invalid,
+.pl-select option[value=""][disabled] {
+  color: #374151;
+  font-weight: 400;
+}
+
+.pl-select option {
+  background: #1a1a1a;
+  color: #e2e8f0;
+}
+
+.pl-input[type="date"] {
+  color: #e2e8f0;
+}
+
+.pl-input[type="date"]:not(:valid),
+.pl-input[type="date"][value=""] {
+  color: #374151;
+  font-weight: 400;
+}
+
+.pl-input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.5);
+  cursor: pointer;
+}
+
+/* Pinned modal footer — always visible at bottom */
+.pl-modal-footer {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 12px 18px calc(18px + env(safe-area-inset-bottom, 0px)); /* ← added */
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+.pl-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 11px 10px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.pl-btn i {
+  font-size: 16px;
+}
+
+.pl-btn--cancel {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #6b7280;
+}
+
+.pl-btn--cancel:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #9ca3af;
+}
+
+.pl-btn--save {
+  background: #e2e8f0;
+  color: #0a0a0a;
+}
+
+.pl-btn--save:hover {
+  background: #f1f5f9;
+}
+
+/* ── DELETE CONFIRM POPUP ── */
+.pl-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  animation: pl-fadeIn 0.2s ease;
+}
+
+.pl-confirm-box {
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 28px 24px 20px;
+  width: 85%;
+  max-width: 320px;
+  text-align: center;
+}
+
+.pl-confirm-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin: 0 0 8px;
+}
+
+.pl-confirm-msg {
+  font-size: 13.5px;
+  color: #6b7280;
+  margin: 0 0 22px;
+  line-height: 1.5;
+}
+
+.pl-confirm-msg strong {
+  color: #cbd5e1;
+}
+
+.pl-confirm-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.pl-confirm-btn {
+  flex: 1;
+  padding: 12px 0;
+  border-radius: 14px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.pl-confirm-btn--cancel {
+  background: #2a2a2a;
+  color: #e2e8f0;
+}
+
+.pl-confirm-btn--cancel:hover {
+  background: #333;
+}
+
+.pl-confirm-btn--remove {
+  background: #ef4444;
+  color: #fff;
+}
+
+.pl-confirm-btn--remove:hover {
+  background: #dc2626;
+}
+
+/* ── RESPONSIVE ── */
+@media (min-width: 640px) {
+  .pl-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pl-modal-overlay {
+    align-items: center;
+  }
+
+  .pl-modal {
+    border-radius: 20px;
+    max-width: 400px;
+    max-height: 80vh;
+  }
+}
+
+@media (min-width: 1024px) {
+  .pl-cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ── ANIMATIONS ── */
+@keyframes pl-fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pl-slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}

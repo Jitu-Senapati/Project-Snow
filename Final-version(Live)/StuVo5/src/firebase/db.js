@@ -11,6 +11,7 @@ const eventsActiveRef = () => doc(db, "content", "events_active");
 const eventsAllRef    = () => doc(db, "content", "events_all");
 const noticesRef      = () => doc(db, "content", "notices");
 const metaRef         = () => doc(db, "content", "meta");
+const placementsRef   = () => doc(db, "content", "placements");
 
 // ─── Real-time listeners ──────────────────────────────────
 export const subscribeToEvents = (callback) =>
@@ -453,5 +454,18 @@ export const saveSupportRequest = async (data) => {
     refId:     data.refId,
     createdAt: serverTimestamp(),
     status:    "open",
+  });
+};
+
+// ─── Placements ──────────────────────────────────────────
+export const subscribeToPlacements = (callback) =>
+  onSnapshot(placementsRef(), (snap) =>
+    callback(snap.exists() ? (snap.data().items ?? []) : [])
+  );
+
+export const savePlacements = async (items) => {
+  await setDoc(placementsRef(), {
+    items,
+    lastChanged: serverTimestamp(),
   });
 };
