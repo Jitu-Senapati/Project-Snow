@@ -456,7 +456,6 @@ export const saveSupportRequest = async (data) => {
     status:    "open",
   });
 };
-
 // ─── Placements ──────────────────────────────────────────
 export const subscribeToPlacements = (callback) =>
   onSnapshot(placementsRef(), (snap) =>
@@ -468,4 +467,38 @@ export const savePlacements = async (items) => {
     items,
     lastChanged: serverTimestamp(),
   });
+};
+
+// ─── Buses ───────────────────────────────────────────────
+const busesRef = () => doc(db, "content", "buses");
+const busPresetsRef = () => doc(db, "content", "bus_presets");
+
+export const subscribeToBuses = (callback) =>
+  onSnapshot(busesRef(), (snap) =>
+    callback(snap.exists() ? (snap.data().items ?? []) : [])
+  );
+
+export const saveBuses = async (items) => {
+  await setDoc(busesRef(), { items, lastChanged: serverTimestamp() });
+};
+
+export const subscribeToBusPresets = (callback) =>
+  onSnapshot(busPresetsRef(), (snap) =>
+    callback(snap.exists() ? (snap.data().items ?? []) : [])
+  );
+
+export const saveBusPresets = async (items) => {
+  await setDoc(busPresetsRef(), { items, lastChanged: serverTimestamp() });
+};
+
+// Search users by name (for driver assignment)
+export const searchUsersByName = async (searchStr) => {
+  if (!searchStr || searchStr.length < 2) return [];
+  const usersRef = collection(db, "users");
+  const snap = await getDocs(usersRef);
+  const term = searchStr.toLowerCase();
+  return snap.docs
+    .map((d) => ({ uid: d.id, ...d.data() }))
+    .filter((u) => u.fullName?.toLowerCase().includes(term))
+    .slice(0, 10);
 };

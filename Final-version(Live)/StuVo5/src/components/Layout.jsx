@@ -188,7 +188,7 @@ export default function Layout() {
       <div className="app-header">
         <div className="app-logo">
           STUVO5
-          {isAdmin && location.pathname === "/admin-explore" && (
+          {isAdmin && (location.pathname === "/admin-explore" || location.pathname === "/bus") && (
             <span className="admin-badge">Admin</span>
           )}
         </div>
