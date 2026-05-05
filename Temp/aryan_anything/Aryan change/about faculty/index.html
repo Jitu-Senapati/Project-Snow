@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Faculty | College Management</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">College Management System</p>
+      <h1>About Faculty</h1>
+      <p class="subtext">View faculty details and manage teachers dynamically from the admin panel.</p>
+    </div>
+    <div class="topbar-badge">
+      <span>Dynamic Faculty Directory</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="admin-panel">
+      <div class="section-heading">
+        <div>
+          <h2>Admin Panel</h2>
+          <p>Add, edit, and manage teacher profiles.</p>
+        </div>
+        <button id="clearAllBtn" class="danger-btn" type="button">Clear All Faculty</button>
+      </div>
+
+      <form id="teacherForm" class="form-grid">
+        <input type="hidden" id="teacherId" />
+
+        <div class="form-group">
+          <label for="name">Teacher Name *</label>
+          <input type="text" id="name" placeholder="Enter teacher name" required />
+        </div>
+
+        <div class="form-group">
+          <label for="designation">Designation *</label>
+          <input type="text" id="designation" placeholder="Assistant Professor, HOD, etc." required />
+        </div>
+
+        <div class="form-group">
+          <label for="department">Department *</label>
+          <input type="text" id="department" placeholder="Computer Science" required />
+        </div>
+
+        <div class="form-group">
+          <label for="qualification">Educational Qualification *</label>
+          <input type="text" id="qualification" placeholder="M.Tech, PhD, etc." required />
+        </div>
+
+        <div class="form-group">
+          <label for="experience">Experience (Years) *</label>
+          <input type="number" id="experience" min="0" step="1" placeholder="5" required />
+        </div>
+
+        <div class="form-group">
+          <label for="specialization">Specialization</label>
+          <input type="text" id="specialization" placeholder="AI, Web Development, etc." />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="teacher@college.edu" />
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" placeholder="+91 9876543210" />
+        </div>
+
+        <div class="form-group">
+          <label for="office">Office / Cabin</label>
+          <input type="text" id="office" placeholder="Block B, Room 204" />
+        </div>
+
+        <div class="form-group full-width">
+          <label for="bio">Short Bio</label>
+          <textarea id="bio" rows="4" placeholder="Write a short introduction about the teacher..."></textarea>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="photo">Teacher Photo *</label>
+          <input type="file" id="photo" accept="image/*" />
+          <small class="help-text">Upload a profile photo. If left empty while editing, the old photo will stay.</small>
+        </div>
+
+        <div class="form-group full-width preview-wrap">
+          <img id="photoPreview" src="https://via.placeholder.com/180x180?text=Photo" alt="Preview" />
+        </div>
+
+        <div class="form-actions full-width">
+          <button type="submit" id="saveBtn" class="primary-btn">Save Teacher</button>
+          <button type="button" id="resetBtn" class="secondary-btn">Reset</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="faculty-section">
+      <div class="section-heading">
+        <div>
+          <h2>Faculty List</h2>
+          <p>All teacher profiles shown for students and visitors.</p>
+        </div>
+
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="Search by name, department, or specialization..." />
+        </div>
+      </div>
+
+      <div id="facultyCount" class="count-pill"></div>
+      <div id="facultyGrid" class="faculty-grid"></div>
+    </section>
+  </main>
+
+  <template id="teacherCardTemplate">
+    <article class="teacher-card">
+      <img class="teacher-photo" src="" alt="Teacher photo" />
+      <div class="teacher-info">
+        <h3 class="teacher-name"></h3>
+        <p class="teacher-designation"></p>
+        <p class="teacher-meta"></p>
+
+        <div class="details">
+          <p><strong>Qualification:</strong> <span class="teacher-qualification"></span></p>
+          <p><strong>Experience:</strong> <span class="teacher-experience"></span></p>
+          <p><strong>Specialization:</strong> <span class="teacher-specialization"></span></p>
+          <p><strong>Email:</strong> <span class="teacher-email"></span></p>
+          <p><strong>Phone:</strong> <span class="teacher-phone"></span></p>
+          <p><strong>Office:</strong> <span class="teacher-office"></span></p>
+        </div>
+
+        <p class="teacher-bio"></p>
+
+        <div class="card-actions">
+          <button class="edit-btn" type="button">Edit</button>
+          <button class="delete-btn" type="button">Delete</button>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>

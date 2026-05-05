@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Faculty Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>College Faculty Directory</h1>
+        <button id="toggleAdminBtn">Open Admin Panel</button>
+    </header>
+
+    <main>
+        <!-- Admin Panel Section (Hidden by default) -->
+        <section id="adminSection" class="admin-panel hidden">
+            <h2>Manage Faculty</h2>
+            <form id="facultyForm">
+                <input type="hidden" id="editId">
+                <div class="form-group">
+                    <input type="text" id="name" placeholder="Full Name" required>
+                    <input type="text" id="dept" placeholder="Department (e.g. CS, IT)" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="qualification" placeholder="Qualification (e.g. M.Tech, PhD)" required>
+                    <input type="number" id="experience" placeholder="Years of Experience" required>
+                </div>
+                <div class="form-group">
+                    <input type="url" id="photoUrl" placeholder="Photo URL (Link to image)" required>
+                    <input type="email" id="email" placeholder="Email Address" required>
+                </div>
+                <button type="submit" id="saveBtn">Add Faculty Member</button>
+                <button type="button" id="cancelBtn" class="hidden">Cancel Edit</button>
+            </form>
+        </section>
+
+        <!-- Faculty Display Section -->
+        <section class="display-section">
+            <div class="filter-bar">
+                <input type="text" id="searchInput" placeholder="Search by name or department...">
+            </div>
+            <div id="facultyGrid" class="faculty-grid">
+                <!-- Cards will be injected here by JS -->
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
