@@ -217,6 +217,8 @@ const LoginForm = forwardRef(
                   <i className="bx bx-key"></i>
                   <input
                     type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     placeholder="Enter OTP"
                     maxLength="6"
                     value={otp}

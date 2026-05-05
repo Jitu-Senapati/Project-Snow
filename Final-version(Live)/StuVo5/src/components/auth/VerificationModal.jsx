@@ -48,6 +48,8 @@ const VerificationModal = ({ show, onClose, onVerify, type, target }) => {
           <div className="code-input-wrapper">
             <input
               type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
               id="verifyCodeInput"
               placeholder="000000"
               maxLength="6"

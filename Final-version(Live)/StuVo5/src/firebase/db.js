@@ -11,6 +11,7 @@ const eventsActiveRef = () => doc(db, "content", "events_active");
 const eventsAllRef    = () => doc(db, "content", "events_all");
 const noticesRef      = () => doc(db, "content", "notices");
 const metaRef         = () => doc(db, "content", "meta");
+const placementsRef   = () => doc(db, "content", "placements");
 
 // ─── Real-time listeners ──────────────────────────────────
 export const subscribeToEvents = (callback) =>
@@ -454,4 +455,50 @@ export const saveSupportRequest = async (data) => {
     createdAt: serverTimestamp(),
     status:    "open",
   });
+};
+// ─── Placements ──────────────────────────────────────────
+export const subscribeToPlacements = (callback) =>
+  onSnapshot(placementsRef(), (snap) =>
+    callback(snap.exists() ? (snap.data().items ?? []) : [])
+  );
+
+export const savePlacements = async (items) => {
+  await setDoc(placementsRef(), {
+    items,
+    lastChanged: serverTimestamp(),
+  });
+};
+
+// ─── Buses ───────────────────────────────────────────────
+const busesRef = () => doc(db, "content", "buses");
+const busPresetsRef = () => doc(db, "content", "bus_presets");
+
+export const subscribeToBuses = (callback) =>
+  onSnapshot(busesRef(), (snap) =>
+    callback(snap.exists() ? (snap.data().items ?? []) : [])
+  );
+
+export const saveBuses = async (items) => {
+  await setDoc(busesRef(), { items, lastChanged: serverTimestamp() });
+};
+
+export const subscribeToBusPresets = (callback) =>
+  onSnapshot(busPresetsRef(), (snap) =>
+    callback(snap.exists() ? (snap.data().items ?? []) : [])
+  );
+
+export const saveBusPresets = async (items) => {
+  await setDoc(busPresetsRef(), { items, lastChanged: serverTimestamp() });
+};
+
+// Search users by name (for driver assignment)
+export const searchUsersByName = async (searchStr) => {
+  if (!searchStr || searchStr.length < 2) return [];
+  const usersRef = collection(db, "users");
+  const snap = await getDocs(usersRef);
+  const term = searchStr.toLowerCase();
+  return snap.docs
+    .map((d) => ({ uid: d.id, ...d.data() }))
+    .filter((u) => u.fullName?.toLowerCase().includes(term))
+    .slice(0, 10);
 };

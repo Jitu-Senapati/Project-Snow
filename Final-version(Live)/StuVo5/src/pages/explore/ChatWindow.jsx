@@ -218,11 +218,34 @@ export default function ChatWindow() {
   const attachRef = useRef(null);
   const imageRef = useRef(null);
   const cameraRef = useRef(null);
+  const overlayRef = useRef(null);
   const docRef = useRef(null);
   const audioRef = useRef(null);
 
   const parts = chatId?.split("_") || [];
   const otherUid = parts.length === 2 ? parts.find((p) => p !== currentUser?.uid) : otherUser?.uid;
+
+  /* ── Mobile keyboard: shrink overlay to visual viewport ── */
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const update = () => {
+      const el = overlayRef.current;
+      if (!el) return;
+      el.style.height = `${vv.height}px`;
+      el.style.top = `${vv.offsetTop}px`;
+      // Keep messages scrolled to bottom when keyboard opens
+      if (messagesRef.current) {
+        messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+      }
+    };
+    vv.addEventListener("resize", update);
+    vv.addEventListener("scroll", update);
+    return () => {
+      vv.removeEventListener("resize", update);
+      vv.removeEventListener("scroll", update);
+    };
+  }, []);
 
   /* ── Load chats for forward picker ── */
   useEffect(() => {
@@ -621,7 +644,7 @@ export default function ChatWindow() {
   const isMine = (m) => m.senderId === currentUser?.uid;
 
   return (
-    <div className="cw-overlay" onClick={() => { setBubMenu(null); setMenuOpen(false); }}>
+    <div ref={overlayRef} className="cw-overlay" onClick={() => { setBubMenu(null); setMenuOpen(false); }}>
 
       {/* Header */}
       <div className="co-header" onClick={(e) => e.stopPropagation()}>
@@ -966,9 +989,12 @@ export default function ChatWindow() {
                 <input ref={audioRef} type="file" accept="audio/*" style={{ display: "none" }} onChange={(e) => { handleSendFile(e.target.files[0], "audio"); e.target.value = ""; }} />
                 <input
                   ref={inputRef} value={input}
+                  type="search"
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend()}
                   placeholder="Type a message…"
+                  autoComplete="off"
+                  enterKeyHint="send"
                 />
                 {input.trim() ? (
                   <button className="co-send-btn" onClick={() => handleSend()} disabled={sending}>
@@ -1394,7 +1420,13 @@ function CameraModal({ onCapture, onClose }) {
     if (!video || !canvas) return;
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
-    canvas.getContext("2d").drawImage(video, 0, 0);
+    const ctx = canvas.getContext("2d");
+    if (facingFront) {
+      ctx.translate(canvas.width, 0);
+      ctx.scale(-1, 1);
+    }
+    ctx.drawImage(video, 0, 0);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
     const dataUrl = canvas.toDataURL("image/jpeg", 0.92);
     const byteStr = atob(dataUrl.split(",")[1]);
     const arr = new Uint8Array(byteStr.length);
@@ -1650,6 +1682,7 @@ function CameraModal({ onCapture, onClose }) {
                   value={caption}
                   onChange={(e) => setCaption(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSendWithCaption()}
+                  autoComplete="off"
                 />
               </div>
               <button className="cam-send-fab" onClick={handleSendWithCaption}>
@@ -1665,7 +1698,7 @@ function CameraModal({ onCapture, onClose }) {
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onWheel={handleWheel}
-            style={{ touchAction: "none" }}
+            style={{ touchAction: "none", transform: facingFront ? "scaleX(-1)" : "none" }}
           />
         )}
         <canvas ref={canvasRef} style={{ display: "none" }} />
@@ -2259,7 +2292,9 @@ function MediaViewer({ items, startIndex, onClose, otherName, chatId, myUid, myN
               className="mv-reply-input"
               placeholder="Type a message..."
               value={replyText}
+              type="search"
               onChange={(e) => setReplyText(e.target.value)}
+              autoComplete="off"
               autoFocus
             />
             <button className="mv-reply-send" onClick={() => { setReplyOpen(false); setReplyText(""); }}>

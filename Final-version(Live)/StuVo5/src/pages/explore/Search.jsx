@@ -492,11 +492,12 @@ export default function SearchExplore() {
                   </svg>
                 </span>
                 <input
-                  type="text"
+                  type="search"
                   className="se-search-input"
                   value={inputValue}
                   placeholder={TAB_PLACEHOLDER[activeTab]}
                   onChange={handleInput}
+                  autoComplete="off"
                 />
                 {inputValue && (
                   <button className="se-clear-btn" onClick={clearSearch}>✕</button>

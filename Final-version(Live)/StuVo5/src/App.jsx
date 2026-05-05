@@ -27,6 +27,7 @@ const ComingSoon     = lazy(() => import("./pages/explore/ComingSoon"));
 const SupportUs      = lazy(() => import("./pages/explore/SupportUs"));
 const Syllabus       = lazy(() => import("./pages/explore/Syllabus"));
 const RaiseComplaint = lazy(() => import("./pages/explore/RaiseComplaint"));
+const Placements     = lazy(() => import("./pages/explore/Placements"));
 
 // Error boundary for lazy-loaded pages that fail offline
 class LazyErrorBoundary extends Component {
@@ -74,7 +75,7 @@ function App() {
           <Route path="/complaint"  element={<RaiseComplaint />} />
           {/* Coming soon routes */}
           <Route path="/clubs"      element={<ComingSoon />} />
-          <Route path="/placements" element={<ComingSoon />} />
+          <Route path="/placements" element={<Placements />} />
           <Route path="/facilities" element={<ComingSoon />} />
           <Route path="/transport"  element={<ComingSoon />} />
           <Route path="/cafeteria"  element={<ComingSoon />} />
