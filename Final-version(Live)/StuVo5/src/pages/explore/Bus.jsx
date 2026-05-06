@@ -8,7 +8,7 @@ import "../../styles/bus.css";
 import "../../styles/AdminExplore.css";
 import BusRouteEditor from "./BusRouteEditor";
 
-const COLLEGE = { lat: 19.246111, lng: 83.446283 };
+const COLLEGE = { lat: 19.246860, lng: 83.446065 };
 const STATUS = {
   "auto-scheduled": { label: "Auto", color: "#6366f1", bg: "rgba(99,102,241,0.12)" },
   ontime: { label: "On Time", color: "#4ade80", bg: "rgba(74,222,128,0.12)" },
@@ -19,9 +19,9 @@ const STATUS = {
 };
 const TABS = [
   { key: "all", label: "All" },
-  { key: "ontime", label: "Ongoing" },
-  { key: "delayed", label: "Delayed" },
-  { key: "notstarted", label: "Upcoming" },
+  { key: "running", label: "Running" },
+  { key: "notstarted", label: "Scheduled" },
+  { key: "canceled", label: "Canceled" },
 ];
 const SCHEDULE_OPTS = [
   { key: "daily", label: "Daily" },
@@ -50,7 +50,7 @@ function computeAutoStatus(bus, liveLocations, presets) {
 
   // Bus is live — check checkpoint timing
   if (live) {
-    const preset = presets.find((p) => p.id === bus.fromPreset);
+    const preset = presets.find((p) => p.id === (bus.presetId || bus.fromPreset));
     if (preset?.waypoints?.length) {
       const busPos = { lat: live.lat, lng: live.lng };
       // Find closest waypoint
@@ -139,6 +139,34 @@ function BusMap({ buses, presets, selectedId, liveLocations, userLoc, onBusClick
       zoomControl: false,
       styles: DARK_STYLE, gestureHandling: "greedy",
     });
+
+    // College campus perimeter highlight
+    const campusBounds = [
+      { lat: 19.2464081, lng: 83.4472581 },
+      { lat: 19.2464116, lng: 83.4468789 },
+      { lat: 19.2448282, lng: 83.4465349 },
+      { lat: 19.2453005, lng: 83.4446332 },
+      { lat: 19.2457617, lng: 83.4447355 },
+      { lat: 19.2459586, lng: 83.4439704 },
+      { lat: 19.2468557, lng: 83.4443422 },
+      { lat: 19.24766, lng: 83.4446027 },
+      { lat: 19.2480892, lng: 83.4468232 },
+      { lat: 19.248042, lng: 83.447472 },
+    ];
+    new gm.Polygon({
+      paths: campusBounds, map: mapRef.current,
+      strokeColor: "#a78bfa", strokeOpacity: 0.6, strokeWeight: 2,
+      fillColor: "#a78bfa", fillOpacity: 0.3,
+    });
+    // College label marker — no circle, just text
+    new gm.Marker({
+      position: COLLEGE, map: mapRef.current,
+      icon: {
+        url: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="48" height="20"><text x="24" y="15" text-anchor="middle" font-size="11" font-weight="800" fill="#a78bfa" font-family="system-ui">MITS</text></svg>'),
+        scaledSize: new gm.Size(48, 20), anchor: new gm.Point(24, 10),
+      },
+      zIndex: 500,
+    });
   }, [ready, mapRef]);
 
   // Map click handler for preset creation
@@ -177,8 +205,8 @@ function BusMap({ buses, presets, selectedId, liveLocations, userLoc, onBusClick
       if (!pos) return;
       const st = getSt(bus.status);
       const isSel = bus.id === selectedId;
-      const svg = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="52" height="54"><rect x="2" y="2" width="48" height="40" rx="10" fill="${isSel ? '#fff' : 'rgba(10,13,22,0.96)'}" stroke="${isSel ? '#fff' : st.color}" stroke-width="2"/><polygon points="20,42 26,52 32,42" fill="${isSel ? '#fff' : st.color}"/><text x="26" y="28" text-anchor="middle" font-size="16" fill="${isSel ? '#0a0d16' : st.color}">🚌</text><text x="26" y="38" text-anchor="middle" font-size="7" font-weight="800" fill="${isSel ? '#0a0d16' : '#94a3b8'}" font-family="system-ui">${bus.id}</text></svg>`)}`;
-      const icon = { url: svg, scaledSize: new gm.Size(52, 54), anchor: new gm.Point(26, 54) };
+      const svg = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"><rect x="2" y="2" width="44" height="36" rx="8" fill="${isSel ? '#fff' : 'rgba(10,13,22,0.96)'}" stroke="${isSel ? '#fff' : st.color}" stroke-width="2"/><polygon points="18,38 24,46 30,38" fill="${isSel ? '#fff' : st.color}"/><text x="24" y="18" text-anchor="middle" font-size="14" fill="${isSel ? '#0a0d16' : st.color}">🚌</text><text x="24" y="32" text-anchor="middle" font-size="8" font-weight="800" fill="${isSel ? '#0a0d16' : '#94a3b8'}" font-family="system-ui">${bus.id}</text></svg>`)}`;
+      const icon = { url: svg, scaledSize: new gm.Size(48, 48), anchor: new gm.Point(24, 46) };
       if (markersRef.current[bus.id]) {
         const m = markersRef.current[bus.id];
         m.setPosition(pos); m.setIcon(icon);
@@ -191,98 +219,139 @@ function BusMap({ buses, presets, selectedId, liveLocations, userLoc, onBusClick
     });
   }, [ready, buses, selectedId, liveLocations, onBusClick, mapRef]);
 
-  // Draw route polyline for selected bus using Directions API
+  // Draw full route for selected bus (only re-fetches when bus selection or presets change, NOT on live updates)
   const dirRendererRef = useRef(null);
-  const lastDirOriginRef = useRef(null); // avoid re-fetching if bus barely moved
+  const routePathRef = useRef(null); // stores the overview_path from Directions API
+  const routeLabelsRef = useRef([]);
   useEffect(() => {
     if (!ready || !mapRef.current) return;
     const gm = window.google.maps, map = mapRef.current;
 
-    // Clean up previous route
+    // Clean up
     if (dirRendererRef.current) { dirRendererRef.current.setMap(null); dirRendererRef.current = null; }
     if (selPolyRef.current) { selPolyRef.current.setMap(null); selPolyRef.current = null; }
+    routeLabelsRef.current.forEach((m) => m.setMap(null)); routeLabelsRef.current = [];
+    routePathRef.current = null;
 
-    if (!selectedId) { lastDirOriginRef.current = null; map.panTo(COLLEGE); map.setZoom(14); return; }
+    if (!selectedId) return;
 
     const bus = buses.find((b) => b.id === selectedId);
-    const fromPreset = presets.find((p) => p.id === bus?.fromPreset);
-    const toPreset = presets.find((p) => p.id === bus?.toPreset);
-    if (!fromPreset?.waypoints?.length || !toPreset?.waypoints?.length) return;
+    const routePreset = presets.find((p) => p.id === (bus?.presetId || bus?.fromPreset));
+    if (!routePreset?.waypoints?.length || routePreset.waypoints.length < 2) return;
 
-    const allWaypoints = [...fromPreset.waypoints, ...toPreset.waypoints];
-    if (allWaypoints.length < 2) return;
+    const allWaypoints = routePreset.waypoints;
 
-    const live = liveLocations[selectedId];
-    let origin, routePoints;
-
-    if (live) {
-      const busPos = { lat: live.lat, lng: live.lng };
-      // Skip re-fetch if bus moved less than 200m
-      if (lastDirOriginRef.current) {
-        const moved = km(lastDirOriginRef.current, busPos);
-        if (moved !== null && parseFloat(moved) < 0.2) return;
-      }
-      let closestIdx = 0, closestDist = Infinity;
-      allWaypoints.forEach((wp, i) => {
-        const d = Math.abs(wp.lat - busPos.lat) + Math.abs(wp.lng - busPos.lng);
-        if (d < closestDist) { closestDist = d; closestIdx = i; }
-      });
-      routePoints = allWaypoints.slice(Math.min(closestIdx + 1, allWaypoints.length - 1));
-      origin = busPos;
-      lastDirOriginRef.current = busPos;
-    } else {
-      origin = allWaypoints[0];
-      routePoints = allWaypoints.slice(1);
-      lastDirOriginRef.current = null;
+    // Draw START/END labels
+    const startWp = allWaypoints.find((w) => w.markedTime === 0) || allWaypoints[0];
+    const endWp = allWaypoints.reduce((max, wp) => (wp.markedTime != null && (max === null || wp.markedTime > max.markedTime)) ? wp : max, null) || allWaypoints[allWaypoints.length - 1];
+    const makeLabelSvg = (text, color) => `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="50" height="20"><rect width="50" height="20" rx="6" fill="${color}"/><text x="25" y="14" text-anchor="middle" font-size="9" font-weight="800" fill="#fff" font-family="system-ui">${text}</text></svg>`)}`;
+    if (startWp) {
+      const m = new gm.Marker({ position: startWp, map, icon: { url: makeLabelSvg("START", "#16a34a"), scaledSize: new gm.Size(50, 20), anchor: new gm.Point(25, -5) }, zIndex: 900 });
+      routeLabelsRef.current.push(m);
+    }
+    if (endWp) {
+      const m = new gm.Marker({ position: endWp, map, icon: { url: makeLabelSvg("END", "#dc2626"), scaledSize: new gm.Size(50, 20), anchor: new gm.Point(25, -5) }, zIndex: 900 });
+      routeLabelsRef.current.push(m);
     }
 
-    if (routePoints.length === 0) return;
-
-    const destination = routePoints[routePoints.length - 1];
-    const intermediateWaypoints = routePoints.slice(0, -1).map((wp) => ({
+    // Fetch Directions API for full route
+    const origin = allWaypoints[0];
+    const destination = allWaypoints[allWaypoints.length - 1];
+    const intermediateWaypoints = allWaypoints.slice(1, -1).map((wp) => ({
       location: new gm.LatLng(wp.lat, wp.lng), stopover: true,
     }));
 
-    // Debounce: wait 1.5s after last liveLocation change
-    const timer = setTimeout(() => {
-      const directionsService = new gm.DirectionsService();
-      const renderer = new gm.DirectionsRenderer({
-        map, suppressMarkers: true,
-        polylineOptions: { strokeColor: "#6366f1", strokeWeight: 5, strokeOpacity: 0.85 },
-      });
-      dirRendererRef.current = renderer;
+    const directionsService = new gm.DirectionsService();
+    const renderer = new gm.DirectionsRenderer({
+      map, suppressMarkers: true,
+      polylineOptions: {
+        strokeColor: "#6366f1", strokeWeight: 5, strokeOpacity: 0.85,
+        icons: [{
+          icon: { path: gm.SymbolPath.FORWARD_CLOSED_ARROW, scale: 3, fillColor: "#a78bfa", fillOpacity: 0.9, strokeWeight: 0 },
+          offset: "0", repeat: "80px",
+        }],
+      },
+    });
+    dirRendererRef.current = renderer;
 
-      directionsService.route(
-        {
-          origin: new gm.LatLng(origin.lat, origin.lng),
-          destination: new gm.LatLng(destination.lat, destination.lng),
-          waypoints: intermediateWaypoints,
-          travelMode: gm.TravelMode.DRIVING,
-          optimizeWaypoints: false,
-        },
-        (result, status) => {
-          if (status === "OK") {
-            renderer.setDirections(result);
-            const bounds = new gm.LatLngBounds();
-            result.routes[0].overview_path.forEach((p) => bounds.extend(p));
-            if (live) bounds.extend({ lat: live.lat, lng: live.lng });
-            map.fitBounds(bounds, { top: 70, bottom: 350, left: 40, right: 40 });
-          } else {
-            console.warn("Directions API failed:", status, "— using straight line fallback");
-            selPolyRef.current = new gm.Polyline({
-              path: [origin, ...routePoints],
-              strokeColor: "#6366f1", strokeWeight: 4, strokeOpacity: 0.85, map,
-            });
-            const bounds = new gm.LatLngBounds();
-            [origin, ...routePoints].forEach((w) => bounds.extend(w));
-            map.fitBounds(bounds, { top: 70, bottom: 350, left: 40, right: 40 });
-          }
+    directionsService.route(
+      {
+        origin: new gm.LatLng(origin.lat, origin.lng),
+        destination: new gm.LatLng(destination.lat, destination.lng),
+        waypoints: intermediateWaypoints,
+        travelMode: gm.TravelMode.DRIVING,
+        optimizeWaypoints: false,
+      },
+      (result, status) => {
+        if (status === "OK") {
+          renderer.setDirections(result);
+          routePathRef.current = result.routes[0].overview_path;
+          const bounds = new gm.LatLngBounds();
+          result.routes[0].overview_path.forEach((p) => bounds.extend(p));
+          map.fitBounds(bounds, { top: 10, bottom: 420, left: 30, right: 30 });
+        } else {
+          console.warn("Directions API failed:", status, "— using straight line fallback");
+          selPolyRef.current = new gm.Polyline({
+            path: allWaypoints,
+            strokeColor: "#6366f1", strokeWeight: 4, strokeOpacity: 0.85, map,
+          });
+          const bounds = new gm.LatLngBounds();
+          allWaypoints.forEach((w) => bounds.extend(w));
+          map.fitBounds(bounds, { top: 10, bottom: 420, left: 30, right: 30 });
         }
-      );
-    }, live ? 1500 : 100); // longer debounce for live updates, instant for first selection
+      }
+    );
+  }, [ready, selectedId, buses, presets, mapRef]); // NO liveLocations dependency
 
-    return () => clearTimeout(timer);
-  }, [ready, selectedId, buses, presets, liveLocations, mapRef]);
+  // Live overlay: dims passed portion and highlights remaining (reacts to GPS updates)
+  const passedPolyRef = useRef(null);
+  const liveOverlayRef = useRef(null);
+  useEffect(() => {
+    if (!ready || !mapRef.current) return;
+    const gm = window.google.maps, map = mapRef.current;
+
+    // Clean up previous live overlay
+    if (passedPolyRef.current) { passedPolyRef.current.setMap(null); passedPolyRef.current = null; }
+    if (liveOverlayRef.current) { liveOverlayRef.current.setMap(null); liveOverlayRef.current = null; }
+
+    if (!selectedId) return;
+    const live = liveLocations[selectedId];
+    if (!live || !routePathRef.current) return;
+
+    const path = routePathRef.current;
+    const busPos = { lat: live.lat, lng: live.lng };
+
+    // Find closest point on the route path
+    let closestIdx = 0, closestD = Infinity;
+    path.forEach((pt, i) => {
+      const d = Math.abs(pt.lat() - busPos.lat) + Math.abs(pt.lng() - busPos.lng);
+      if (d < closestD) { closestD = d; closestIdx = i; }
+    });
+
+    // Dim the full route renderer (only once, tracked by ref)
+    if (dirRendererRef.current && !dirRendererRef.current._dimmed) {
+      dirRendererRef.current.setOptions({
+        preserveViewport: true,
+        polylineOptions: { strokeColor: "#6366f1", strokeWeight: 5, strokeOpacity: 0.25, icons: [] },
+      });
+      const dirs = dirRendererRef.current.getDirections();
+      if (dirs) dirRendererRef.current.setDirections(dirs);
+      dirRendererRef.current._dimmed = true;
+    }
+
+    // Draw bright remaining path from bus to end
+    const remainingPath = [busPos, ...path.slice(closestIdx).map((p) => ({ lat: p.lat(), lng: p.lng() }))];
+    if (remainingPath.length >= 2) {
+      liveOverlayRef.current = new gm.Polyline({
+        path: remainingPath,
+        strokeColor: "#6366f1", strokeWeight: 5, strokeOpacity: 0.85, map,
+        icons: [{
+          icon: { path: gm.SymbolPath.FORWARD_CLOSED_ARROW, scale: 3, fillColor: "#a78bfa", fillOpacity: 0.9, strokeWeight: 0 },
+          offset: "0", repeat: "80px",
+        }],
+      });
+    }
+  }, [ready, selectedId, liveLocations, mapRef]);
 
   return <div ref={divRef} className={`btm-map${mapClickMode ? " btm-map--clickable" : ""}`} />;
 }
@@ -356,7 +425,7 @@ export default function Bus() {
   const myDriverBus = useMemo(() => buses.find((b) => b.driverUid === currentUser?.uid), [buses, currentUser]);
   const selBus = buses.find((b) => b.id === selected) || null;
   const selSt = selBus ? computeAutoStatus(selBus, liveLocations, presets) : null;
-  const selPreset = presets.find((p) => p.id === selBus?.fromPreset);
+  const selPreset = presets.find((p) => p.id === (selBus?.presetId || selBus?.fromPreset));
   const selLive = liveLocations[selected];
   const selDist = selLive && userLoc ? km(selLive, userLoc) : null;
 
@@ -368,9 +437,17 @@ export default function Bus() {
     : null;
 
   const displayBuses = useMemo(() => {
-    let list = tab === "all" ? buses : buses.filter((b) => b.status === tab);
-    return list.map((b) => ({ ...b, _runsToday: runsToday(b) })).sort((a, b) => (b._runsToday ? 1 : 0) - (a._runsToday ? 1 : 0));
-  }, [buses, tab]);
+    const withComputed = buses.map((b) => ({
+      ...b,
+      _runsToday: runsToday(b),
+      _computedStatus: computeAutoStatus(b, liveLocations, presets),
+    }));
+    const RUNNING_LABELS = ["On Time", "Slightly Delayed", "Delayed"];
+    let list = tab === "all" ? withComputed
+      : tab === "running" ? withComputed.filter((b) => RUNNING_LABELS.includes(b._computedStatus.label))
+      : withComputed.filter((b) => b._computedStatus.label === TABS.find((t) => t.key === tab)?.label || b.status === tab);
+    return list.sort((a, b) => (b._runsToday ? 1 : 0) - (a._runsToday ? 1 : 0));
+  }, [buses, tab, liveLocations, presets]);
 
   const handleBusClick = useCallback((id) => { setSelected((p) => p === id ? null : id); setSheetH(380); }, []);
 
@@ -479,16 +556,20 @@ export default function Bus() {
 
   // ── Admin: Bus CRUD ──
   const [form, setForm] = useState({});
-  const openAddBus = () => { setForm({ id: "", fromPreset: "", toPreset: "", departure: "", status: "auto-scheduled", customStatus: "", schedule: "daily", customDays: [], driverUid: "", driverName: "" }); setDriverSearch(""); setDriverResults([]); setEditBus("new"); };
-  const openEditBus = (bus) => { setForm({ ...bus, fromPreset: bus.fromPreset || "", toPreset: bus.toPreset || "" }); setDriverSearch(bus.driverName || ""); setDriverResults([]); setEditBus(bus.id); };
+  const openAddBus = () => { setForm({ id: "", presetId: "", _from: "", _to: "", departure: "", status: "auto-scheduled", customStatus: "", schedule: "daily", customDays: [], driverUid: "", driverName: "" }); setDriverSearch(""); setDriverResults([]); setEditBus("new"); };
+  const openEditBus = (bus) => {
+    const preset = presets.find((p) => p.id === (bus.presetId || bus.fromPreset));
+    setForm({ ...bus, presetId: bus.presetId || bus.fromPreset || "", _from: preset?.from || "", _to: preset?.to || "" });
+    setDriverSearch(bus.driverName || ""); setDriverResults([]); setEditBus(bus.id);
+  };
 
   const saveBusForm = async () => {
-    if (!form.id?.trim() || !form.fromPreset || !form.toPreset || !form.departure?.trim()) { showToast("error", "Bus ID, From, To & departure required"); return; }
-    const fromP = presets.find((p) => p.id === form.fromPreset);
-    const toP = presets.find((p) => p.id === form.toPreset);
+    if (!form.id?.trim() || !form.presetId || !form.departure?.trim()) { showToast("error", form._from && form._to && !form.presetId ? "No route matches this From/To combo" : "Bus ID, Route & departure required"); return; }
+    const preset = presets.find((p) => p.id === form.presetId);
     const busObj = {
-      id: form.id.trim(), fromPreset: form.fromPreset, toPreset: form.toPreset,
-      route: `${fromP?.name || "?"} → ${toP?.name || "?"}`,
+      id: form.id.trim(), presetId: form.presetId,
+      fromPreset: form.presetId, toPreset: form.presetId,
+      route: preset ? `${preset.from || "?"} → ${preset.to || "?"}` : "?",
       departure: form.departure.trim(), status: form.status === "custom" ? (form.customStatus || "custom") : (form.status || "auto-scheduled"),
       schedule: form.schedule || "daily",
       customDays: form.schedule === "custom" ? (form.customDays || []) : [],
@@ -536,7 +617,12 @@ export default function Bus() {
     else updated = presets.map((p) => p.id === presetObj.id ? presetObj : p);
     try { await saveBusPresets(updated); showToast("success", "Route saved"); }
     catch (e) { showToast("error", "Failed to save route"); }
-    setRouteEditorData(null);
+    // Close editor and return to preset management — must set panel states BEFORE closing editor
+    setEditPanel(true);
+    setPresetPanel(true);
+    setEditBus(null);
+    // Use timeout to ensure panel states are committed before editor unmounts
+    setTimeout(() => setRouteEditorData(null), 50);
   };
   const deletePreset = async (id) => {
     try { await saveBusPresets(presets.filter((p) => p.id !== id)); showToast("success", "Route removed"); }
@@ -626,7 +712,7 @@ export default function Bus() {
                   </button>
                 )}
               </div>
-              <div className="bt-sheet__sub">{buses.filter((b) => b.status !== "notstarted").length} running now</div>
+              <div className="bt-sheet__sub">{buses.filter((b) => { const s = computeAutoStatus(b, liveLocations, presets).label; return s === "On Time" || s === "Slightly Delayed" || s === "Delayed"; }).length} running now</div>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <div className={`bt-status-chip${isDataLive ? " bt-status-chip--live" : " bt-status-chip--stale"}`}>
@@ -637,7 +723,13 @@ export default function Bus() {
           </div>
 
           {!selected && buses.length > 0 && <div className="bt-hint-bar"><i className="bx bx-info-circle" />Choose a bus to live track</div>}
-          {!selected && (<div className="bt-tabs">{TABS.map((t) => (<button key={t.key} className={`bt-tab${tab === t.key ? " bt-tab--active" : ""}`} onClick={() => setTab(t.key)}>{t.label}<span className="bt-tab__count">{t.key === "all" ? buses.length : buses.filter((b) => b.status === t.key).length}</span></button>))}</div>)}
+          {!selected && (<div className="bt-tabs">{TABS.map((t) => {
+            const RUNNING_LABELS = ["On Time", "Slightly Delayed", "Delayed"];
+            const count = t.key === "all" ? buses.length
+              : t.key === "running" ? buses.filter((b) => RUNNING_LABELS.includes(computeAutoStatus(b, liveLocations, presets).label)).length
+              : buses.filter((b) => computeAutoStatus(b, liveLocations, presets).label === t.label).length;
+            return (<button key={t.key} className={`bt-tab${tab === t.key ? " bt-tab--active" : ""}`} onClick={() => setTab(t.key)}>{t.label}<span className="bt-tab__count">{count}</span></button>);
+          })}</div>)}
 
           <div ref={scrollRef} className="bt-sheet__scroll">
             {/* Selected bus detail */}
@@ -647,7 +739,7 @@ export default function Bus() {
                 <div className="bt-card__body">
                   <div className="bt-card__row">
                     <div className="bt-card__icon"><i className="bx bxs-bus" /><span>{selBus.id}</span></div>
-                    <div className="bt-card__info"><div className="bt-card__route">{selBus.route}</div><div className="bt-card__meta"><i className="bx bx-time" />{selBus.departure}</div></div>
+                    <div className="bt-card__info"><div className="bt-card__route">{(() => { const p = presets.find((pr) => pr.id === (selBus.presetId || selBus.fromPreset)); return p?.from && p?.to ? `${p.from} → ${p.to}` : (selBus.route || "—"); })()}</div><div className="bt-card__meta"><i className="bx bx-time" />{selBus.departure}{selBus.driverName && <><span style={{ margin: "0 4px", color: "#2d3748" }}>·</span><i className="bx bx-user" />{selBus.driverName}</>}</div></div>
                     <span className="bt-item__badge" style={{ color: selSt.color, background: selSt.bg }}>{selSt.label}</span>
                     <button className="bt-card__close" onClick={() => setSelected(null)}><i className="bx bx-x" /></button>
                   </div>
@@ -671,7 +763,7 @@ export default function Bus() {
 
             {/* Bus list */}
             {!selected && displayBuses.map((bus) => {
-              const st = computeAutoStatus(bus, liveLocations, presets);
+              const st = bus._computedStatus;
               const today = bus._runsToday;
               const live = liveLocations[bus.id];
               return (
@@ -679,8 +771,8 @@ export default function Bus() {
                   <div className="bt-item__left">
                     <div className="bt-item__icon"><i className="bx bxs-bus" /><span>{bus.id}</span></div>
                     <div className="bt-item__text">
-                      <div className="bt-item__route">{bus.route || "—"}</div>
-                      <div className="bt-item__meta"><i className="bx bx-time" /><span>{bus.departure}</span>{!today && <span className="bt-item__off">Not today</span>}</div>
+                      <div className="bt-item__route">{(() => { const p = presets.find((pr) => pr.id === (bus.presetId || bus.fromPreset)); return p?.from && p?.to ? `${p.from} → ${p.to}` : (bus.route || "—"); })()}</div>
+                      <div className="bt-item__meta"><i className="bx bx-time" /><span>{bus.departure}</span>{bus.driverName && <><span className="bt-item__dot">·</span><i className="bx bx-user" /><span>{bus.driverName}</span></>}{!today && <span className="bt-item__off">Not today</span>}</div>
                     </div>
                   </div>
                   <div className="bt-item__right">
@@ -725,7 +817,7 @@ export default function Bus() {
                       <div className="ad-bus-card__top">
                         <div className="ad-bus-card__icon"><i className="bx bxs-bus" /><span>{bus.id}</span></div>
                         <div className="ad-bus-card__info">
-                          <div className="ad-bus-card__route">{bus.route || "—"}</div>
+                          <div className="ad-bus-card__route">{(() => { const p = presets.find((pr) => pr.id === (bus.presetId || bus.fromPreset)); return p?.from && p?.to ? `${p.from} → ${p.to}` : (bus.route || "—"); })()}</div>
                           <div className="ad-bus-card__meta"><i className="bx bx-time" />{bus.departure}{bus.driverName && <><span className="ad-dot">·</span><i className="bx bx-user" />{bus.driverName}</>}</div>
                         </div>
                         <div className="ad-bus-card__actions">
@@ -803,31 +895,43 @@ export default function Bus() {
               <div className="bt-from-to-row">
                 <div className="ef-field" style={{ flex: 1 }}>
                   <label className="ef-label">From *</label>
-                  <select className="ef-input bt-route-select" value={form.fromPreset || ""} onChange={(e) => {
+                  <select className="ef-input bt-route-select" value={form._from || ""} onChange={(e) => {
                     if (e.target.value === "__add__") { openAddPreset(); setEditBus(null); return; }
-                    const p = presets.find((pr) => pr.id === e.target.value);
-                    setForm((prev) => ({ ...prev, fromPreset: e.target.value, toPreset: p ? (presets.find((pr2) => pr2.to && pr2.from === p.from)?.id || prev.toPreset) : prev.toPreset }));
+                    const newFrom = e.target.value;
+                    const match = presets.find((p) => p.from === newFrom && p.to === form._to);
+                    setForm((p) => ({ ...p, _from: newFrom, presetId: match?.id || "" }));
                   }}>
                     <option value="" disabled>Select</option>
-                    {[...new Set(presets.map((p) => p.from).filter(Boolean))].map((f) => <option key={f} value={presets.find((p) => p.from === f)?.id || f}>{f}</option>)}
+                    {[...new Set(presets.map((p) => p.from).filter(Boolean))].map((f) => <option key={f} value={f}>{f}</option>)}
                     <option value="__add__">+ Add new route</option>
                   </select>
                 </div>
-                <button type="button" className="bt-swap-btn" onClick={() => setForm((p) => ({ ...p, fromPreset: p.toPreset, toPreset: p.fromPreset }))}>
+                <button type="button" className="bt-swap-btn" onClick={() => {
+                  const match = presets.find((p) => p.from === form._to && p.to === form._from);
+                  setForm((p) => ({ ...p, _from: p._to, _to: p._from, presetId: match?.id || "" }));
+                }}>
                   <i className="bx bx-transfer-alt" />
                 </button>
                 <div className="ef-field" style={{ flex: 1 }}>
                   <label className="ef-label">To *</label>
-                  <select className="ef-input bt-route-select" value={form.toPreset || ""} onChange={(e) => {
+                  <select className="ef-input bt-route-select" value={form._to || ""} onChange={(e) => {
                     if (e.target.value === "__add__") { openAddPreset(); setEditBus(null); return; }
-                    setForm((p) => ({ ...p, toPreset: e.target.value }));
+                    const newTo = e.target.value;
+                    const match = presets.find((p) => p.from === form._from && p.to === newTo);
+                    setForm((p) => ({ ...p, _to: newTo, presetId: match?.id || "" }));
                   }}>
                     <option value="" disabled>Select</option>
-                    {[...new Set(presets.map((p) => p.to).filter(Boolean))].map((t) => <option key={t} value={presets.find((p) => p.to === t)?.id || t}>{t}</option>)}
+                    {[...new Set(presets.map((p) => p.to).filter(Boolean))].map((t) => <option key={t} value={t}>{t}</option>)}
                     <option value="__add__">+ Add new route</option>
                   </select>
                 </div>
               </div>
+              {form._from && form._to && !form.presetId && (
+                <span className="bt-hint" style={{ color: "#ef4444" }}>No route found for {form._from} → {form._to}. Create one first.</span>
+              )}
+              {form.presetId && (
+                <span className="bt-hint bt-hint--ok">✓ Route: {presets.find((p) => p.id === form.presetId)?.name || form.presetId}</span>
+              )}
 
               <div className="ef-field">
                 <label className="ef-label">Departure Time (Point 0) *</label>
