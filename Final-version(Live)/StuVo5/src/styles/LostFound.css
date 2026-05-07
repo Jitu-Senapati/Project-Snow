@@ -281,7 +281,7 @@
 }
 
 .lf-card--resolved {
-  opacity: 0.5;
+  /* opacity intentionally removed — resolved cards show at full brightness */
 }
 
 /* Card image */
@@ -955,4 +955,239 @@
   .lf-modal {
     max-height: 96vh;
   }
+}
+
+/* ════════════════════════════════════════════════════════════
+   ADDITIONS — new tabs, back btn, validation, loading, etc.
+════════════════════════════════════════════════════════════ */
+
+/* ── Back button ─────────────────────────────────────────── */
+.lf-back-btn {
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 10px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #9ca3af !important;
+  font-size: 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+  transition: all 0.2s !important;
+  margin-right: 10px;
+}
+.lf-back-btn:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #e2e8f0 !important;
+}
+
+/* ── Header layout fix (back btn + text + post btn) ──────── */
+.lf-header {
+  align-items: center !important;
+}
+.lf-header-text {
+  flex: 1;
+}
+
+/* ── Resolved tab ────────────────────────────────────────── */
+.lf-tab--active.lf-tab--resolved {
+  background: rgba(99, 179, 237, 0.12) !important;
+  border-color: rgba(99, 179, 237, 0.4) !important;
+  color: #63b3ed !important;
+}
+.lf-tab-count--resolved {
+  background: rgba(99, 179, 237, 0.2);
+  color: #63b3ed;
+}
+
+/* ── My Posts tab ────────────────────────────────────────── */
+.lf-tab--active.lf-tab--my {
+  background: rgba(167, 139, 250, 0.12) !important;
+  border-color: rgba(167, 139, 250, 0.4) !important;
+  color: #a78bfa !important;
+}
+.lf-tab-count--my {
+  background: rgba(167, 139, 250, 0.2);
+  color: #a78bfa;
+}
+
+/* ── Tabs scroll on small screens ───────────────────────── */
+.lf-tabs {
+  overflow-x: auto !important;
+  scrollbar-width: none !important;
+  flex-wrap: nowrap !important;
+  gap: 6px !important;
+}
+.lf-tabs::-webkit-scrollbar { display: none; }
+.lf-tab { flex-shrink: 0 !important; }
+
+/* ── Required asterisk ───────────────────────────────────── */
+.lf-req {
+  color: #f87171;
+  margin-left: 2px;
+}
+
+/* ── Field error state ───────────────────────────────────── */
+.lf-input--error {
+  border-color: rgba(248, 113, 113, 0.5) !important;
+  box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.08) !important;
+}
+.lf-field-err {
+  font-size: 11px !important;
+  color: #f87171 !important;
+  margin-top: -2px !important;
+}
+
+/* ── Custom location field slide-in ─────────────────────── */
+.lf-field--custom-loc {
+  animation: lf-slideDown 0.18s ease;
+}
+@keyframes lf-slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Submit error banner ─────────────────────────────────── */
+.lf-submit-err {
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  padding: 10px 13px !important;
+  border-radius: 10px !important;
+  background: rgba(248, 113, 113, 0.08) !important;
+  border: 1px solid rgba(248, 113, 113, 0.25) !important;
+  color: #f87171 !important;
+  font-size: 12.5px !important;
+}
+.lf-submit-err i { font-size: 16px; flex-shrink: 0; }
+
+/* ── Spinner / loading ───────────────────────────────────── */
+.lf-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 48px 16px;
+  color: #4b5563;
+  font-size: 13px;
+}
+.lf-spinner {
+  width: 28px;
+  height: 28px;
+  border: 2.5px solid rgba(255,255,255,0.08);
+  border-top-color: #6b7280;
+  border-radius: 50%;
+  animation: lf-spin 0.7s linear infinite;
+}
+@keyframes lf-spin { to { transform: rotate(360deg); } }
+
+/* ── Spin icon (for inline loader states) ────────────────── */
+.lf-spin {
+  display: inline-block !important;
+  animation: lf-spin 0.7s linear infinite !important;
+}
+
+/* ── Delete button ───────────────────────────────────────── */
+.lf-btn--delete {
+  background: rgba(248, 113, 113, 0.08) !important;
+  border: 1px solid rgba(248, 113, 113, 0.25) !important;
+  color: #f87171 !important;
+}
+.lf-btn--delete:hover {
+  background: rgba(248, 113, 113, 0.16) !important;
+  border-color: rgba(248, 113, 113, 0.45) !important;
+}
+
+/* ── Single-action row ───────────────────────────────────── */
+.lf-card-actions--single {
+  grid-template-columns: 1fr !important;
+}
+
+/* ── Disabled button state ───────────────────────────────── */
+.lf-btn:disabled {
+  opacity: 0.55 !important;
+  cursor: not-allowed !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   PATCH — filters smaller, delete modal, overlay center
+════════════════════════════════════════════════════════════ */
+
+/* ── Tabs 20% smaller ────────────────────────────────────── */
+/* Override the base .lf-tab sizing */
+.lf-tab {
+  padding: 6px 14px !important;
+  font-size: 11px !important;
+  gap: 5px !important;
+}
+.lf-tab i {
+  font-size: 13px !important;
+}
+.lf-tab-count {
+  font-size: 9px !important;
+  padding: 1px 5px !important;
+  min-width: 15px !important;
+  height: 15px !important;
+  line-height: 1.5 !important;
+}
+
+/* ── Center-aligned overlay (for delete modal) ───────────── */
+.lf-overlay--center {
+  align-items: center !important;
+}
+
+/* ── Delete confirm modal ────────────────────────────────── */
+.lf-confirm-modal {
+  width: calc(100% - 32px);
+  max-width: 320px;
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 28px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  animation: lf-slideUp 0.22s ease;
+  text-align: center;
+}
+
+.lf-confirm-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+.lf-confirm-icon i {
+  font-size: 24px;
+  color: #f87171;
+}
+
+.lf-confirm-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.lf-confirm-desc {
+  margin: 0;
+  font-size: 12.5px;
+  color: #6b7280;
+  line-height: 1.55;
+}
+
+.lf-confirm-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+  margin-top: 8px;
 }

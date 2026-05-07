@@ -2,7 +2,7 @@ import {
   doc, setDoc, getDoc, updateDoc, onSnapshot,
   runTransaction, arrayUnion, arrayRemove,
   collection, addDoc, serverTimestamp, query,
-  orderBy, limit, where, getDocs, deleteField
+  orderBy, limit, where, getDocs, deleteField, deleteDoc
 } from "firebase/firestore";
 import { db } from "./config";
 
@@ -502,3 +502,32 @@ export const searchUsersByName = async (searchStr) => {
     .filter((u) => u.fullName?.toLowerCase().includes(term))
     .slice(0, 10);
 };
+// ─── Lost & Found ─────────────────────────────────────────
+const lostFoundRef = () => collection(db, "lostFound");
+
+export const subscribeLostFound = (callback, onError) =>
+  onSnapshot(
+    query(lostFoundRef(), orderBy("createdAt", "desc")),
+    (snap) => callback(snap.docs.map((d) => ({ id: d.id, ...d.data() }))),
+    (err) => {
+      console.error("subscribeLostFound:", err.code, err.message);
+      if (onError) onError(err);
+    }
+  );
+
+export const addLostFoundPost = async (postData) =>
+  addDoc(lostFoundRef(), {
+    ...postData,
+    createdAt: serverTimestamp(),
+    resolved: false,
+    resolvedAt: null,
+  });
+
+export const resolveLostFoundPost = async (postId) =>
+  updateDoc(doc(db, "lostFound", postId), {
+    resolved: true,
+    resolvedAt: serverTimestamp(),
+  });
+
+export const deleteLostFoundPost = async (postId) =>
+  deleteDoc(doc(db, "lostFound", postId));
