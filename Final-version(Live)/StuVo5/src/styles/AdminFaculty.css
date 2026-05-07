@@ -11,14 +11,12 @@
 
 .af-topbar {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 24px;
-  padding: 28px 28px 20px;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 20px 16px;
   background: linear-gradient(135deg, #0d1b2a 0%, #111827 100%);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
-.af-topbar-left { display: flex; flex-direction: column; gap: 4px; }
 .af-badge {
   display: inline-flex; align-items: center; gap: 6px;
   font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
@@ -199,4 +197,515 @@
   .af-grid { grid-template-columns: 1fr; }
   .af-form { padding: 16px; }
   .af-table th:nth-child(3), .af-table td:nth-child(3) { display: none; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   ADDITIONS — back btn + title row in topbar
+════════════════════════════════════════════════════════════ */
+
+/* ── Title row (back btn + h1 inline) ────────────────────── */
+.af-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ── Back button ─────────────────────────────────────────── */
+.af-back-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: #9ca3af;
+  font-size: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.af-back-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+}
+
+/* Ensure title has no top margin when inside row */
+.af-title-row .af-title {
+  margin: 0;
+}
+
+/* ── Working Since dropdown ──────────────────────────────── */
+.af-select {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9px;
+  color: #e2e8f0;
+  font-size: 0.9rem;
+  padding: 10px 13px;
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: inherit;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 13px center;
+  padding-right: 36px;
+}
+.af-select:focus {
+  border-color: rgba(99, 179, 237, 0.45);
+  box-shadow: 0 0 0 3px rgba(99, 179, 237, 0.08);
+}
+.af-select option {
+  background: #1a1f2e;
+  color: #e2e8f0;
+}
+
+/* ── Stat val row (number + "yrs" inline) ───────────────── */
+.af-stat-val-row {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+}
+.af-stat-unit {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: rgba(99, 179, 237, 0.6);
+  letter-spacing: 0.04em;
+}
+
+/* ── Toolbar actions row (Add + Clear All) ───────────────── */
+.af-toolbar-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* ════════════════════════════════════════════════════════════
+   MOBILE CARD LIST — replaces table on small screens
+════════════════════════════════════════════════════════════ */
+
+/* Desktop: show table, hide mobile list */
+.af-mobile-list { display: none; }
+
+@media (max-width: 640px) {
+
+  /* Hide entire table wrap on mobile */
+  .af-table-wrap { display: none; }
+
+  /* Show mobile list */
+  .af-mobile-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;                                  /* NO gap — gap breaks corner clipping */
+    border-radius: 14px;                     /* ALL 4 corners */
+    overflow: hidden;                        /* clips child corners */
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: rgba(255, 255, 255, 0.025);
+  }
+
+  /* Each faculty row */
+  .af-mobile-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.025);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    transition: background 0.15s;
+  }
+  .af-mobile-card:last-child { border-bottom: none; }
+
+  /* Photo */
+  .af-mobile-photo {
+    width: 46px;
+    height: 46px;
+    border-radius: 10px;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* Info column */
+  .af-mobile-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .af-mobile-name {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #f0f6ff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .af-mobile-dept {
+    font-size: 0.72rem;
+    color: #63b3ed;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .af-mobile-desig {
+    font-size: 0.68rem;
+    color: rgba(226, 232, 240, 0.38);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Actions column — Edit + Delete stacked */
+  .af-mobile-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex-shrink: 0;
+  }
+  .af-mobile-actions .af-row-edit {
+    padding: 5px 10px;
+    font-size: 0.72rem;
+  }
+  .af-mobile-actions .af-row-delete {
+    width: 100%;
+    height: 28px;
+    font-size: 0.82rem;
+  }
+
+  /* Also fix toolbar on mobile */
+  .af-list-toolbar { flex-wrap: nowrap; }
+  .af-search-wrap { max-width: none; }
+}
+
+/* ── Stats bar (matches Faculty hero stats) ──────────────── */
+.af-stats-bar {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  padding: 14px 16px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 8px;
+}
+.af-sbar-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+.af-sbar-stat strong {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #63b3ed;
+  line-height: 1;
+}
+.af-sbar-stat > span {
+  font-size: 0.6rem;
+  color: rgba(226, 232, 240, 0.35);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  white-space: nowrap;
+}
+.af-sbar-sep {
+  width: 1px;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+.af-sbar-val-row {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+}
+.af-sbar-unit {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: rgba(99, 179, 237, 0.6);
+  letter-spacing: 0.04em;
+}
+
+/* ── Mobile card tweaks ───────────────────────────────────── */
+/* per-card radius removed: container overflow:hidden handles all clipping */
+
+/* Padding tweaks */
+.af-mobile-card { padding: 10px 14px !important; }
+.af-mobile-photo {
+  width: 60px !important;
+  height: 50px !important;
+  border-radius: 8px !important;
+}
+.af-mobile-actions .af-row-edit { padding: 5px 8px !important; }
+
+/* ════════════════════════════════════════════════════════════
+   DRAWER — Add / Edit Faculty
+════════════════════════════════════════════════════════════ */
+
+/* Overlay: blurs everything behind, blocks clicks */
+.af-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  bottom: 65px; /* above nav bar */
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1000;
+  animation: af-fadeIn 0.2s ease;
+}
+
+/* Drawer panel — slides up from bottom */
+.af-drawer {
+  width: 100%;
+  max-width: 520px;
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px 20px 0 0;
+  max-height: calc(100dvh - 70px);
+  display: flex;
+  flex-direction: column;
+  animation: af-slideUp 0.25s ease;
+  overflow: hidden;
+}
+
+@keyframes af-slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+@keyframes af-fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Desktop — centered modal instead of bottom sheet */
+@media (min-width: 640px) {
+  .af-drawer-overlay { bottom: 0; align-items: center; }
+  .af-drawer {
+    border-radius: 20px;
+    max-width: 560px;
+    max-height: 88vh;
+  }
+}
+
+/* ── Drawer header (pinned) ──────────────────────────────── */
+.af-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.02);
+}
+.af-drawer-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.af-drawer-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #f0f6ff;
+}
+.af-drawer-close {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(226, 232, 240, 0.5);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.af-drawer-close:hover { background: rgba(255,255,255,0.08); color: #e2e8f0; }
+
+/* ── Drawer body (scrollable) ────────────────────────────── */
+.af-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.1) transparent;
+}
+.af-drawer-body form {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.af-drawer-body::-webkit-scrollbar { width: 4px; }
+.af-drawer-body::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+}
+
+/* ── Drawer footer (pinned) ──────────────────────────────── */
+.af-drawer-footer {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px calc(16px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  background: #111;
+}
+.af-drawer-cancel,
+.af-drawer-save {
+  flex: 1;
+  justify-content: center;
+}
+
+/* Trash icon button in footer (edit mode only) */
+.af-drawer-delete-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
+  border: 1px solid rgba(252, 129, 74, 0.2);
+  background: rgba(252, 129, 74, 0.07);
+  color: #fc814a;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.af-drawer-delete-btn:hover { background: rgba(252,129,74,0.16); }
+
+/* ════════════════════════════════════════════════════════════
+   DELETE CONFIRMATION MODAL
+════════════════════════════════════════════════════════════ */
+.af-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  animation: af-fadeIn 0.2s ease;
+}
+.af-confirm-box {
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 28px 22px 20px;
+  width: 85%;
+  max-width: 320px;
+  text-align: center;
+  animation: af-popIn 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes af-popIn {
+  from { transform: scale(0.88); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+.af-confirm-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: rgba(252, 129, 74, 0.1);
+  border: 1px solid rgba(252, 129, 74, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+}
+.af-confirm-icon i { font-size: 24px; color: #fc814a; }
+.af-confirm-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin: 0 0 8px;
+}
+.af-confirm-msg {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+.af-confirm-msg strong { color: #cbd5e1; }
+.af-confirm-actions { display: flex; gap: 10px; }
+.af-confirm-btn {
+  flex: 1;
+  padding: 12px 0;
+  border-radius: 12px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.af-confirm-btn--cancel  { background: #2a2a2a; color: #e2e8f0; }
+.af-confirm-btn--cancel:hover { background: #333; }
+.af-confirm-btn--delete  { background: #ef4444; color: #fff; }
+.af-confirm-btn--delete:hover { background: #dc2626; }
+
+/* Remove textarea resize grip inside the drawer */
+.af-drawer-body textarea { resize: none; }
+
+/* ── Loading spinner ─────────────────────────────────────── */
+.af-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 56px 24px;
+  color: #4b5563;
+  font-size: 13px;
+}
+.af-spinner {
+  width: 28px;
+  height: 28px;
+  border: 2.5px solid rgba(255,255,255,0.08);
+  border-top-color: #6b7280;
+  border-radius: 50%;
+  animation: af-spin 0.7s linear infinite;
+}
+@keyframes af-spin { to { transform: rotate(360deg); } }
+
+/* ── Spin icon (inline loader) ───────────────────────────── */
+.af-spin {
+  display: inline-block !important;
+  animation: af-spin 0.7s linear infinite !important;
+}
+
+/* ── Submit error banner ─────────────────────────────────── */
+.af-submit-err {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 13px;
+  border-radius: 10px;
+  background: rgba(248, 113, 113, 0.08);
+  border: 1px solid rgba(248, 113, 113, 0.25);
+  color: #f87171;
+  font-size: 12.5px;
+}
+.af-submit-err i { font-size: 16px; flex-shrink: 0; }
+
+/* ── Disabled button ─────────────────────────────────────── */
+.af-btn-primary:disabled,
+.af-btn-secondary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }

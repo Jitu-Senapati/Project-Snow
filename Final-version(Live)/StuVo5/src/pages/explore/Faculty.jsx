@@ -1,80 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import "../../styles/Faculty.css";
-
-const STORAGE_KEY = "stuvo5_faculty_data_v1";
-
-const DEFAULT_FACULTY = [
-  {
-    id: "1",
-    name: "Dr. Ananya Mishra",
-    designation: "Head of Department",
-    department: "Computer Science",
-    qualification: "PhD, M.Tech",
-    experience: 12,
-    specialization: "Artificial Intelligence & Machine Learning",
-    email: "ananya@college.edu",
-    phone: "+91 9876543210",
-    office: "Block A, Room 201",
-    bio: "Experienced academician with strong research background in AI and modern software systems.",
-    photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=80",
-  },
-  {
-    id: "2",
-    name: "Prof. Rakesh Kumar",
-    designation: "Associate Professor",
-    department: "Information Technology",
-    qualification: "M.Tech",
-    experience: 9,
-    specialization: "Web Development & Cloud Computing",
-    email: "rakesh@college.edu",
-    phone: "+91 9123456780",
-    office: "Block B, Room 105",
-    bio: "Passionate about teaching web technologies, cloud infrastructure, and project-based learning.",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80",
-  },
-  {
-    id: "3",
-    name: "Dr. Priya Sharma",
-    designation: "Assistant Professor",
-    department: "Electronics",
-    qualification: "PhD",
-    experience: 6,
-    specialization: "VLSI Design & Embedded Systems",
-    email: "priya@college.edu",
-    phone: "+91 9988776655",
-    office: "Block C, Room 310",
-    bio: "Researcher and educator specializing in VLSI and embedded systems with several patents.",
-    photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=900&q=80",
-  },
-];
-
-function loadFaculty() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) return JSON.parse(saved);
-  } catch (_) {}
-  return DEFAULT_FACULTY;
-}
+import { subscribeFaculty } from "../../firebase/db";
 
 export default function Faculty() {
-  const [faculty] = useState(loadFaculty);
-  const [search, setSearch] = useState("");
-  const [activeDept, setActiveDept] = useState("All");
+  const navigate = useNavigate();
+  const { isAdmin } = useAuth();
+  const [faculty, setFaculty] = useState([]);
+  const [loading, setLoading]   = useState(true);
+  const [search, setSearch]     = useState("");
   const [selected, setSelected] = useState(null);
 
-  const departments = ["All", ...new Set(faculty.map((f) => f.department))];
+  useEffect(() => {
+    let active = true;
+    const unsub = subscribeFaculty(
+      (data) => { if (active) { setFaculty(data); setLoading(false); } },
+      ()     => { if (active) setLoading(false); }
+    );
+    return () => { active = false; unsub(); };
+  }, []);
+
 
   const filtered = faculty.filter((f) => {
     const q = search.toLowerCase();
-    const matchSearch =
-      !q ||
+    return !q ||
       f.name.toLowerCase().includes(q) ||
-      f.department.toLowerCase().includes(q) ||
+      (f.department || "").toLowerCase().includes(q) ||
       (f.specialization || "").toLowerCase().includes(q) ||
-      f.designation.toLowerCase().includes(q);
-    const matchDept = activeDept === "All" || f.department === activeDept;
-    return matchSearch && matchDept;
+      (f.designation || "").toLowerCase().includes(q);
   });
+
+  // Smart: if experience > 1990 it's a "working since" year; else it's raw years
+  const avgExp = faculty.length
+    ? Math.round(faculty.reduce((a, f) => {
+        const yrs = f.experience > 1990
+          ? new Date().getFullYear() - f.experience
+          : (f.experience || 0);
+        return a + yrs;
+      }, 0) / faculty.length)
+    : 0;
 
   return (
     <div className="fac-page">
@@ -82,12 +47,19 @@ export default function Faculty() {
       <div className="fac-hero">
         <div className="fac-hero-bg" />
         <div className="fac-hero-content">
-          <span className="fac-eyebrow">
-            <i className="bx bx-buildings" /> MITS Faculty
-          </span>
-          <h1 className="fac-hero-title">Meet Our Faculty</h1>
+          <div className="fac-hero-top-row">
+            <button className="fac-back-btn" onClick={() => navigate(-1)}>
+              <i className="bx bx-arrow-back" />
+            </button>
+            <h1 className="fac-hero-title">Meet Our Faculty</h1>
+            {isAdmin && (
+              <button className="fac-edit-btn" onClick={() => navigate("/admin-faculty")}>
+                <i className="bx bx-edit" /> Manage
+              </button>
+            )}
+          </div>
           <p className="fac-hero-sub">
-            Dedicated educators and researchers shaping the future at MITS.
+            The strength of an institution lies in the excellence of its faculty.
           </p>
           <div className="fac-hero-stats">
             <div className="fac-hstat">
@@ -101,8 +73,11 @@ export default function Faculty() {
             </div>
             <div className="fac-hstat-sep" />
             <div className="fac-hstat">
-              <strong>{Math.round(faculty.reduce((a, f) => a + (f.experience || 0), 0) / (faculty.length || 1))}+</strong>
-              <span>Avg. Years Exp.</span>
+              <div className="fac-hstat-val-row">
+                <strong>{avgExp}+</strong>
+                <span className="fac-hstat-unit">yrs</span>
+              </div>
+              <span>Average Experience</span>
             </div>
           </div>
         </div>
@@ -126,39 +101,20 @@ export default function Faculty() {
             )}
           </div>
 
-          <div className="fac-dept-pills">
-            {departments.map((dept) => (
-              <button
-                key={dept}
-                className={`fac-dept-pill ${activeDept === dept ? "fac-dept-pill--active" : ""}`}
-                onClick={() => setActiveDept(dept)}
-              >
-                {dept}
-                <span className="fac-pill-count">
-                  {dept === "All" ? faculty.length : faculty.filter((f) => f.department === dept).length}
-                </span>
-              </button>
-            ))}
-          </div>
         </div>
 
-        {/* Results count */}
-        {(search || activeDept !== "All") && (
-          <p className="fac-results-info">
-            <i className="bx bx-filter-alt" />
-            {filtered.length} result{filtered.length !== 1 ? "s" : ""}
-            {activeDept !== "All" ? ` in ${activeDept}` : ""}
-            {search ? ` for "${search}"` : ""}
-          </p>
-        )}
 
-        {/* Grid */}
-        {filtered.length === 0 ? (
+                {/* Grid */}
+        {loading ? (
+          <div className="fac-loading">
+            <div className="fac-spinner" />
+          </div>
+        ) : filtered.length === 0 ? (
           <div className="fac-no-results">
             <i className="bx bx-search-alt" />
             <h3>No faculty found</h3>
             <p>Try adjusting your search or filter.</p>
-            <button className="fac-reset-btn" onClick={() => { setSearch(""); setActiveDept("All"); }}>
+            <button className="fac-reset-btn" onClick={() => setSearch("")}>
               Clear filters
             </button>
           </div>
@@ -184,19 +140,21 @@ export default function Faculty() {
             </button>
             <div className="fac-modal-photo">
               <img
-                src={selected.photo || "https://via.placeholder.com/600x400?text=Faculty"}
+                src={selected.photoUrl || selected.photo || "https://via.placeholder.com/600x400?text=Faculty"}
                 alt={selected.name}
                 onError={(e) => { e.target.src = "https://via.placeholder.com/600x400?text=Faculty"; }}
               />
-              <div className="fac-modal-dept-badge">{selected.department}</div>
+              {selected.designation && (
+              <div className="fac-modal-dept-badge">{selected.designation}</div>
+            )}
             </div>
             <div className="fac-modal-body">
               <h2 className="fac-modal-name">{selected.name}</h2>
-              <p className="fac-modal-desig">{selected.designation}</p>
+              <p className="fac-modal-desig">{selected.department}</p>
 
               <div className="fac-modal-chips">
                 {selected.experience != null && (
-                  <span className="fac-mchip"><i className="bx bx-time-five" /> {selected.experience} Years Exp.</span>
+                  <span className="fac-mchip"><i className="bx bx-time-five" />{selected.experience > 1990 ? ` Since ${selected.experience}` : ` ${selected.experience} yrs exp.`}</span>
                 )}
                 {selected.qualification && (
                   <span className="fac-mchip"><i className="bx bx-award" /> {selected.qualification}</span>
@@ -248,18 +206,20 @@ function FacultyCard({ teacher, onClick }) {
       <div className="fac-card-img-wrap">
         <img
           className="fac-card-img"
-          src={teacher.photo || "https://via.placeholder.com/600x400?text=Faculty"}
+          src={teacher.photoUrl || teacher.photo || "https://via.placeholder.com/600x400?text=Faculty"}
           alt={teacher.name}
           onError={(e) => { e.target.src = "https://via.placeholder.com/600x400?text=Faculty"; }}
         />
-        <div className="fac-card-dept">{teacher.department}</div>
+        {teacher.designation && (
+          <div className="fac-card-dept">{teacher.designation}</div>
+        )}
       </div>
       <div className="fac-card-info">
         <h3 className="fac-card-name">{teacher.name}</h3>
-        <p className="fac-card-desig">{teacher.designation}</p>
+        <p className="fac-card-desig">{teacher.department}</p>
         <div className="fac-card-tags">
           {teacher.experience != null && (
-            <span className="fac-tag"><i className="bx bx-time" /> {teacher.experience}y</span>
+            <span className="fac-tag"><i className="bx bx-time" />{teacher.experience > 1990 ? ` Since ${teacher.experience}` : ` ${teacher.experience} yrs`}</span>
           )}
           {teacher.qualification && (
             <span className="fac-tag"><i className="bx bx-graduation" /> {teacher.qualification}</span>
@@ -268,9 +228,7 @@ function FacultyCard({ teacher, onClick }) {
         {teacher.specialization && (
           <p className="fac-card-spec"><i className="bx bx-bookmark" /> {teacher.specialization}</p>
         )}
-        <div className="fac-card-cta">
-          View Profile <i className="bx bx-right-arrow-alt" />
-        </div>
+
       </div>
     </article>
   );

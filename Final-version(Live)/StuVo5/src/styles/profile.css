@@ -1266,7 +1266,6 @@
    MOBILE RESPONSIVE
 ================================ */
 @media (max-width: 768px) {
-  .menu-panel,
   .cover-photo-container {
     height: 160px;
   }

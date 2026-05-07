@@ -12,7 +12,7 @@
 /* ── Hero ───────────────────────────────────────────────── */
 .fac-hero {
   position: relative;
-  padding: 44px 28px 36px;
+  padding: 22px 20px 20px;
   overflow: hidden;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
@@ -28,7 +28,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 55% 90% at 85% 40%, rgba(56, 139, 253, 0.07) 0%, transparent 70%);
+  background: radial-gradient(ellipse 35% 50% at 85% 40%, rgba(56, 139, 253, 0.06) 0%, transparent 70%);
 }
 
 .fac-hero-content {
@@ -60,10 +60,11 @@
 }
 
 .fac-hero-sub {
-  margin: 0 0 24px;
+  margin: 0 0 20px;
+  padding-left: 46px; /* 34px btn + 12px gap — aligns under title "M" */
   font-size: 0.95rem;
   color: rgba(226, 232, 240, 0.45);
-  max-width: 500px;
+  max-width: 540px;
 }
 
 .fac-hero-stats {
@@ -74,6 +75,8 @@
   border-radius: 14px;
   padding: 16px 24px;
   width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .fac-hstat {
@@ -261,7 +264,7 @@
 .fac-card-img-wrap {
   position: relative;
   width: 100%;
-  height: 195px;
+  height: 257px; /* 234px × 1.1 = 257px */
   overflow: hidden;
   background: rgba(255, 255, 255, 0.03);
 }
@@ -571,11 +574,126 @@
 @media (max-width: 960px) { .fac-grid { grid-template-columns: repeat(2, 1fr); } }
 
 @media (max-width: 640px) {
-  .fac-hero { padding: 28px 16px 24px; }
+  .fac-hero-sub { padding-left: 0; } /* full-width on mobile */
+  .fac-hero { padding: 16px 16px 16px; }
   .fac-hero-title { font-size: 1.7rem; }
   .fac-main { padding: 16px 16px 40px; }
   .fac-grid { grid-template-columns: 1fr; }
-  .fac-hero-stats { padding: 12px 16px; }
-  .fac-hstat { padding: 0 16px; }
+  .fac-hero-stats {
+    padding: 10px 8px;
+    width: 100%;        /* fill container, no overflow */
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  .fac-hstat {
+    padding: 0 8px;
+    flex: 1;            /* equal share of width */
+  }
+  .fac-hstat strong,
+  .fac-hstat-val-row strong { font-size: 1.15rem; }
+  .fac-hstat span { font-size: 0.58rem; }
+  .fac-hstat-unit { font-size: 0.6rem; }
+  .fac-hstat-sep { height: 24px; }
   .fac-modal-photo { height: 200px; }
 }
+
+/* ════════════════════════════════════════════════════════════
+   ADDITIONS — back btn, edit btn, top row layout
+════════════════════════════════════════════════════════════ */
+
+/* ── Hero top row (back btn + title + edit btn) ──────────── */
+.fac-hero-top-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+/* ── Back button ─────────────────────────────────────────── */
+.fac-back-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #9ca3af;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.fac-back-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+}
+
+/* ── Hero title inline (no bottom margin when in top-row) ── */
+.fac-hero-top-row .fac-hero-title {
+  margin: 0;
+  flex: 1;
+}
+
+/* ── Edit / Manage button (admin only) ───────────────────── */
+.fac-edit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  border-radius: 9px;
+  background: rgba(99, 179, 237, 0.1);
+  border: 1px solid rgba(99, 179, 237, 0.22);
+  color: #63b3ed;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.fac-edit-btn:hover {
+  background: rgba(99, 179, 237, 0.18);
+  border-color: rgba(99, 179, 237, 0.4);
+}
+.fac-edit-btn i {
+  font-size: 1rem;
+}
+
+/* ── Stat value row (number + "yrs" inline) ─────────────── */
+.fac-hstat-val-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  line-height: 1;
+}
+.fac-hstat-val-row strong {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #63b3ed;
+  line-height: 1;
+}
+.fac-hstat-unit {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgba(99, 179, 237, 0.65);
+  letter-spacing: 0.04em;
+  margin-bottom: 1px;
+}
+
+/* ── Loading spinner ─────────────────────────────────────── */
+.fac-loading {
+  display: flex;
+  justify-content: center;
+  padding: 56px 0;
+}
+.fac-spinner {
+  width: 30px;
+  height: 30px;
+  border: 2.5px solid rgba(255,255,255,0.07);
+  border-top-color: #63b3ed;
+  border-radius: 50%;
+  animation: fac-spin 0.7s linear infinite;
+}
+@keyframes fac-spin { to { transform: rotate(360deg); } }

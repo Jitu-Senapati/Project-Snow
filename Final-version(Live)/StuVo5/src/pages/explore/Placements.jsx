@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { subscribeToPlacements, savePlacements } from "../../firebase/db";
 import "../../styles/placements.css";
@@ -134,13 +135,10 @@ export default function Placements() {
     <div className="pl-root">
       {/* Header */}
       <div className="pl-header">
+        <button className="pl-back-btn" onClick={() => navigate(-1)}>
+          <i className="bx bx-arrow-back" />
+        </button>
         <span className="pl-title">Placements</span>
-        {isAdmin && (
-          <span className="pl-admin-badge">
-            <i className="bx bx-shield-alt-2" />
-            Admin
-          </span>
-        )}
       </div>
 
       {/* Tabs */}

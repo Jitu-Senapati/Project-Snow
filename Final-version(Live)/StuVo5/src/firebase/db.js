@@ -531,3 +531,32 @@ export const resolveLostFoundPost = async (postId) =>
 
 export const deleteLostFoundPost = async (postId) =>
   deleteDoc(doc(db, "lostFound", postId));
+
+// ─── Faculty ──────────────────────────────────────────────
+const facultyColRef = () => collection(db, "faculty");
+
+export const subscribeFaculty = (callback, onError) =>
+  onSnapshot(
+    query(facultyColRef(), orderBy("createdAt", "desc")),
+    (snap) => callback(snap.docs.map((d) => ({ id: d.id, ...d.data() }))),
+    (err) => {
+      console.error("subscribeFaculty:", err.code, err.message);
+      if (onError) onError(err);
+    }
+  );
+
+export const addFacultyDoc = async (id, data) =>
+  setDoc(doc(db, "faculty", id), {
+    ...data,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  });
+
+export const updateFacultyDoc = async (id, data) =>
+  updateDoc(doc(db, "faculty", id), {
+    ...data,
+    updatedAt: serverTimestamp(),
+  });
+
+export const deleteFacultyDoc = async (id) =>
+  deleteDoc(doc(db, "faculty", id));

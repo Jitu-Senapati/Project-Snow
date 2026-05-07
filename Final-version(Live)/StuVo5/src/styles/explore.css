@@ -98,7 +98,7 @@ body {
     transform 0.2s ease,
     visibility 0.2s;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
-  overflow: hidden;
+  overflow: visible;   /* hidden was causing phantom space below last item */
 }
 
 .notification-panel {
