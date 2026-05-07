@@ -28,6 +28,11 @@ const SupportUs      = lazy(() => import("./pages/explore/SupportUs"));
 const Syllabus       = lazy(() => import("./pages/explore/Syllabus"));
 const RaiseComplaint = lazy(() => import("./pages/explore/RaiseComplaint"));
 const Placements     = lazy(() => import("./pages/explore/Placements"));
+const LostFound      = lazy(() => import("./pages/explore/LostFound"));
+const Attendance     = lazy(() => import("./pages/explore/Attendance"));
+const Faculty        = lazy(() => import("./pages/explore/Faculty"));
+const AdminFaculty   = lazy(() => import("./pages/explore/AdminFaculty"));
+const AdminAttendance = lazy(() => import("./pages/explore/AdminAttendance"));
 
 // Error boundary for lazy-loaded pages that fail offline
 class LazyErrorBoundary extends Component {
@@ -80,6 +85,10 @@ function App() {
           <Route path="/transport"  element={<ComingSoon />} />
           <Route path="/cafeteria"  element={<ComingSoon />} />
           <Route path="/library"    element={<ComingSoon />} />
+          {/* New pages */}
+          <Route path="/lost-found"  element={<LostFound />} />
+          <Route path="/attendance"  element={<Attendance />} />
+          <Route path="/faculty"     element={<Faculty />} />
         </Route>
 
         {/* Regular users only */}
@@ -90,6 +99,8 @@ function App() {
         {/* Admins only */}
         <Route element={<AdminRoute><Layout /></AdminRoute>}>
           <Route path="/admin-explore" element={<AdminExplore />} />
+          <Route path="/admin-faculty" element={<AdminFaculty />} />
+          <Route path="/admin-attendance" element={<AdminAttendance />} />
         </Route>
       </Routes>
     </Suspense>

@@ -1,0 +1,581 @@
+/* ============================================================
+   Faculty.css — STUVO5 Student View
+   ============================================================ */
+
+.fac-page {
+  min-height: 100vh;
+  background: var(--bg, #0f1117);
+  color: var(--text, #e2e8f0);
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+/* ── Hero ───────────────────────────────────────────────── */
+.fac-hero {
+  position: relative;
+  padding: 44px 28px 36px;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.fac-hero-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #0d1b2a 0%, #111827 60%, #0f1117 100%);
+  z-index: 0;
+}
+
+.fac-hero-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 55% 90% at 85% 40%, rgba(56, 139, 253, 0.07) 0%, transparent 70%);
+}
+
+.fac-hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.fac-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #63b3ed;
+  margin-bottom: 10px;
+}
+
+.fac-hero-title {
+  margin: 0 0 8px;
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #f0f6ff;
+  line-height: 1.1;
+}
+
+.fac-hero-sub {
+  margin: 0 0 24px;
+  font-size: 0.95rem;
+  color: rgba(226, 232, 240, 0.45);
+  max-width: 500px;
+}
+
+.fac-hero-stats {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  padding: 16px 24px;
+  width: fit-content;
+}
+
+.fac-hstat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 24px;
+}
+
+.fac-hstat strong {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #63b3ed;
+  line-height: 1;
+}
+
+.fac-hstat span {
+  font-size: 0.7rem;
+  color: rgba(226, 232, 240, 0.35);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  white-space: nowrap;
+}
+
+.fac-hstat-sep {
+  width: 1px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ── Main ───────────────────────────────────────────────── */
+.fac-main {
+  padding: 24px 28px 56px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ── Controls ───────────────────────────────────────────── */
+.fac-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.fac-search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 11px 16px;
+  transition: border-color 0.2s;
+}
+
+.fac-search-box:focus-within {
+  border-color: rgba(99, 179, 237, 0.35);
+}
+
+.fac-search-box i {
+  color: rgba(226, 232, 240, 0.28);
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+.fac-search-box input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #e2e8f0;
+  font-size: 0.92rem;
+  width: 100%;
+  font-family: inherit;
+}
+
+.fac-search-box input::placeholder {
+  color: rgba(226, 232, 240, 0.2);
+}
+
+.fac-clear-btn {
+  background: none;
+  border: none;
+  color: rgba(226, 232, 240, 0.3);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+
+.fac-clear-btn:hover {
+  color: rgba(226, 232, 240, 0.65);
+}
+
+.fac-dept-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.fac-dept-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(226, 232, 240, 0.5);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.fac-dept-pill:hover {
+  border-color: rgba(99, 179, 237, 0.3);
+  color: #e2e8f0;
+  background: rgba(99, 179, 237, 0.05);
+}
+
+.fac-dept-pill--active {
+  background: rgba(99, 179, 237, 0.12);
+  border-color: rgba(99, 179, 237, 0.35);
+  color: #63b3ed;
+}
+
+.fac-pill-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.fac-dept-pill--active .fac-pill-count {
+  background: rgba(99, 179, 237, 0.2);
+}
+
+.fac-results-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: rgba(226, 232, 240, 0.35);
+  margin: 0 0 16px;
+}
+
+/* ── Grid ───────────────────────────────────────────────── */
+.fac-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+/* ── Card ───────────────────────────────────────────────── */
+.fac-card {
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: border-color 0.22s, transform 0.22s, box-shadow 0.22s;
+}
+
+.fac-card:hover {
+  border-color: rgba(99, 179, 237, 0.25);
+  transform: translateY(-3px);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.4);
+}
+
+.fac-card-img-wrap {
+  position: relative;
+  width: 100%;
+  height: 195px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.fac-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.fac-card:hover .fac-card-img {
+  transform: scale(1.04);
+}
+
+.fac-card-dept {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(10, 15, 25, 0.78);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(99, 179, 237, 0.22);
+  color: #63b3ed;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.fac-card-info {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  flex: 1;
+}
+
+.fac-card-name {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #f0f6ff;
+  line-height: 1.25;
+}
+
+.fac-card-desig {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #63b3ed;
+}
+
+.fac-card-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.fac-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  color: rgba(226, 232, 240, 0.45);
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.fac-card-spec {
+  margin: 0;
+  font-size: 0.78rem;
+  color: rgba(226, 232, 240, 0.42);
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  line-height: 1.4;
+}
+
+.fac-card-spec i {
+  color: #63b3ed;
+  font-size: 0.82rem;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+.fac-card-cta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #63b3ed;
+  margin-top: auto;
+  padding-top: 4px;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.fac-card:hover .fac-card-cta {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ── No Results ─────────────────────────────────────────── */
+.fac-no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 72px 24px;
+  gap: 10px;
+  color: rgba(226, 232, 240, 0.25);
+  border: 1px dashed rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+}
+
+.fac-no-results i { font-size: 2.8rem; }
+.fac-no-results h3 { margin: 0; font-size: 1rem; color: rgba(226, 232, 240, 0.35); }
+.fac-no-results p { margin: 0; font-size: 0.85rem; }
+
+.fac-reset-btn {
+  margin-top: 8px;
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: 1px solid rgba(99, 179, 237, 0.2);
+  background: rgba(99, 179, 237, 0.07);
+  color: #63b3ed;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.fac-reset-btn:hover { background: rgba(99, 179, 237, 0.14); }
+
+/* ── Modal ──────────────────────────────────────────────── */
+.fac-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: fac-overlay-in 0.2s ease;
+}
+
+@keyframes fac-overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fac-modal {
+  background: #141920;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 20px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 480px;
+  max-height: 88vh;
+  overflow-y: auto;
+  position: relative;
+  animation: fac-modal-in 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.08) transparent;
+}
+
+@keyframes fac-modal-in {
+  from { opacity: 0; transform: scale(0.92) translateY(16px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.fac-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(15, 17, 23, 0.8);
+  backdrop-filter: blur(8px);
+  color: rgba(226, 232, 240, 0.6);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.fac-modal-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+}
+
+.fac-modal-photo {
+  position: relative;
+  width: 100%;
+  height: 260px;
+  overflow: hidden;
+}
+
+.fac-modal-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.fac-modal-dept-badge {
+  position: absolute;
+  bottom: 12px;
+  left: 14px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(10, 15, 25, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(99, 179, 237, 0.25);
+  color: #63b3ed;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.fac-modal-body {
+  padding: 20px 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fac-modal-name { margin: 0; font-size: 1.35rem; font-weight: 800; color: #f0f6ff; line-height: 1.2; }
+.fac-modal-desig { margin: 0; font-size: 0.88rem; font-weight: 600; color: #63b3ed; }
+
+.fac-modal-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.fac-mchip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(226, 232, 240, 0.55);
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+.fac-mchip i { color: #63b3ed; font-size: 0.85rem; }
+
+.fac-modal-spec {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(99, 179, 237, 0.05);
+  border: 1px solid rgba(99, 179, 237, 0.12);
+  border-radius: 10px;
+  font-size: 0.85rem;
+  color: rgba(226, 232, 240, 0.65);
+}
+
+.fac-modal-spec i { color: #63b3ed; font-size: 1rem; margin-top: 1px; flex-shrink: 0; }
+
+.fac-modal-bio {
+  margin: 0;
+  font-size: 0.87rem;
+  line-height: 1.65;
+  color: rgba(226, 232, 240, 0.5);
+  font-style: italic;
+}
+
+.fac-modal-contacts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.fac-contact-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.84rem;
+  color: rgba(226, 232, 240, 0.55);
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.fac-contact-row:hover { background: rgba(99, 179, 237, 0.06); color: #63b3ed; }
+.fac-contact-row i { color: #63b3ed; font-size: 1rem; flex-shrink: 0; }
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 960px) { .fac-grid { grid-template-columns: repeat(2, 1fr); } }
+
+@media (max-width: 640px) {
+  .fac-hero { padding: 28px 16px 24px; }
+  .fac-hero-title { font-size: 1.7rem; }
+  .fac-main { padding: 16px 16px 40px; }
+  .fac-grid { grid-template-columns: 1fr; }
+  .fac-hero-stats { padding: 12px 16px; }
+  .fac-hstat { padding: 0 16px; }
+  .fac-modal-photo { height: 200px; }
+}

@@ -15,15 +15,15 @@ const NAV_ITEMS = [
 ];
 
 const BROWSE_ITEMS = [
-  { icon: "bx-donate-heart", label: "Support Us", path: "/support-us", name: "Support Us" },
   { icon: "bx-book-open", label: "Syllabus", path: "/syllabus", name: "Syllabus" },
-  { icon: "bx-message-error", label: "Raise Complaint", path: "/complaint", name: "Raise Complaint" },
-  { icon: "bx-group", label: "Clubs", path: "/clubs", name: "Clubs" },
-  { icon: "bx-briefcase", label: "Placements", path: "/placements", name: "Placements" },
-  { icon: "bx-building", label: "Facilities", path: "/facilities", name: "Facilities" },
-  { icon: "bx-bus", label: "Transport", path: "/transport", name: "Transport" },
+  { icon: "bx-calendar-check", label: "Attendance", path: "/attendance", name: "Attendance" },
   { icon: "bx-food-menu", label: "Cafeteria", path: "/cafeteria", name: "Cafeteria" },
+  { icon: "bx-briefcase", label: "Placements", path: "/placements", name: "Placements" },
+  { icon: "bx-user-voice", label: "Faculty", path: "/faculty", name: "Faculty" },
   { icon: "bx-library", label: "Library", path: "/library", name: "Library" },
+  { icon: "bx-search-alt-2", label: "Lost & Found", path: "/lost-found", name: "Lost & Found" },
+  { icon: "bx-message-error", label: "Raise Complaint", path: "/complaint", name: "Raise Complaint" },
+  { icon: "bx-donate-heart", label: "Support Us", path: "/support-us", name: "Support Us" },
 ];
 
 export default function Layout() {

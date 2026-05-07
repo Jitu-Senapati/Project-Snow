@@ -1,0 +1,758 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@400;500;600;700;800&display=swap");
+
+:root {
+  --bg: #111314;
+  --card: #1a1c1f;
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --text: #f0f2f4;
+  --muted: #6b7280;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Root ── */
+.adm {
+  font-family: "Outfit", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  width: 100%;
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease;
+}
+.adm--in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Centered inner panel ── */
+.adm__inner {
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  padding-bottom: 100px;
+  position: relative;
+}
+
+@media (min-width: 600px) {
+  .adm__inner {
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    min-height: 100vh;
+  }
+}
+
+/* ── Toast ── */
+.adm-toast {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 999;
+  animation:
+    fadeUp 0.3s ease,
+    fadeOut 0.3s ease 2.2s forwards;
+  white-space: nowrap;
+}
+.adm-toast--ok {
+  background: rgba(74, 222, 128, 0.12);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  color: #4ade80;
+}
+.adm-toast--warn {
+  background: rgba(248, 113, 113, 0.12);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  color: #f87171;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translateX(-50%) translateY(6px);
+  }
+}
+
+/* ── Header ── */
+.adm__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 16px 12px;
+}
+
+.adm__back {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.2s;
+}
+.adm__back:hover {
+  border-color: var(--border-strong);
+}
+
+.adm__header-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.adm__title {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.adm__sub {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.adm__badge {
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(250, 204, 21, 0.35);
+  background: rgba(250, 204, 21, 0.08);
+  color: #facc15;
+  flex-shrink: 0;
+}
+
+/* ── Semester Bar ── */
+.sem-bar {
+  display: flex;
+  gap: 6px;
+  padding: 0 16px 14px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.sem-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.sem-btn {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-family: "Outfit", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+.sem-btn:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+.sem-btn--on {
+  background: #fff !important;
+  border-color: #fff !important;
+  color: #111314 !important;
+}
+
+/* ── Summary Card ── */
+.adm-summary {
+  margin: 0 16px 12px;
+  padding: 18px 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.adm-summary__left {
+  flex: 1;
+  min-width: 0;
+}
+
+.adm-summary__label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--muted);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.adm-summary__val {
+  font-family: "DM Mono", monospace;
+  font-size: 30px;
+  font-weight: 500;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+.adm-summary__val span {
+  font-size: 60%;
+  color: var(--muted);
+}
+
+.adm-summary__sub {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.adm-summary__right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.adm-summary__pct {
+  font-family: "DM Mono", monospace;
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.adm-summary__pct-lbl {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+/* ── Actions Bar ── */
+.adm-actions {
+  display: flex;
+  gap: 8px;
+  padding: 0 16px 12px;
+}
+
+/* ── Section ── */
+.adm__section {
+  padding: 0 16px;
+  margin-bottom: 8px;
+}
+
+.adm-section-lbl {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--muted);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+/* ── Empty State ── */
+.adm-empty {
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+  background: var(--card);
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+}
+
+/* ── Subject Row ── */
+.adm-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 8px;
+  animation: fadeUp 0.35s ease both;
+  transition:
+    border-color 0.2s,
+    transform 0.15s;
+}
+.adm-row:hover {
+  border-color: var(--border-strong);
+  transform: translateX(2px);
+}
+.adm-row--low {
+  border-color: rgba(248, 113, 113, 0.2) !important;
+}
+.adm-row--low:hover {
+  border-color: rgba(248, 113, 113, 0.4) !important;
+}
+
+.adm-row__icon {
+  font-size: 20px;
+  width: 38px;
+  height: 38px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.adm-row__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.adm-row__name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 3px;
+}
+
+.adm-row__meta {
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+
+.adm-row__track {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.adm-row__fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.adm-row__pct {
+  font-family: "DM Mono", monospace;
+  font-size: 16px;
+  font-weight: 700;
+  flex-shrink: 0;
+  min-width: 44px;
+  text-align: right;
+}
+
+.adm-row__btns {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* ── Icon Buttons (edit/delete) ── */
+.adm-icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: transparent;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s ease;
+}
+.adm-icon-btn--edit:hover {
+  border-color: rgba(250, 204, 21, 0.4);
+  background: rgba(250, 204, 21, 0.08);
+}
+.adm-icon-btn--del:hover {
+  border-color: rgba(248, 113, 113, 0.4);
+  background: rgba(248, 113, 113, 0.08);
+}
+
+/* ── Confirm Delete ── */
+.adm-confirm {
+  padding: 14px 16px;
+  background: rgba(248, 113, 113, 0.06);
+  border: 1px solid rgba(248, 113, 113, 0.25);
+  border-radius: 14px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  animation: fadeUp 0.25s ease;
+}
+.adm-confirm p {
+  font-size: 14px;
+  color: var(--text);
+}
+.adm-confirm__btns {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ── Edit Row ── */
+.adm-edit-row {
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  margin-bottom: 8px;
+  animation: fadeUp 0.25s ease;
+}
+
+.adm-edit-row__top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.adm-edit-row__icon {
+  font-size: 20px;
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.adm-edit-row__name-input {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  color: var(--text);
+  font-family: "Outfit", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 12px;
+  outline: none;
+  transition: border-color 0.2s;
+  min-width: 0;
+}
+.adm-edit-row__name-input:focus {
+  border-color: var(--border-strong);
+}
+
+.adm-edit-row__code {
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.adm-edit-row__fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.adm-edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.adm-edit-field label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.adm-edit-field input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  color: var(--text);
+  font-family: "DM Mono", monospace;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 10px 12px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+  -moz-appearance: textfield;
+}
+.adm-edit-field input::-webkit-outer-spin-button,
+.adm-edit-field input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+.adm-edit-field input:focus {
+  border-color: var(--border-strong);
+}
+
+.adm-edit-field--pct {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.adm-edit-row__actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ── Add Subject Form ── */
+.adm-add-form {
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-strong);
+  border-radius: 16px;
+  animation: fadeUp 0.3s ease;
+}
+
+.adm-add-form__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.adm-add-form__title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.adm-add-form__close {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s;
+}
+.adm-add-form__close:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+/* Icon picker grid */
+.adm-add-form__icon-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+  padding: 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.adm-icon-pick {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  font-size: 17px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+.adm-icon-pick:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--border);
+}
+.adm-icon-pick--on {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: var(--border-strong) !important;
+}
+
+.adm-add-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.adm-add-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.adm-add-field label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.adm-add-field input {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: "DM Mono", monospace;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 11px 12px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+  -moz-appearance: textfield;
+}
+.adm-add-field input::-webkit-outer-spin-button,
+.adm-add-field input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+.adm-add-field input::placeholder {
+  color: rgba(255, 255, 255, 0.12);
+}
+.adm-add-field input:focus {
+  border-color: var(--border-strong);
+}
+
+.adm-add-form__err {
+  font-size: 12px;
+  color: #f87171;
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  background: rgba(248, 113, 113, 0.08);
+  border: 1px solid rgba(248, 113, 113, 0.2);
+  border-radius: 8px;
+}
+
+/* ── Buttons ── */
+.adm-btn {
+  padding: 11px 18px;
+  border-radius: 11px;
+  border: none;
+  font-family: "Outfit", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    opacity 0.2s,
+    transform 0.1s;
+  white-space: nowrap;
+}
+.adm-btn:hover {
+  opacity: 0.88;
+}
+.adm-btn:active {
+  transform: scale(0.97);
+}
+
+.adm-btn--primary {
+  background: #fff;
+  color: #111314;
+}
+
+.adm-btn--ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.adm-btn--ghost:hover {
+  border-color: var(--border-strong);
+}
+
+.adm-btn--save {
+  background: rgba(74, 222, 128, 0.12);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  color: #4ade80;
+  flex: 1;
+}
+.adm-btn--save:hover {
+  background: rgba(74, 222, 128, 0.18);
+}
+
+.adm-btn--cancel {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  flex: 1;
+}
+.adm-btn--cancel:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+.adm-btn--danger {
+  background: rgba(248, 113, 113, 0.12);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  color: #f87171;
+}
+.adm-btn--danger:hover {
+  background: rgba(248, 113, 113, 0.2);
+}
+
+.adm-btn--sm {
+  padding: 8px 14px;
+  font-size: 13px;
+  border-radius: 9px;
+}
+
+/* ── Animations ── */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Responsive ── */
+@media (max-width: 380px) {
+  .adm-edit-row__fields {
+    grid-template-columns: 1fr 1fr;
+  }
+  .adm-edit-field--pct {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .adm-add-form__row {
+    grid-template-columns: 1fr;
+  }
+  .adm-summary {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
