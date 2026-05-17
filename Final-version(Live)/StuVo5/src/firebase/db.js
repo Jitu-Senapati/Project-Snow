@@ -560,3 +560,24 @@ export const updateFacultyDoc = async (id, data) =>
 
 export const deleteFacultyDoc = async (id) =>
   deleteDoc(doc(db, "faculty", id));
+// ─── FCM Token Management ─────────────────────────────────
+
+
+// ── FCM Tokens — per physical device (map: deviceKey → token) ────
+// deviceKey = screen resolution (same on Chrome & PWA, different per device)
+// Phone: "m_393x873", PC: "d_1920x1080"
+
+export const saveFcmToken = async (uid, deviceKey, token) => {
+  if (!uid || !deviceKey || !token) return;
+  return updateDoc(doc(db, "users", uid), {
+    [`fcmTokens.${deviceKey}`]: token,
+    fcmToken: deleteField(), // clear legacy single-token field if it exists
+  });
+};
+
+export const removeFcmToken = async (uid, deviceKey) => {
+  if (!uid || !deviceKey) return;
+  return updateDoc(doc(db, "users", uid), {
+    [`fcmTokens.${deviceKey}`]: deleteField(),
+  });
+};

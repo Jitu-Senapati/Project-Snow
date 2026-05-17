@@ -3,6 +3,7 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { getDatabase } from "firebase/database";
+import { getMessaging, isSupported } from "firebase/messaging";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -21,3 +22,12 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 export const rtdb = getDatabase(app);
+
+// Messaging — lazy init (not supported in all browsers / contexts)
+let _messaging = null;
+export const getAppMessaging = async () => {
+  if (_messaging) return _messaging;
+  const supported = await isSupported();
+  if (supported) _messaging = getMessaging(app);
+  return _messaging;
+};

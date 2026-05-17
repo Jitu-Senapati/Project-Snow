@@ -3,8 +3,11 @@ import { useNavigate, useLocation, Outlet } from "react-router-dom";
 import "boxicons/css/boxicons.min.css";
 import "../styles/explore.css";
 import { signOutUser } from "../firebase/auth";
+import { removeFcmToken } from "../firebase/db";
+import { getDeviceKey } from "../firebase/messaging";
 import { useAuth } from "../context/AuthContext";
 import SearchExplore from "../pages/explore/Search";
+import NotificationPrompt from "./NotificationPrompt";
 
 const NAV_ITEMS = [
   { id: "explorer", icon: "bx-compass", label: "Explorer", path: "/explore", isMore: false },
@@ -29,7 +32,7 @@ const BROWSE_ITEMS = [
 export default function Layout() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAdmin } = useAuth();
+  const { currentUser, isAdmin } = useAuth();
 
   const [openPanel, setOpenPanel] = useState(null);
   const [explorerOpen, setExplorerOpen] = useState(false);
@@ -158,7 +161,17 @@ export default function Layout() {
   const handleLogoutConfirm = async () => {
     setLogoutConfirmOpen(false);
     setLogoutToast(true);
+    const uid = currentUser?.uid;
+    const deviceKey = getDeviceKey(); // screen-based physical device ID
     setTimeout(async () => {
+      try {
+        if (uid && deviceKey) {
+          await removeFcmToken(uid, deviceKey);
+          localStorage.removeItem("stuvo5_fcm_token");
+        }
+      } catch (err) {
+        console.error("FCM cleanup on logout:", err);
+      }
       await signOutUser();
       setLogoutToast(false);
       navigate("/login");
@@ -259,6 +272,7 @@ export default function Layout() {
       {/* PAGE CONTENT */}
       <div className={`page-content active${explorerOpen || searchOpen ? " content-blurred" : ""}`}>
         <Outlet />
+      <NotificationPrompt />
       </div>
 
       {/* INSTALL BANNER */}

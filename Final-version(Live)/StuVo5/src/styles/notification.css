@@ -1,0 +1,89 @@
+/* ═══════════════════════════════════════════════════════════
+   NotificationPrompt — bottom banner
+═══════════════════════════════════════════════════════════ */
+
+.notif-banner {
+  position: fixed;
+  bottom: 75px; /* above nav bar */
+  left: 12px;
+  right: 12px;
+  max-width: 440px;
+  margin: 0 auto;
+  background: #1a1a2e;
+  border: 1px solid rgba(167, 139, 250, 0.25);
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 999;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.5);
+  animation: notif-slideUp 0.3s ease;
+}
+
+@keyframes notif-slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.notif-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.notif-banner-icon {
+  font-size: 24px;
+  color: #a78bfa;
+  flex-shrink: 0;
+}
+
+.notif-banner-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.notif-banner-text strong {
+  font-size: 14px;
+  color: #f1f5f9;
+  font-weight: 700;
+}
+
+.notif-banner-text span {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.notif-banner-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.notif-btn {
+  flex: 1;
+  padding: 10px 0;
+  border-radius: 10px;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-family: inherit;
+}
+
+.notif-btn--later {
+  background: #2a2a2a;
+  color: #9ca3af;
+}
+.notif-btn--later:hover {
+  background: #333;
+}
+
+.notif-btn--enable {
+  background: #7c3aed;
+  color: #fff;
+}
+.notif-btn--enable:hover {
+  background: #6d28d9;
+}

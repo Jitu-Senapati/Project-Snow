@@ -10,7 +10,7 @@ const creatorsData = [
   {
     id: 1,
     name: "Prabhat Kumar Behera",
-    role: "Frontend Developer",
+    //role: "Frontend Developer",
     image: Prabhat,
     socials: {
       instagram: "https://www.instagram.com/prabhat4a",
@@ -22,7 +22,7 @@ const creatorsData = [
   {
     id: 2,
     name: "Jitu Senapati",
-    role: "UI/UX Designer",
+    //role: "UI/UX Designer",
     image: Jitu,
     socials: {
       instagram: "https://www.instagram.com/_jitu_senapati_",
@@ -34,7 +34,7 @@ const creatorsData = [
   {
     id: 3,
     name: "N.Eswar Sunny",
-    role: "Backend Developer",
+    //role: "Backend Developer",
     image: Sunny,
     socials: {
       instagram: "https://www.instagram.com/the_e_square_",
@@ -46,7 +46,7 @@ const creatorsData = [
   {
     id: 4,
     name: "Aryan Kumar Rajak",
-    role: "Content Strategist",
+    //role: "Content Strategist",
     image: Aryan,
     socials: {
       instagram: "https://www.instagram.com/aryankr_99",
@@ -58,7 +58,7 @@ const creatorsData = [
   {
     id: 5,
     name: "Sudhansu Sekhara Sunani",
-    role: "Marketing Lead",
+    //role: "Marketing Lead",
     image: Sudhansu,
     socials: {
       instagram: "https://www.instagram.com/iam_sss19",

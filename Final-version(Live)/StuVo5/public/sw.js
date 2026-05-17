@@ -1,3 +1,58 @@
+// ═══════════════════════════════════════════════════════════════
+// FIREBASE CLOUD MESSAGING — push notification handling
+// ═══════════════════════════════════════════════════════════════
+importScripts("https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js");
+importScripts("https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-compat.js");
+
+firebase.initializeApp({
+  apiKey: "AIzaSyDfnI5L2tiLT8tpOrKcbU30lxzS6iOl6fo",
+  authDomain: "stuvo5.firebaseapp.com",
+  projectId: "stuvo5",
+  storageBucket: "stuvo5.firebasestorage.app",
+  messagingSenderId: "663968338842",
+  appId: "1:663968338842:web:69856b67638df1fca32023",
+});
+
+const fcmMessaging = firebase.messaging();
+
+// Background push — DATA-ONLY messages (no webpush.notification)
+// We are the ONLY thing that shows the notification. No browser auto-display.
+fcmMessaging.onBackgroundMessage((payload) => {
+  const d = payload.data || {};
+  // Only show if there's actual content
+  if (!d.title && !d.body) return;
+  self.registration.showNotification(d.title || "StuVo5", {
+    body:     d.body || "You have a new notification",
+    icon:     d.icon || "/logo192px.png",
+    badge:    "/logo192px.png",
+    tag:      "stuvo5-notice",   // deduplicates within same SW scope
+    renotify: true,
+    data:     { url: d.url || "/explore" },
+    vibrate:  [100, 50, 100],
+  });
+});
+
+// Notification click — open/focus the app
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const targetUrl = event.notification.data?.url || "/explore";
+  event.waitUntil(
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then((windowClients) => {
+      for (const client of windowClients) {
+        if (client.url.includes(self.location.origin) && "focus" in client) {
+          client.navigate(targetUrl);
+          return client.focus();
+        }
+      }
+      return clients.openWindow(targetUrl);
+    })
+  );
+});
+
+// ═══════════════════════════════════════════════════════════════
+// EXISTING SERVICE WORKER — caching & offline support
+// ═══════════════════════════════════════════════════════════════
+
 const SHELL_CACHE = "stuvo5-shell-v5";
 const MEDIA_CACHE = "stuvo5-media-v3";
 const MEDIA_CACHE_LIMIT = 300;
