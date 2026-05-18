@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
 import "boxicons/css/boxicons.min.css";
 import "../styles/explore.css";
+import "../styles/notifications.css";
 import { signOutUser } from "../firebase/auth";
 import { removeFcmToken } from "../firebase/db";
+import { subscribeToNotifications } from "../firebase/db";
 import { getDeviceKey } from "../firebase/messaging";
 import { useAuth } from "../context/AuthContext";
 import SearchExplore from "../pages/explore/Search";
@@ -43,6 +45,12 @@ export default function Layout() {
   const [logoutToast, setLogoutToast] = useState(false);
   const menuButtonRef = useRef(null);
   const [menuPosition, setMenuPosition] = useState({ top: 0, right: 0 });
+  const [panelNotifs, setPanelNotifs] = useState([]);
+  const [allNotifs, setAllNotifs] = useState([]);
+  const [notifsLoaded, setNotifsLoaded] = useState(false);
+  const [lastSeenAt, setLastSeenAt] = useState(
+    () => Number(localStorage.getItem("stuvo5_notif_last_seen") || 0)
+  );
 
   // ── Suppress Android autofill bar on all text inputs globally ──
   useEffect(() => {
@@ -57,6 +65,16 @@ export default function Layout() {
     };
     document.addEventListener("focusin", suppress, true);
     return () => document.removeEventListener("focusin", suppress, true);
+  }, []);
+
+  // ── Subscribe to latest notifications for the dropdown ──
+  useEffect(() => {
+    const unsub = subscribeToNotifications(7, (data) => {
+      setAllNotifs(data);
+      setPanelNotifs(data.slice(0, 5));
+      setNotifsLoaded(true);
+    });
+    return unsub;
   }, []);
 
   // Install prompt — show banner after delay + use globally captured prompt
@@ -139,7 +157,15 @@ export default function Layout() {
   const togglePanel = (name, e) => {
     e.stopPropagation();
     setSearchOpen(false);
-    setOpenPanel((p) => (p === name ? null : name));
+    setOpenPanel((p) => {
+      const opening = p !== name;
+      if (name === "notif" && opening) {
+        const now = Date.now();
+        localStorage.setItem("stuvo5_notif_last_seen", String(now));
+        setLastSeenAt(now);
+      }
+      return opening ? name : null;
+    });
   };
 
   const handleNavClick = (item) => {
@@ -223,6 +249,14 @@ export default function Layout() {
           >
             <i className="bx bx-bell hdr-icon hdr-icon--default" />
             <i className="bx bx-x hdr-icon hdr-icon--close" />
+            {(() => {
+              const count = allNotifs.filter((n) => {
+                const ts = n.createdAt?.toMillis?.() ?? (n.createdAt?.seconds * 1000) ?? 0;
+                return ts > lastSeenAt;
+              }).length;
+              if (count === 0 || isNotifOpen) return null;
+              return <span className="notif-badge">{count > 9 ? "9+" : count}</span>;
+            })()}
           </span>
 
           {/* Menu */}
@@ -238,17 +272,95 @@ export default function Layout() {
 
         {/* Notification panel */}
         <div className={`notification-panel${isNotifOpen ? " active" : ""}`} onClick={(e) => e.stopPropagation()}>
-          {[
-            { icon: "bx-bus", title: "Bus #101", body: "Arriving in 5 minutes" },
-            { icon: "bx-calendar", title: "New Event", body: "Tech Fest starts tomorrow" },
-            { icon: "bx-book", title: "Attendance Updated", body: "Your attendance has been updated" },
-          ].map((n, i) => (
-            <div className="notification-item" key={i}>
-              <i className={`bx ${n.icon}`} />
-              <div className="notif-text"><strong>{n.title}</strong><p>{n.body}</p></div>
-            </div>
-          ))}
-          <div className="notification-footer">View all notifications</div>
+          <div className="notif-panel-header">Notifications</div>
+          <div className="notif-panel-list">
+            {!notifsLoaded ? (
+              <div className="notif-panel-empty">
+                <i className="bx bx-loader-alt bx-spin" />
+                <span>Loading…</span>
+              </div>
+            ) : panelNotifs.length === 0 ? (
+              <div className="notif-panel-empty">
+                <i className="bx bx-bell-off" />
+                <span>No notifications yet</span>
+              </div>
+            ) : (
+              (() => {
+                // ── Shared destination map ───────────────────────────
+                const NOTIF_DEST = {
+                  notice:     { path: "/explore", scrollTo: "notices" },
+                  event:      { path: "/explore", scrollTo: "events" },
+                  bus:        { path: "/bus",     scrollTo: null },
+                  attendance: { path: "/explore", scrollTo: null },
+                  placement:  { path: "/explore", scrollTo: "placements" },
+                  system:     { path: "/explore", scrollTo: null },
+                };
+                const iconMap = {
+                  notice: "bx-bell", event: "bx-calendar-event", bus: "bx-bus",
+                  attendance: "bx-calendar-check", placement: "bx-briefcase-alt-2", system: "bx-info-circle",
+                };
+
+                // ── Group by date bucket ──────────────────────────────
+                const now = new Date();
+                const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                const startOfYesterday = new Date(startOfToday - 86400000);
+                const startOfWeek = new Date(startOfToday - 6 * 86400000);
+
+                const buckets = {};
+                panelNotifs.forEach((n) => {
+                  const d = n.createdAt?.toDate?.() || new Date(n.createdAt);
+                  const label = d >= startOfToday ? "Today"
+                    : d >= startOfYesterday ? "Yesterday"
+                    : d >= startOfWeek ? "This Week"
+                    : "Earlier";
+                  if (!buckets[label]) buckets[label] = [];
+                  buckets[label].push(n);
+                });
+                const ORDER = ["Today", "Yesterday", "This Week", "Earlier"];
+                const groups = ORDER.filter((l) => buckets[l]);
+
+                return groups.map((label) => (
+                  <div key={label}>
+                    <div className="notif-panel-group-label">{label}</div>
+                    {buckets[label].map((n) => {
+                      const d = n.createdAt?.toDate?.() || new Date(n.createdAt);
+                      const diff = Date.now() - d.getTime();
+                      const mins = Math.floor(diff / 60000);
+                      const hrs  = Math.floor(diff / 3600000);
+                      const days = Math.floor(diff / 86400000);
+                      const ago  = mins < 1 ? "now" : mins < 60 ? `${mins}m` : hrs < 24 ? `${hrs}h` : `${days}d`;
+                      const dest = NOTIF_DEST[n.type] || NOTIF_DEST.notice;
+                      return (
+                        <div
+                          className="notif-panel-item"
+                          key={n.id}
+                          onClick={() => {
+                            setOpenPanel(null);
+                            navigate(dest.path, dest.scrollTo ? { state: { scrollTo: dest.scrollTo } } : undefined);
+                          }}
+                        >
+                          <div className="notif-panel-icon">
+                            <i className={`bx ${iconMap[n.type] || "bx-bell"}`} />
+                          </div>
+                          <div className="notif-panel-text">
+                            <strong>{n.title}</strong>
+                            <p>{n.body}</p>
+                          </div>
+                          <span className="notif-panel-time">{ago}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ));
+              })()
+            )}
+          </div>
+          <div
+            className="notif-panel-footer"
+            onClick={() => { setOpenPanel(null); navigate("/notifications"); }}
+          >
+            View all notifications
+          </div>
         </div>
 
         {/* Menu panel */}

@@ -2,7 +2,8 @@ import {
   doc, setDoc, getDoc, updateDoc, onSnapshot,
   runTransaction, arrayUnion, arrayRemove,
   collection, addDoc, serverTimestamp, query,
-  orderBy, limit, where, getDocs, deleteField, deleteDoc
+  orderBy, limit, where, getDocs, deleteField, deleteDoc,
+  Timestamp
 } from "firebase/firestore";
 import { db } from "./config";
 
@@ -20,9 +21,14 @@ export const subscribeToEvents = (callback) =>
   );
 
 export const subscribeToNotices = (callback) =>
-  onSnapshot(noticesRef(), (snap) =>
-    callback(snap.exists() ? (snap.data().items ?? []) : [])
-  );
+  onSnapshot(noticesRef(), (snap) => {
+    const items = snap.exists() ? (snap.data().items ?? []) : [];
+    // Sort newest first by createdAt (ISO string)
+    const sorted = [...items].sort((a, b) =>
+      new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+    );
+    callback(sorted);
+  });
 
 // ─── Get lastChanged timestamp only (cheap single-field read) ───
 export const getLastChanged = async (type) => {
@@ -580,4 +586,55 @@ export const removeFcmToken = async (uid, deviceKey) => {
   return updateDoc(doc(db, "users", uid), {
     [`fcmTokens.${deviceKey}`]: deleteField(),
   });
+};
+
+// ═══════════════════════════════════════════════════════════
+// NOTIFICATIONS — stored in top-level "notifications" collection
+// Each doc: { title, body, type, icon, createdAt }
+// ═══════════════════════════════════════════════════════════
+
+const notificationsCol = () => collection(db, "notifications");
+
+/**
+ * Real-time listener for recent notifications.
+ * @param {number} maxDays - How many days back to fetch (default 30)
+ * @param {function} callback - Called with array of notification objects
+ * @returns {function} Unsubscribe function
+ */
+export const subscribeToNotifications = (maxDays = 30, callback) => {
+  const cutoff = Timestamp.fromDate(
+    new Date(Date.now() - maxDays * 24 * 60 * 60 * 1000)
+  );
+  const q = query(
+    notificationsCol(),
+    where("createdAt", ">=", cutoff),
+    orderBy("createdAt", "desc"),
+    limit(100)
+  );
+  return onSnapshot(
+    q,
+    (snap) => {
+      const items = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      callback(items);
+    },
+    (err) => {
+      console.warn("Notifications listener error:", err.message);
+      callback([]); // return empty so UI stops loading
+    }
+  );
+};
+
+/**
+ * Fetch latest N notifications (one-shot, for dropdown).
+ * @param {number} count - Max items to fetch
+ * @returns {Promise<Array>}
+ */
+export const getLatestNotifications = async (count = 5) => {
+  const q = query(
+    notificationsCol(),
+    orderBy("createdAt", "desc"),
+    limit(count)
+  );
+  const snap = await getDocs(q);
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 };

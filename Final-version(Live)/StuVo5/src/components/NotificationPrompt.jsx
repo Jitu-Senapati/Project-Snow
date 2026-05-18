@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { requestAndSaveToken, ensureTokenSaved, listenForForegroundMessages } from "../firebase/messaging";
-import "../styles/notification.css";
+import "../styles/notifications.css";
 
 const DISMISSED_KEY = "stuvo5_notif_dismissed";
 

@@ -23,7 +23,6 @@ fcmMessaging.onBackgroundMessage((payload) => {
   if (!d.title && !d.body) return;
   self.registration.showNotification(d.title || "StuVo5", {
     body:     d.body || "You have a new notification",
-    icon:     d.icon || "/logo192px.png",
     badge:    "/logo192px.png",
     tag:      "stuvo5-notice",   // deduplicates within same SW scope
     renotify: true,

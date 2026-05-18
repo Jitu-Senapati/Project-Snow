@@ -46,12 +46,32 @@ exports.onNoticeUpdate = onDocumentUpdated("content/notices", async (event) => {
 
   console.log(`Sending to ${tokens.length} unique token(s)…`);
 
+  // ── Persist one Firestore doc per notice (for in-app history) ──
+  try {
+    const writeBatch = db.batch();
+    added.forEach((notice) => {
+      const ref = db.collection("notifications").doc();
+      writeBatch.set(ref, {
+        title:     `📢 ${notice.title || "New Notice"}`,
+        body:      (notice.body || notice.description || "A new notice has been posted.").substring(0, 200),
+        type:      "notice",
+        sourceId:  notice.id || null,
+        createdAt: FieldValue.serverTimestamp(),
+      });
+    });
+    await writeBatch.commit();
+    console.log(`${added.length} notification doc(s) saved to Firestore.`);
+  } catch (err) {
+    console.error("Failed to save notifications:", err);
+  }
+
+  // ── Build a single grouped push (one push per trigger, not per notice) ──
   const latest = added[added.length - 1];
   const title  = added.length === 1
     ? `📢 ${latest.title || "New Notice"}`
     : `📢 ${added.length} New Notices`;
   const body   = added.length === 1
-    ? (latest.body || latest.description || "A new notice has been posted on StuVo5").substring(0, 120)
+    ? (latest.body || latest.description || "A new notice has been posted.").substring(0, 120)
     : `${latest.title || "Notice"} and ${added.length - 1} more`;
 
   const messaging = getMessaging();

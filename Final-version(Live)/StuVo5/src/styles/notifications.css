@@ -1,0 +1,431 @@
+/* ═══════════════════════════════════════════════════════════
+   NOTIFICATIONS — Full Page  (/notifications)
+═══════════════════════════════════════════════════════════ */
+
+.notif-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+/* ── Page header ──────────────────────────────────────── */
+.notif-page-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px 12px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.notif-back-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #161616;
+  border: 1px solid #2a2a2a;
+  color: #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 20px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.notif-back-btn:hover {
+  border-color: #a78bfa;
+  color: #a78bfa;
+  background: rgba(167, 139, 250, 0.06);
+}
+
+.notif-page-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+/* ── Page body ────────────────────────────────────────── */
+.notif-page-body {
+  flex: 1;
+  padding: 4px 0 30px;
+}
+
+/* ── Date group ───────────────────────────────────────── */
+.notif-group {
+  margin-bottom: 6px;
+}
+
+.notif-group-label {
+  padding: 10px 20px 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+
+/* ── Notification row (used on full page) ─────────────── */
+.notif-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 20px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.notif-row:hover {
+  background: #111;
+}
+.notif-row:active {
+  background: #161616;
+}
+
+/* Icon circle */
+.notif-row-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 19px;
+  background: rgba(167, 139, 250, 0.1);
+  color: #a78bfa;
+  border: 1px solid rgba(167, 139, 250, 0.15);
+}
+
+/* Type-based icon colors */
+.notif-row-icon.type-notice {
+  background: rgba(167, 139, 250, 0.1);
+  color: #a78bfa;
+  border-color: rgba(167, 139, 250, 0.15);
+}
+.notif-row-icon.type-event {
+  background: rgba(250, 204, 21, 0.08);
+  color: #facc15;
+  border-color: rgba(250, 204, 21, 0.15);
+}
+.notif-row-icon.type-bus {
+  background: rgba(56, 189, 248, 0.08);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.15);
+}
+.notif-row-icon.type-attendance {
+  background: rgba(74, 222, 128, 0.08);
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.15);
+}
+.notif-row-icon.type-placement {
+  background: rgba(251, 146, 60, 0.08);
+  color: #fb923c;
+  border-color: rgba(251, 146, 60, 0.15);
+}
+.notif-row-icon.type-chat {
+  background: rgba(129, 140, 248, 0.08);
+  color: #818cf8;
+  border-color: rgba(129, 140, 248, 0.15);
+}
+.notif-row-icon.type-system {
+  background: rgba(148, 163, 184, 0.08);
+  color: #94a3b8;
+  border-color: rgba(148, 163, 184, 0.15);
+}
+
+/* Text content */
+.notif-row-content {
+  flex: 1;
+  min-width: 0;
+}
+.notif-row-content strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #f1f5f9;
+  margin-bottom: 3px;
+  line-height: 1.3;
+}
+.notif-row-content p {
+  font-size: 12.5px;
+  color: #777;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Timestamp */
+.notif-row-time {
+  font-size: 11px;
+  color: #555;
+  flex-shrink: 0;
+  margin-top: 2px;
+  white-space: nowrap;
+}
+
+/* ── Empty state ──────────────────────────────────────── */
+.notif-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+  gap: 8px;
+}
+.notif-empty i {
+  font-size: 56px;
+  color: #2a2a2a;
+  margin-bottom: 8px;
+}
+.notif-empty p {
+  font-size: 16px;
+  font-weight: 600;
+  color: #888;
+}
+.notif-empty span {
+  font-size: 13px;
+  color: #555;
+}
+
+/* ── Skeleton loading ─────────────────────────────────── */
+.notif-loading {
+  padding: 10px 0;
+}
+
+.notif-skeleton {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+}
+
+.notif-skel-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #1a1a1a;
+  flex-shrink: 0;
+  animation: notifShimmer 1.2s ease-in-out infinite alternate;
+}
+
+.notif-skel-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.notif-skel-line {
+  height: 12px;
+  border-radius: 6px;
+  background: #1a1a1a;
+  animation: notifShimmer 1.2s ease-in-out infinite alternate;
+}
+.notif-skel-line.w60 { width: 60%; }
+.notif-skel-line.w90 { width: 90%; }
+
+@keyframes notifShimmer {
+  from { opacity: 0.4; }
+  to   { opacity: 1; }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   HEADER DROPDOWN — Improved notification panel
+═══════════════════════════════════════════════════════════ */
+
+/* Override panel to have scrollable body + fixed footer */
+.notification-panel {
+  display: flex;
+  flex-direction: column;
+  max-height: 380px;
+}
+
+.notif-panel-header {
+  padding: 14px 16px 10px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  border-bottom: 1px solid #1e1e1e;
+  flex-shrink: 0;
+  letter-spacing: 0.3px;
+}
+
+.notif-panel-list {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.notif-panel-list::-webkit-scrollbar { width: 3px; }
+.notif-panel-list::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+.notif-panel-list::-webkit-scrollbar-track { background: transparent; }
+
+/* Mini notification item inside dropdown */
+.notif-panel-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #1a1a1a;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.notif-panel-item:last-child {
+  border-bottom: none;
+}
+.notif-panel-item:hover {
+  background: #1e1e1e;
+}
+
+.notif-panel-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 16px;
+  background: rgba(167, 139, 250, 0.1);
+  color: #a78bfa;
+}
+
+.notif-panel-text {
+  flex: 1;
+  min-width: 0;
+}
+.notif-panel-text strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.notif-panel-text p {
+  font-size: 11.5px;
+  color: #777;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.notif-panel-time {
+  font-size: 10px;
+  color: #555;
+  flex-shrink: 0;
+  margin-top: 2px;
+  white-space: nowrap;
+}
+
+/* Empty state in dropdown */
+.notif-panel-empty {
+  padding: 32px 16px;
+  text-align: center;
+  color: #555;
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.notif-panel-empty i {
+  font-size: 28px;
+  color: #333;
+}
+
+/* View all footer — always sticky at bottom */
+.notif-panel-footer {
+  padding: 12px 16px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #a78bfa;
+  cursor: pointer;
+  border-top: 1px solid #1e1e1e;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.notif-panel-footer:hover {
+  background: #1e1e1e;
+}
+
+/* Notification badge on bell icon */
+.hdr-icon-wrap {
+  position: relative;
+}
+.notif-badge {
+  position: absolute;
+  top: -5px;
+  right: -6px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 99px;
+  background: #ef4444;
+  border: 2px solid #000;
+  pointer-events: none;
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  letter-spacing: -0.3px;
+}
+
+
+/* Group label inside the popup dropdown */
+.notif-panel-group-label {
+  padding: 8px 16px 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: #111;
+}
+
+/* Make full-page rows feel tappable */
+.notif-row {
+  cursor: pointer;
+}
+/* ── Responsive ───────────────────────────────────────── */
+@media (max-width: 480px) {
+  .notif-page-header {
+    padding: 12px 16px 10px;
+  }
+  .notif-page-title {
+    font-size: 18px;
+  }
+  .notif-row {
+    padding: 12px 16px;
+    gap: 12px;
+  }
+  .notif-row-icon {
+    width: 38px;
+    height: 38px;
+    font-size: 17px;
+  }
+  .notif-row-content strong {
+    font-size: 13px;
+  }
+  .notif-row-content p {
+    font-size: 12px;
+  }
+  .notif-group-label {
+    padding: 10px 16px 6px;
+  }
+}

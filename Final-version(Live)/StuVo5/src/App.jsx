@@ -33,6 +33,7 @@ const Attendance     = lazy(() => import("./pages/explore/Attendance"));
 const Faculty        = lazy(() => import("./pages/explore/Faculty"));
 const AdminFaculty   = lazy(() => import("./pages/explore/AdminFaculty"));
 const AdminAttendance = lazy(() => import("./pages/explore/AdminAttendance"));
+const Notifications  = lazy(() => import("./pages/explore/Notifications"));
 
 // Error boundary for lazy-loaded pages that fail offline
 class LazyErrorBoundary extends Component {
@@ -89,6 +90,7 @@ function App() {
           <Route path="/lost-found"  element={<LostFound />} />
           <Route path="/attendance"  element={<Attendance />} />
           <Route path="/faculty"     element={<Faculty />} />
+          <Route path="/notifications" element={<Notifications />} />
         </Route>
 
         {/* Regular users only */}

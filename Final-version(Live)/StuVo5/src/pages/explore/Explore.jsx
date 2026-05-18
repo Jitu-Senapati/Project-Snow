@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useLocation } from "react-router-dom";
 import "boxicons/css/boxicons.min.css";
 import "../../styles/explore.css";
 import { subscribeToEvents, subscribeToNotices, toggleBookmark, getLastChanged } from "../../firebase/db";
@@ -174,6 +175,23 @@ function useCarousel(total) {
 function ExplorerContent({ events, notices, userBookmarks, uid }) {
   const [loadedImgs, setLoadedImgs] = useState({});
   const [pendingBookmark, setPendingBookmark] = useState(null);
+  const noticesSectionRef = useRef(null);
+  const location = useLocation();
+
+  // Auto-scroll to section when navigated with scrollTo state
+  useEffect(() => {
+    const target = location.state?.scrollTo;
+    if (!target) return;
+    // Small delay to allow render to settle
+    const timer = setTimeout(() => {
+      if (target === "notices" && noticesSectionRef.current) {
+        noticesSectionRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 150);
+    // Clear the state so back-navigation doesn't re-trigger scroll
+    window.history.replaceState({}, "");
+    return () => clearTimeout(timer);
+  }, [location.state?.scrollTo]);
 
   const total = events.length;
   const displayEvents = events;
@@ -304,7 +322,7 @@ function ExplorerContent({ events, notices, userBookmarks, uid }) {
       </div>
 
       {/* NOTICES */}
-      <div className="notices-section">
+      <div className="notices-section" ref={noticesSectionRef}>
         <div className="section-header notices-header">
           <div className="header-line" />
           <h2 className="section-title">Notices</h2>
