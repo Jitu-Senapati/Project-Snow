@@ -434,7 +434,12 @@ export default function Explorer() {
         });
       }
 
-      if (noticesStale || cachedNtcs.length === 0) {
+      // Always subscribe to notices regardless of stale state.
+      // Notices can be deleted by admin at any time; the cache alone cannot be
+      // trusted. Cached data is shown immediately above for a fast first render;
+      // this subscription silently corrects any deletions or re-orders in the
+      // background without showing a loading state.
+      {
         let first = true;
         unsubNotices = subscribeToNotices((data) => {
           setNotices(data);

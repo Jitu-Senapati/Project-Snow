@@ -109,10 +109,26 @@ export async function setCachedEvents(events) {
   return cacheSetMany("events", events.map((e) => ({ id: e.id, ...e })));
 }
 export async function getCachedNotices() {
-  return cacheGetAll("notices");
+  const items = await cacheGetAll("notices");
+  // Always return sorted newest-first so cached order matches live order
+  return items.sort((a, b) => {
+    if (b.serial != null && a.serial != null) return b.serial - a.serial;
+    if (b.serial != null) return -1;
+    if (a.serial != null) return 1;
+    return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+  });
 }
 export async function setCachedNotices(notices) {
-  return cacheSetMany("notices", notices.map((n) => ({ id: n.id, ...n })));
+  // Clear the store first so deleted notices don't linger in IndexedDB
+  const db = await openDB();
+  return new Promise((resolve) => {
+    const tx = db.transaction("notices", "readwrite");
+    const os = tx.objectStore("notices");
+    os.clear(); // wipe old entries (removes deleted notices)
+    notices.forEach((n) => os.put({ id: n.id, ...n, _cachedAt: Date.now() }));
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => resolve();
+  });
 }
 export async function getCachedProfile(uid) {
   return cacheGet("profiles", uid);

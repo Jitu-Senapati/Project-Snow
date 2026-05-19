@@ -24,9 +24,15 @@ export const subscribeToNotices = (callback) =>
   onSnapshot(noticesRef(), (snap) => {
     const items = snap.exists() ? (snap.data().items ?? []) : [];
     // Sort newest first by createdAt (ISO string)
-    const sorted = [...items].sort((a, b) =>
-      new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
-    );
+    // Sort newest first:
+    // 1. Use serial (auto-increment) as primary — most reliable
+    // 2. Fall back to createdAt ISO string
+    const sorted = [...items].sort((a, b) => {
+      if (b.serial != null && a.serial != null) return b.serial - a.serial;
+      if (b.serial != null) return -1;
+      if (a.serial != null) return 1;
+      return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+    });
     callback(sorted);
   });
 
