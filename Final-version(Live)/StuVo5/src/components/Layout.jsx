@@ -339,9 +339,15 @@ export default function Layout() {
                             navigate(dest.path, dest.scrollTo ? { state: { scrollTo: dest.scrollTo } } : undefined);
                           }}
                         >
-                          <div className="notif-panel-icon">
-                            <i className={`bx ${iconMap[n.type] || "bx-bell"}`} />
-                          </div>
+                          {n.type === "event" && n.imageUrl ? (
+                            <div className="notif-panel-thumb">
+                              <img src={n.imageUrl} alt="" />
+                            </div>
+                          ) : (
+                            <div className="notif-panel-icon">
+                              <i className={`bx ${iconMap[n.type] || "bx-bell"}`} />
+                            </div>
+                          )}
                           <div className="notif-panel-text">
                             <strong>{n.title}</strong>
                             <p>{n.body}</p>

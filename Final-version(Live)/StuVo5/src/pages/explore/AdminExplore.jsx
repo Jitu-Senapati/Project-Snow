@@ -211,23 +211,45 @@ function ImageUploadField({ value, onChange }) {
   const [uploading, setUploading] = useState(false);
 
   const compressImage = (file) => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const img = new Image();
       const url = URL.createObjectURL(file);
+
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        reject(new Error("Image failed to load — the file may be corrupted or unsupported."));
+      };
+
       img.onload = () => {
-        const MAX = 1200; // max width/height
+        const MAX = 1200;
         let { width, height } = img;
         if (width > MAX || height > MAX) {
           if (width > height) { height = Math.round(height * MAX / width); width = MAX; }
           else { width = Math.round(width * MAX / height); height = MAX; }
         }
         const canvas = document.createElement("canvas");
-        canvas.width = width;
+        canvas.width  = width;
         canvas.height = height;
-        canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+          URL.revokeObjectURL(url);
+          reject(new Error("Canvas unavailable — try a different browser or device."));
+          return;
+        }
+
+        ctx.drawImage(img, 0, 0, width, height);
         URL.revokeObjectURL(url);
-        canvas.toBlob((blob) => resolve(blob), "image/jpeg", 0.8);
+
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            reject(new Error("Image compression failed — could not encode the image."));
+            return;
+          }
+          resolve(blob);
+        }, "image/jpeg", 0.8);
       };
+
       img.src = url;
     });
   };
@@ -241,6 +263,9 @@ function ImageUploadField({ value, onChange }) {
       const storageRef = ref(storage, `eventImages/${Date.now()}_${file.name}`);
       await uploadBytes(storageRef, compressed);
       const url = await getDownloadURL(storageRef);
+      // Warm _blobUrlCache now so CachedImage renders the thumbnail
+      // synchronously the moment this event is added to the draft list
+      await getBlobUrl(url).catch(() => null);
       onChange(url);
     } catch (err) {
       alert("Image upload failed: " + err.message);

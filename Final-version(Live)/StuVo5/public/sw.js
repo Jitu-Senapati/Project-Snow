@@ -17,19 +17,24 @@ const fcmMessaging = firebase.messaging();
 
 // Background push — DATA-ONLY messages (no webpush.notification)
 // We are the ONLY thing that shows the notification. No browser auto-display.
-fcmMessaging.onBackgroundMessage((payload) => {
+fcmMessaging.onBackgroundMessage(async (payload) => {
   const d = payload.data || {};
-  // Only show if there's actual content
   if (!d.title && !d.body) return;
-  self.registration.showNotification(d.title || "StuVo5", {
+
+  const options = {
     body:     d.body || "You have a new notification",
-    icon:     "/transparent.png",
-    badge:    "/logo192px.png",
-    tag:      "stuvo5-notice",   // deduplicates within same SW scope
+    icon:     "/transparent.png",  // transparent = no large icon on right
+    badge:    "/logo192px.png",    // StuVo5 logo on left + suppresses Chrome's auto S circle
+    tag:      `stuvo5-${d.type || "notice"}`,
     renotify: true,
     data:     { url: d.url || "/explore" },
     vibrate:  [100, 50, 100],
-  });
+  };
+
+  // Event image: shows as a large banner below the notification text on Android
+  if (d.image) options.image = d.image;
+
+  return self.registration.showNotification(d.title || "StuVo5", options);
 });
 
 // Notification click — open/focus the app
@@ -53,7 +58,7 @@ self.addEventListener("notificationclick", (event) => {
 // EXISTING SERVICE WORKER — caching & offline support
 // ═══════════════════════════════════════════════════════════════
 
-const SHELL_CACHE = "stuvo5-shell-v5";
+const SHELL_CACHE = "stuvo5-shell-v7";
 const MEDIA_CACHE = "stuvo5-media-v3";
 const MEDIA_CACHE_LIMIT = 300;
 

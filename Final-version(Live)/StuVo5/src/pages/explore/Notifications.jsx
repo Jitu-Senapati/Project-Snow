@@ -132,9 +132,15 @@ export default function Notifications() {
                       navigate(dest.path, dest.scrollTo ? { state: { scrollTo: dest.scrollTo } } : undefined);
                     }}
                   >
-                    <div className={`notif-row-icon type-${n.type || "notice"}`}>
-                      <i className={getIcon(n.type)} />
-                    </div>
+                    {n.type === "event" && n.imageUrl ? (
+                      <div className="notif-row-thumb">
+                        <img src={n.imageUrl} alt="" />
+                      </div>
+                    ) : (
+                      <div className={`notif-row-icon type-${n.type || "notice"}`}>
+                        <i className={getIcon(n.type)} />
+                      </div>
+                    )}
                     <div className="notif-row-content">
                       <strong>{n.title}</strong>
                       <p>{n.body}</p>

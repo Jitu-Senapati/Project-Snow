@@ -412,7 +412,7 @@ export default function Explorer() {
       const bothUpdated = { evt: !eventsStale, ntc: !noticesStale };
       const markIfDone = () => { if (bothUpdated.evt && bothUpdated.ntc) markUpdated(); };
 
-      // If already cached and up to date — show immediately, no subscription needed
+      // If already cached and up to date — mark done for toast, but still subscribe below
       if (!eventsStale && cachedEvts.length > 0) {
         bothUpdated.evt = true;
         markIfDone();
@@ -422,13 +422,20 @@ export default function Explorer() {
         markIfDone();
       }
 
-      // 3. Subscribe only for stale/missing data
-      if (eventsStale || cachedEvts.length === 0) {
+      // Always subscribe to events regardless of stale state.
+      // Events can be deleted by admin at any time; the cache alone cannot be
+      // trusted. Cached data is shown immediately above for a fast first render;
+      // this subscription silently corrects any deletions in the background.
+      {
         let first = true;
-        unsubEvents = subscribeToEvents((data) => {
+        unsubEvents = subscribeToEvents(async (data) => {
+          // Pre-cache all event images BEFORE calling setEvents so CachedImage
+          // finds blob URLs synchronously on first render (no placeholder flash).
+          await Promise.allSettled(
+            data.filter((ev) => ev.img).map((ev) => getBlobUrl(ev.img).catch(() => null))
+          );
           setEvents(data);
           setCachedEvents(data);
-          data.forEach((ev) => { if (ev.img) precacheMedia(ev.img); });
           if (remoteEvtTs) setCachedLastChanged("events", remoteEvtTs);
           if (first) { bothUpdated.evt = true; markIfDone(); first = false; }
         });

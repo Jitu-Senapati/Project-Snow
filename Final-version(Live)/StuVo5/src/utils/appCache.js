@@ -103,10 +103,26 @@ export async function setCachedMessages(chatId, messages) {
   return cacheSetMany("messages", messages.map((m) => ({ id: m.id, chatId, ...m })));
 }
 export async function getCachedEvents() {
-  return cacheGetAll("events");
+  const items = await cacheGetAll("events");
+  // Always sort newest-first so cached order matches live order
+  return items.sort((a, b) => {
+    if (b.serial != null && a.serial != null) return b.serial - a.serial;
+    if (b.serial != null) return -1;
+    if (a.serial != null) return 1;
+    return 0;
+  });
 }
 export async function setCachedEvents(events) {
-  return cacheSetMany("events", events.map((e) => ({ id: e.id, ...e })));
+  // Clear the store first so deleted events don't linger in IndexedDB
+  const db = await openDB();
+  return new Promise((resolve) => {
+    const tx = db.transaction("events", "readwrite");
+    const os = tx.objectStore("events");
+    os.clear(); // wipe old entries (removes deleted events)
+    events.forEach((e) => os.put({ id: e.id, ...e, _cachedAt: Date.now() }));
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => resolve();
+  });
 }
 export async function getCachedNotices() {
   const items = await cacheGetAll("notices");
