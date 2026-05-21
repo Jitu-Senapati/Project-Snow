@@ -24,170 +24,35 @@ export function timeAgo(isoString) {
   return `${days} day${days > 1 ? "s" : ""} ago`;
 }
 
-const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-const DAYS_SHORT = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 const pad = (n) => String(n).padStart(2, "0");
 
-function buildISO(date, h, m, ap) {
-  if (!date) return "";
-  const d = new Date(date);
-  let hours = h % 12;
-  if (ap === "PM") hours += 12;
-  d.setHours(hours, m, 0, 0);
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-}
-
-function formatDisplay(iso) {
-  if (!iso) return "";
-  return new Date(iso).toLocaleString("en-US", {
+function formatDisplay(dateVal, timeVal) {
+  if (!dateVal) return "";
+  const [y, mo, d] = dateVal.split("-").map(Number);
+  const [h, mi] = (timeVal || "10:00").split(":").map(Number);
+  return new Date(y, mo - 1, d, h, mi).toLocaleString("en-US", {
     weekday: "short", day: "2-digit", month: "short",
     hour: "2-digit", minute: "2-digit",
   });
 }
 
-/* ═══════════════════════════════════════════════════════════
-   TIME SPINNER
-═══════════════════════════════════════════════════════════ */
-function TimeSpinner({ value, min, max, step, onChange }) {
-  const [editing, setEditing] = useState(false);
-  const [raw, setRaw] = useState("");
-  const inputRef = useRef(null);
+function combineDateTime(dateVal, timeVal) {
+  if (!dateVal) return "";
+  const [y, mo, d] = dateVal.split("-").map(Number);
+  const [h, mi] = (timeVal || "10:00").split(":").map(Number);
+  return new Date(y, mo - 1, d, h, mi, 0, 0).toISOString();
+}
 
-  const wrap = (v) => { if (v < min) return max - (min - v - 1); if (v > max) return min + (v - max - 1); return v; };
-  const inc = () => onChange(wrap(value + step));
-  const dec = () => onChange(wrap(value - step));
-  const handleWheel = (e) => { e.preventDefault(); if (e.deltaY < 0) inc(); else dec(); };
-  const startEdit = () => { setRaw(pad(value)); setEditing(true); setTimeout(() => inputRef.current?.select(), 0); };
-  const commitEdit = () => { const n = parseInt(raw, 10); if (!isNaN(n)) onChange(Math.min(max, Math.max(min, n))); setEditing(false); };
-  const handleKey = (e) => {
-    if (e.key === "Enter" || e.key === "Tab") { e.preventDefault(); commitEdit(); }
-    if (e.key === "Escape") setEditing(false);
-    if (e.key === "ArrowUp") { e.preventDefault(); inc(); }
-    if (e.key === "ArrowDown") { e.preventDefault(); dec(); }
+function parseDateRaw(raw) {
+  if (!raw) return { dateVal: "", timeVal: "10:00" };
+  const d = new Date(raw);
+  if (isNaN(d)) return { dateVal: "", timeVal: "10:00" };
+  return {
+    dateVal: `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`,
+    timeVal: `${pad(d.getHours())}:${pad(d.getMinutes())}`,
   };
-
-  return (
-    <div className="dtp-spinner" onWheel={handleWheel}>
-      <button className="dtp-spin-btn" onClick={inc} tabIndex={-1}><i className="bx bx-chevron-up" /></button>
-      {editing ? (
-        <input ref={inputRef} className="dtp-spin-input" value={raw} onChange={(e) => setRaw(e.target.value)} onBlur={commitEdit} onKeyDown={handleKey} maxLength={2} />
-      ) : (
-        <span className="dtp-spin-val" onClick={startEdit} title="Click to type">{pad(value)}</span>
-      )}
-      <button className="dtp-spin-btn" onClick={dec} tabIndex={-1}><i className="bx bx-chevron-down" /></button>
-    </div>
-  );
 }
 
-/* ═══════════════════════════════════════════════════════════
-   CALENDAR PANEL
-═══════════════════════════════════════════════════════════ */
-function CalendarPanel({ value, onConfirm, onClose }) {
-  const initDate = value ? new Date(value) : null;
-  const [viewYear, setViewYear] = useState(() => (initDate || new Date()).getFullYear());
-  const [viewMonth, setViewMonth] = useState(() => (initDate || new Date()).getMonth());
-  const [selected, setSelected] = useState(initDate);
-  const [hour, setHour] = useState(() => initDate ? initDate.getHours() % 12 || 12 : 10);
-  const [minute, setMinute] = useState(() => initDate ? initDate.getMinutes() : 0);
-  const [ampm, setAmpm] = useState(() => initDate ? (initDate.getHours() >= 12 ? "PM" : "AM") : "AM");
-  const [yearEdit, setYearEdit] = useState(false);
-  const [yearRaw, setYearRaw] = useState("");
-  const yearInputRef = useRef(null);
-
-  const openYearEdit = () => { setYearRaw(String(viewYear)); setYearEdit(true); setTimeout(() => yearInputRef.current?.select(), 0); };
-  const commitYear = () => { const y = parseInt(yearRaw, 10); if (!isNaN(y) && y > 1900 && y < 2200) setViewYear(y); setYearEdit(false); };
-  const yearKey = (e) => { if (e.key === "Enter" || e.key === "Tab") { e.preventDefault(); commitYear(); } if (e.key === "Escape") setYearEdit(false); };
-  const prevMonth = () => viewMonth === 0 ? (setViewMonth(11), setViewYear((y) => y - 1)) : setViewMonth((m) => m - 1);
-  const nextMonth = () => viewMonth === 11 ? (setViewMonth(0), setViewYear((y) => y + 1)) : setViewMonth((m) => m + 1);
-  const selectDay = (day) => setSelected(new Date(viewYear, viewMonth, day));
-  const toggleAmpm = () => setAmpm((ap) => ap === "AM" ? "PM" : "AM");
-  const handleConfirm = () => { if (!selected) return; onConfirm(buildISO(selected, hour, minute, ampm)); };
-
-  const firstDay = new Date(viewYear, viewMonth, 1).getDay();
-  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
-  const today = new Date();
-  const preview = selected ? formatDisplay(buildISO(selected, hour, minute, ampm)) : null;
-
-  return (
-    <div className="dtp-popup-card" onClick={(e) => e.stopPropagation()}>
-      <div className="dtp-popup-header">
-        <span className="dtp-popup-title"><i className="bx bx-calendar" /> Pick Date &amp; Time</span>
-        <button className="dtp-popup-close" onClick={onClose}><i className="bx bx-x" /></button>
-      </div>
-      <div className="dtp-cal">
-        <div className="dtp-nav-row">
-          <button className="dtp-nav" onClick={() => setViewYear((y) => y - 1)}><i className="bx bx-chevron-left" /></button>
-          {yearEdit ? (
-            <input ref={yearInputRef} className="dtp-year-input" value={yearRaw} onChange={(e) => setYearRaw(e.target.value)} onBlur={commitYear} onKeyDown={yearKey} maxLength={4} />
-          ) : (
-            <button className="dtp-year-btn" onClick={openYearEdit} title="Click to edit year">{viewYear}</button>
-          )}
-          <button className="dtp-nav" onClick={() => setViewYear((y) => y + 1)}><i className="bx bx-chevron-right" /></button>
-        </div>
-        <div className="dtp-nav-row dtp-month-row">
-          <button className="dtp-nav" onClick={prevMonth}><i className="bx bx-chevron-left" /></button>
-          <span className="dtp-month-label">{MONTHS[viewMonth]}</span>
-          <button className="dtp-nav" onClick={nextMonth}><i className="bx bx-chevron-right" /></button>
-        </div>
-        <div className="dtp-day-names">{DAYS_SHORT.map((d) => <span key={d}>{d}</span>)}</div>
-        <div className="dtp-grid">
-          {Array.from({ length: firstDay }).map((_, i) => <span key={`b${i}`} />)}
-          {Array.from({ length: daysInMonth }).map((_, i) => {
-            const day = i + 1;
-            const date = new Date(viewYear, viewMonth, day);
-            const isToday = date.toDateString() === today.toDateString();
-            const isSelected = selected && date.toDateString() === selected.toDateString();
-            return (
-              <button key={day} onClick={() => selectDay(day)} className={["dtp-day", isToday ? "dtp-today" : "", isSelected ? "dtp-selected" : ""].filter(Boolean).join(" ")}>{day}</button>
-            );
-          })}
-        </div>
-      </div>
-      <div className="dtp-divider" />
-      <div className="dtp-time-row">
-        <div className="dtp-time-label"><i className="bx bx-time-five" /><span>Time</span></div>
-        <div className="dtp-time-controls">
-          <TimeSpinner value={hour} min={1} max={12} step={1} onChange={setHour} />
-          <span className="dtp-colon">:</span>
-          <TimeSpinner value={minute} min={0} max={59} step={5} onChange={setMinute} />
-          <button className="dtp-ampm" onClick={toggleAmpm}>{ampm}</button>
-        </div>
-      </div>
-      <div className="dtp-popup-footer">
-        {preview && <span className="dtp-preview-text"><i className="bx bx-calendar-check" /> {preview}</span>}
-        <div className="dtp-footer-actions">
-          <button className="dtp-cancel-btn" onClick={onClose}>Cancel</button>
-          <button className="dtp-confirm-btn" onClick={handleConfirm} disabled={!selected}><i className="bx bx-check" /> Confirm</button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function DateTimePicker({ value, onChange, currentLabel }) {
-  const [open, setOpen] = useState(false);
-  const handleConfirm = (iso) => { onChange(iso); setOpen(false); };
-  return (
-    <>
-      <button className="dtp-trigger" onClick={() => setOpen(true)}>
-        <i className="bx bx-calendar dtp-trigger-icon" />
-        <span className={value ? "dtp-trigger-val" : "dtp-trigger-placeholder"}>{value ? formatDisplay(value) : "Select date & time…"}</span>
-        <i className="bx bx-calendar-edit dtp-trigger-caret" />
-      </button>
-      {!value && currentLabel && <span className="ef-current-val"><i className="bx bx-time" /> Current: {currentLabel}</span>}
-      {open && createPortal(
-        <div className="dtp-overlay" onClick={() => setOpen(false)}>
-          <CalendarPanel key={value || "empty"} value={value} onConfirm={handleConfirm} onClose={() => setOpen(false)} />
-        </div>,
-        document.body
-      )}
-    </>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════
-   CONFIRM DIALOG
-═══════════════════════════════════════════════════════════ */
 function ConfirmDialog({ message, onConfirm, onCancel }) {
   return (
     <div className="confirm-overlay">
@@ -296,7 +161,7 @@ function EditEventsPage({ events, onSave, onBack }) {
   const [updating, setUpdating] = useState(null);
   const [updateForm, setUpdateForm] = useState({});
   const [addingNew, setAddingNew] = useState(false);
-  const [newForm, setNewForm] = useState({ title: "", date: "", dateRaw: "", location: "", badge: "", img: "" });
+  const [newForm, setNewForm] = useState({ title: "", dateVal: "", timeVal: "10:00", location: "", badge: "", img: "" });
   const [confirmId, setConfirmId] = useState(null);
   const [toast, setToast] = useState(null);
   const [saving, setSaving] = useState(false);
@@ -308,25 +173,30 @@ function EditEventsPage({ events, onSave, onBack }) {
   const openUpdate = (ev) => {
     setAddingNew(false);
     setUpdating(ev.id);
-    setUpdateForm({ title: ev.title, date: ev.date, dateRaw: "", location: ev.location, badge: ev.badge || "", img: ev.img });
+    const { dateVal, timeVal } = parseDateRaw(ev.dateRaw || ev.date);
+    setUpdateForm({ title: ev.title, dateVal, timeVal, location: ev.location, badge: ev.badge || "", img: ev.img });
   };
   const saveUpdate = () => {
-    setDraft((p) => p.map((e) => e.id === updating ? { ...e, ...updateForm, badge: updateForm.badge || null } : e));
+    const { dateVal, timeVal, ...rest } = updateForm;
+    const date = formatDisplay(dateVal, timeVal);
+    const dateRaw = combineDateTime(dateVal, timeVal);
+    setDraft((p) => p.map((e) => e.id === updating ? { ...e, ...rest, date, dateRaw, badge: rest.badge || null } : e));
     setUpdating(null);
   };
 
   const handleAdd = () => {
-    if (!newForm.title.trim() || !newForm.dateRaw) { showToast("Title and Date are required."); return; }
+    if (!newForm.title.trim() || !newForm.dateVal) { showToast("Title and Date are required."); return; }
     setDraft((p) => [...p, {
       id: Date.now().toString(),
       img: newForm.img || "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=600&fit=crop",
       badge: newForm.badge || null,
       badgeType: newForm.badge ? "default" : null,
-      date: newForm.date,
+      date: formatDisplay(newForm.dateVal, newForm.timeVal),
+      dateRaw: combineDateTime(newForm.dateVal, newForm.timeVal),
       title: newForm.title,
       location: newForm.location.trim() || "NA",
     }]);
-    setNewForm({ title: "", date: "", dateRaw: "", location: "", badge: "", img: "" });
+    setNewForm({ title: "", dateVal: "", timeVal: "10:00", location: "", badge: "", img: "" });
     setAddingNew(false);
   };
 
@@ -371,7 +241,7 @@ function EditEventsPage({ events, onSave, onBack }) {
         </div>
 
         <div className="edit-page-footer">
-          <button className="add-new-btn" onClick={() => { setUpdating(null); setNewForm({ title: "", date: "", dateRaw: "", location: "", badge: "", img: "" }); setAddingNew(true); }}>
+          <button className="add-new-btn" onClick={() => { setUpdating(null); setNewForm({ title: "", dateVal: "", timeVal: "10:00", location: "", badge: "", img: "" }); setAddingNew(true); }}>
             <i className="bx bx-plus" /> Add New Event
           </button>
         </div>
@@ -389,9 +259,16 @@ function EditEventsPage({ events, onSave, onBack }) {
                 </div>
               ))}
               <div className="ef-field">
-                <label className="ef-label">Date &amp; Time</label>
-                <DateTimePicker key={`upd-${updating}`} value={updateForm.dateRaw || ""} currentLabel={updateForm.date && !updateForm.dateRaw ? updateForm.date : null}
-                  onChange={(raw) => setUpdateForm((v) => ({ ...v, dateRaw: raw, date: formatDisplay(raw) }))} />
+                <div className="ef-row">
+                  <div className="ef-half">
+                    <label className="ef-label">Date</label>
+                    <input type="date" className="ef-input" value={updateForm.dateVal || ""} onChange={(e) => setUpdateForm((v) => ({ ...v, dateVal: e.target.value }))} />
+                  </div>
+                  <div className="ef-half">
+                    <label className="ef-label">Time</label>
+                    <input type="time" className="ef-input" value={updateForm.timeVal || "10:00"} onChange={(e) => setUpdateForm((v) => ({ ...v, timeVal: e.target.value }))} />
+                  </div>
+                </div>
               </div>
               <div className="ef-field">
                 <label className="ef-label">Image</label>
@@ -413,8 +290,16 @@ function EditEventsPage({ events, onSave, onBack }) {
                 </div>
               ))}
               <div className="ef-field">
-                <label className="ef-label">Date &amp; Time *</label>
-                <DateTimePicker key="new-event" value={newForm.dateRaw || ""} onChange={(raw) => setNewForm((v) => ({ ...v, dateRaw: raw, date: formatDisplay(raw) }))} />
+                <div className="ef-row">
+                  <div className="ef-half">
+                    <label className="ef-label">Date *</label>
+                    <input type="date" className="ef-input" value={newForm.dateVal || ""} onChange={(e) => setNewForm((v) => ({ ...v, dateVal: e.target.value }))} />
+                  </div>
+                  <div className="ef-half">
+                    <label className="ef-label">Time</label>
+                    <input type="time" className="ef-input" value={newForm.timeVal || "10:00"} onChange={(e) => setNewForm((v) => ({ ...v, timeVal: e.target.value }))} />
+                  </div>
+                </div>
               </div>
               <div className="ef-field">
                 <label className="ef-label">Image</label>
@@ -649,6 +534,11 @@ export default function AdminExplorer() {
   const [loadedImgs, setLoadedImgs] = useState({});
   const [pendingBookmark, setPendingBookmark] = useState(null);
   const [page, setPage] = useState(null);
+  // Snapshots: frozen copies taken at the moment the edit page opens.
+  // Passing snapshots (not live state) to edit components means they never
+  // re-render from subscription updates — eliminating the CSS reflow issue.
+  const [eventsSnapshot, setEventsSnapshot] = useState([]);
+  const [noticesSnapshot, setNoticesSnapshot] = useState([]);
   const [offlineToast, setOfflineToast] = useState(false);
   const [offlineToastClosing, setOfflineToastClosing] = useState(false);
 
@@ -656,11 +546,13 @@ export default function AdminExplorer() {
     if (!online) {
       setOfflineToastClosing(false);
       setOfflineToast(true);
-      // Start exit animation at 2.7s, fully remove at 3s
       setTimeout(() => setOfflineToastClosing(true), 2700);
       setTimeout(() => { setOfflineToast(false); setOfflineToastClosing(false); }, 3000);
       return;
     }
+    // Snapshot current data — edit components receive this frozen copy
+    if (target === "editEvents")  setEventsSnapshot(events);
+    if (target === "editNotices") setNoticesSnapshot(notices);
     setPage(target);
   };
 
@@ -718,10 +610,10 @@ export default function AdminExplorer() {
   return (
     <>
       {page === "editEvents" && (
-        <EditEventsPage events={events} onSave={saveEvents} onBack={() => setPage(null)} />
+        <EditEventsPage events={eventsSnapshot} onSave={saveEvents} onBack={() => setPage(null)} />
       )}
       {page === "editNotices" && (
-        <EditNoticesPage notices={notices} onSave={saveNotices} onBack={() => setPage(null)} />
+        <EditNoticesPage notices={noticesSnapshot} onSave={saveNotices} onBack={() => setPage(null)} />
       )}
 
       {/* SPOTLIGHT */}

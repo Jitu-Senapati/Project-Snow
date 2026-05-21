@@ -6,7 +6,8 @@ import "../../styles/notifications.css";
 /* ── Icon mapping by notification type ─────────────────── */
 const ICON_MAP = {
   notice:     "bx bx-bell",
-  event:      "bx bx-calendar-event",
+  event:          "bx bx-calendar-event",
+  event_reminder: "bx bx-bookmark-alt",
   bus:        "bx bx-bus",
   attendance: "bx bx-calendar-check",
   placement:  "bx bx-briefcase-alt-2",
@@ -64,8 +65,9 @@ function groupNotifications(list) {
    Notifications Page
    ══════════════════════════════════════════════════════════ */
 const NOTIF_DEST = {
-  notice:     { path: "/explore", scrollTo: "notices" },
-  event:      { path: "/explore", scrollTo: "events" },
+  notice:         { path: "/explore", scrollTo: "notices" },
+  event:          { path: "/explore", scrollTo: "events" },
+  event_reminder: { path: "/explore", scrollTo: "events" },
   bus:        { path: "/bus",     scrollTo: null },
   attendance: { path: "/explore", scrollTo: null },
   placement:  { path: "/explore", scrollTo: "placements" },
@@ -132,7 +134,7 @@ export default function Notifications() {
                       navigate(dest.path, dest.scrollTo ? { state: { scrollTo: dest.scrollTo } } : undefined);
                     }}
                   >
-                    {n.type === "event" && n.imageUrl ? (
+                    {(n.type === "event" || n.type === "event_reminder") && n.imageUrl ? (
                       <div className="notif-row-thumb">
                         <img src={n.imageUrl} alt="" />
                       </div>

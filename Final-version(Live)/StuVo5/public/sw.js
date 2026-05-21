@@ -23,8 +23,8 @@ fcmMessaging.onBackgroundMessage(async (payload) => {
 
   const options = {
     body:     d.body || "You have a new notification",
-    icon:     "/transparent.png",  // transparent = no large icon on right
-    badge:    "/logo192px.png",    // StuVo5 logo on left + suppresses Chrome's auto S circle
+    icon:     "/transparent.png",
+    badge:    "/logo192px.png",
     tag:      `stuvo5-${d.type || "notice"}`,
     renotify: true,
     data:     { url: d.url || "/explore" },
@@ -58,7 +58,7 @@ self.addEventListener("notificationclick", (event) => {
 // EXISTING SERVICE WORKER — caching & offline support
 // ═══════════════════════════════════════════════════════════════
 
-const SHELL_CACHE = "stuvo5-shell-v7";
+const SHELL_CACHE = "stuvo5-shell-v9";
 const MEDIA_CACHE = "stuvo5-media-v3";
 const MEDIA_CACHE_LIMIT = 300;
 
