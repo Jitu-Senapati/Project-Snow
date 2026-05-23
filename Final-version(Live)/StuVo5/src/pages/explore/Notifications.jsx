@@ -8,6 +8,7 @@ const ICON_MAP = {
   notice:     "bx bx-bell",
   event:          "bx bx-calendar-event",
   event_reminder: "bx bx-bookmark-alt",
+  placement:      "bx bx-briefcase",
   bus:        "bx bx-bus",
   attendance: "bx bx-calendar-check",
   placement:  "bx bx-briefcase-alt-2",
@@ -68,9 +69,9 @@ const NOTIF_DEST = {
   notice:         { path: "/explore", scrollTo: "notices" },
   event:          { path: "/explore", scrollTo: "events" },
   event_reminder: { path: "/explore", scrollTo: "events" },
+  placement:      { path: "/placements" },
   bus:        { path: "/bus",     scrollTo: null },
   attendance: { path: "/explore", scrollTo: null },
-  placement:  { path: "/explore", scrollTo: "placements" },
   system:     { path: "/explore", scrollTo: null },
 };
 
@@ -134,9 +135,14 @@ export default function Notifications() {
                       navigate(dest.path, dest.scrollTo ? { state: { scrollTo: dest.scrollTo } } : undefined);
                     }}
                   >
-                    {(n.type === "event" || n.type === "event_reminder") && n.imageUrl ? (
+                    {(n.type === "event" || n.type === "event_reminder" || n.type === "placement") && n.imageUrl ? (
                       <div className="notif-row-thumb">
                         <img src={n.imageUrl} alt="" />
+                      </div>
+                    ) : n.type === "placement" ? (
+                      <div className="notif-row-company">
+                        <i className="bx bx-buildings" />
+                        <span>{n.title.replace(/^💼\s*/, "").slice(0, 3).toUpperCase()}</span>
                       </div>
                     ) : (
                       <div className={`notif-row-icon type-${n.type || "notice"}`}>

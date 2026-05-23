@@ -390,3 +390,120 @@ exports.testEventReminder = onRequest(async (req, res) => {
 
   res.json({ ok: true, date: todayStr, results });
 });
+
+
+// ─── Placements ───────────────────────────────────────────────────
+exports.onPlacementsUpdate = onDocumentUpdated("content/placements", async (event) => {
+  const before = event.data.before.data();
+  const after  = event.data.after.data();
+
+  const oldIds = new Set((before?.items || []).map((p) => p.id));
+  const newIds = new Set((after?.items  || []).map((p) => p.id));
+  const added   = (after?.items  || []).filter((p) => !oldIds.has(p.id));
+  const deleted = (before?.items || []).filter((p) => !newIds.has(p.id));
+
+  const db = getFirestore();
+
+  // Clean up notification docs for deleted placements
+  if (deleted.length) {
+    try {
+      const b = db.batch();
+      for (const p of deleted) {
+        const q = await db.collection("notifications")
+          .where("type", "==", "placement").where("sourceId", "==", p.id).get();
+        q.docs.forEach((d) => b.delete(d.ref));
+      }
+      await b.commit();
+    } catch (e) { console.error("Placement cleanup error:", e); }
+  }
+
+  if (!added.length) return null;
+
+  // Fetch all users once — used for branch filtering + token collection
+  const usersSnap = await db.collection("users").get();
+  const messaging = getMessaging();
+
+  for (const p of added) {
+    const title = `💼 ${p.name}`;
+    const body  = p.role
+      ? `${p.role} drive is open!${p.status ? " (" + p.status + ")" : ""}`
+      : "A new placement opportunity has been posted.";
+
+    // Save in-app notification doc (visible to all in bell panel)
+    try {
+      await db.collection("notifications").add({
+        title, body,
+        type:      "placement",
+        sourceId:  p.id || null,
+        imageUrl:  p.img || null,
+        createdAt: FieldValue.serverTimestamp(),
+      });
+    } catch (e) { console.error("Placement notification doc error:", e); }
+
+    // ── Targeted push: only students in eligible branches ────────
+    const eligibleBranches = new Set(p.branches || []);
+    const notifyAll = eligibleBranches.size === 0; // no branch selected = notify all
+
+    const tokens    = [];
+    const tokenToRef = {};
+
+    usersSnap.forEach((doc) => {
+      const u = doc.data();
+
+      // Branch check: if specific branches selected, only match students in those branches
+      // Admins always receive regardless of branch filter
+      if (!notifyAll && !u.admin) {
+        const userBranch = u.branch;
+        if (!userBranch || !eligibleBranches.has(userBranch)) return;
+      }
+
+      const tokenMap = u.fcmTokens;
+      if (tokenMap && typeof tokenMap === "object" && !Array.isArray(tokenMap)) {
+        Object.entries(tokenMap).forEach(([key, token]) => {
+          if (token) { tokens.push(token); tokenToRef[token] = { uid: doc.id, key }; }
+        });
+      }
+    });
+
+    if (!tokens.length) {
+      console.log(`No eligible tokens for "${p.name}" — skipping push.`);
+      continue;
+    }
+
+    console.log(`"${p.name}" → pushing to ${tokens.length} eligible token(s).`);
+
+    const badTokens = [];
+    for (let i = 0; i < tokens.length; i += 500) {
+      const batch = tokens.slice(i, i + 500);
+      try {
+        const res = await messaging.sendEachForMulticast({
+          tokens: batch,
+          data:   { type: "placement", title, body, image: p.img || "", url: "/placements" },
+        });
+        console.log(`Batch: ${res.successCount} ok / ${res.failureCount} failed`);
+        res.responses.forEach((r, idx) => {
+          if (!r.success) {
+            const c = r.error?.code;
+            if (c === "messaging/invalid-registration-token" ||
+                c === "messaging/registration-token-not-registered")
+              badTokens.push(batch[idx]);
+          }
+        });
+      } catch (e) { console.error("Multicast error:", e); }
+    }
+
+    // Prune stale tokens
+    if (badTokens.length) {
+      const bad = new Set(badTokens);
+      const b   = db.batch();
+      bad.forEach((token) => {
+        const info = tokenToRef[token];
+        if (info) b.update(db.doc(`users/${info.uid}`), { [`fcmTokens.${info.key}`]: FieldValue.delete() });
+      });
+      await b.commit();
+      console.log(`Pruned ${bad.size} stale token(s).`);
+    }
+  }
+
+  return null;
+});

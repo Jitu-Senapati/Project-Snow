@@ -291,13 +291,13 @@ export default function Layout() {
                   notice:         { path: "/explore", scrollTo: "notices" },
                   event:          { path: "/explore", scrollTo: "events" },
                   event_reminder: { path: "/explore", scrollTo: "events" },
+                  placement:      { path: "/placements" },
                   bus:        { path: "/bus",     scrollTo: null },
                   attendance: { path: "/explore", scrollTo: null },
-                  placement:  { path: "/explore", scrollTo: "placements" },
-                  system:     { path: "/explore", scrollTo: null },
+                                  system:     { path: "/explore", scrollTo: null },
                 };
                 const iconMap = {
-                  notice: "bx-bell", event: "bx-calendar-event", event_reminder: "bx-bookmark-alt", bus: "bx-bus",
+                  notice: "bx-bell", event: "bx-calendar-event", event_reminder: "bx-bookmark-alt", placement: "bx-briefcase", bus: "bx-bus",
                   attendance: "bx-calendar-check", placement: "bx-briefcase-alt-2", system: "bx-info-circle",
                 };
 
@@ -340,9 +340,14 @@ export default function Layout() {
                             navigate(dest.path, dest.scrollTo ? { state: { scrollTo: dest.scrollTo } } : undefined);
                           }}
                         >
-                          {(n.type === "event" || n.type === "event_reminder") && n.imageUrl ? (
+                          {(n.type === "event" || n.type === "event_reminder" || n.type === "placement") && n.imageUrl ? (
                             <div className="notif-panel-thumb">
                               <img src={n.imageUrl} alt="" />
+                            </div>
+                          ) : n.type === "placement" ? (
+                            <div className="notif-panel-company">
+                              <i className="bx bx-buildings" />
+                              <span>{n.title.replace(/^💼\s*/, "").slice(0, 3).toUpperCase()}</span>
                             </div>
                           ) : (
                             <div className="notif-panel-icon">
